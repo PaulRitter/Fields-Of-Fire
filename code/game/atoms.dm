@@ -545,3 +545,6 @@ its easier to just keep the beam vertical.
 	var/new_alpha = alpha - (50 * amount)
 	animate(src,alpha = new_alpha,time = 2 SECONDS)
 	elevation += amount
+
+/atom/proc/get_impact_type(var/turf/location)
+	new /obj/effect/projectile/generic_impact(location)

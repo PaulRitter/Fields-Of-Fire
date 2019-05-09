@@ -83,7 +83,7 @@
 
 //called when the projectile stops flying because it collided with something
 /obj/item/projectile/proc/on_impact(var/atom/A)
-	impact_effect(effect_transform)		// generate impact effect
+	impact_effect(effect_transform, A)		// generate impact effect
 	return
 
 //Checks if the projectile is eligible for embedding. Not that it necessarily will.
@@ -393,15 +393,17 @@
 			else
 				P.activate()
 
-/obj/item/projectile/proc/impact_effect(var/matrix/M)
+/obj/item/projectile/proc/impact_effect(var/matrix/M, var/atom/A)
+	var/obj/effect/projectile/P
 	if(ispath(impact_type))
-		var/obj/effect/projectile/P = new impact_type(location.loc)
-
-		if(istype(P))
-			P.set_transform(M)
-			P.pixel_x = location.pixel_x
-			P.pixel_y = location.pixel_y
-			P.activate()
+		P = new impact_type(location.loc)
+	else //Get one dependent on the atom hit
+		P = A.get_impact_type(location.loc)
+	if(istype(P))
+		P.set_transform(M)
+		P.pixel_x = location.pixel_x
+		P.pixel_y = location.pixel_y
+		P.activate()
 
 //"Tracing" projectile
 /obj/item/projectile/test //Used to see if you can hit them.

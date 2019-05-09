@@ -129,3 +129,18 @@
 //----------------------------
 /obj/effect/projectile/bullet/muzzle
 	icon_state = "muzzle_bullet"
+
+//----------------------------
+// Atom specific
+//----------------------------
+
+/obj/effect/projectile/generic_impact
+	icon_state = "impact_generic"
+
+//obj/effect/projectile/wood_impact
+
+//obj/effect/projectile/metal_impact
+
+//obj/effect/projectile/mob_impact
+
+//obj/effect/projectile/sand_impact
