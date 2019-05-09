@@ -56,8 +56,6 @@
 	icon_state = "sheetsnatcher"
 	desc = "A patented storage system designed for any kind of mineral sheet."
 
-	storage_ui = /datum/storage_ui/default/sheetsnatcher
-
 	var/capacity = 300; //the number of sheets it can carry.
 	w_class = ITEM_SIZE_NORMAL
 	storage_slots_w = 7
@@ -111,8 +109,6 @@
 			if(!S.amount)
 				qdel(S)
 			usr.update_icons()	//update our overlays
-
-		prepare_ui(usr)
 		update_icon()
 		return 1
 
@@ -127,9 +123,8 @@
 				S.amount -= stacksize
 			if(!S.amount)
 				qdel(S) // todo: there's probably something missing here
-		prepare_ui()
-		if(usr.s_active)
-			usr.s_active.show_to(usr)
+
+		ui_interact(usr)
 		update_icon()
 
 // Instead of removing

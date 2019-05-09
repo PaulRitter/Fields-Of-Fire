@@ -1,40 +1,8 @@
-/datum/storage_ui
-	var/obj/item/weapon/storage/storage
+/obj/item/weapon/storage/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+	var/list/data = list()
 
-/datum/storage_ui/New(var/storage)
-	src.storage = storage
-	..()
-
-/datum/storage_ui/Destroy()
-	storage = null
-	. = ..()
-
-/datum/storage_ui/proc/show_to(var/mob/user)
-	return
-
-/datum/storage_ui/proc/hide_from(var/mob/user)
-	return
-
-/datum/storage_ui/proc/prepare_ui()
-	return
-
-/datum/storage_ui/proc/close_all()
-	return
-
-/datum/storage_ui/proc/on_open(var/mob/user)
-	return
-
-/datum/storage_ui/proc/after_close(var/mob/user)
-	return
-
-/datum/storage_ui/proc/on_insertion(var/mob/user)
-	return
-
-/datum/storage_ui/proc/on_pre_remove(var/mob/user, var/obj/item/W)
-	return
-
-/datum/storage_ui/proc/on_post_remove(var/mob/user, var/obj/item/W)
-	return
-
-/datum/storage_ui/proc/on_hand_attack(var/mob/user)
-	return
+	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if(!ui)
+		ui = new(user, src, ui_key, "storage.tmpl", name, storage_slots_w * 32, storage_slots_h * 32)
+		ui.set_initial_data(data)
+		ui.open()

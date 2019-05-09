@@ -126,7 +126,7 @@
 
 //Creates the storage UI
 /datum/storage_ui/default/prepare_ui()
-	neo_orient_objs()
+	// Launch NanoUI
 
 
 /datum/storage_ui/default/close_all()
@@ -142,21 +142,6 @@
 		else
 			is_seeing -= M
 	return cansee
-
-//This proc draws out UI elements based on their 2D size and position
-/datum/storage_ui/default/proc/neo_orient_objs().
-	var/tx = 4
-	var/ty = 4
-
-	boxes.screen_loc = "[tx],[ty] to [tx + round(storage.storage_slots_w/GRID_PER_ITEM)],[ty + round(storage.storage_slots_h/GRID_PER_ITEM)]"
-
-	for(var/obj/O in storage.contents)
-		var/datum/vec2/stored_loc = storage.stored_locations[O]
-		if(istype(stored_loc))
-			var sx = tx + ((stored_loc.x-1)/GRID_PER_ITEM)
-			var sy = ty + ((stored_loc.y-1)/GRID_PER_ITEM)
-			O.screen_loc = "[round(sx)]:[round(sx*32)%32],[round(sy)]:[round(sy*32)%32]"
-			O.hud_layerise()
 
 //This proc draws out the inventory and places the items on it. tx and ty are the upper left tile and mx, my are the bottm right.
 //The numbers are calculated from the bottom-left The bottom-left slot being 1,1.
