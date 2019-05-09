@@ -96,7 +96,7 @@
 	icon = 'code/modules/halo/clothing/marine_items.dmi'
 	icon_state = "UNSC Marine Ammo Belt item"
 	item_state = "UNSC Marine Ammo Belt"
-	storage_slots = 6
+	storage_slots_w = 6
 
 	can_hold = list(/obj/item/ammo_magazine,/obj/item/ammo_box,/obj/item/weapon/grenade/frag/m9_hedp,/obj/item/weapon/grenade/smokebomb,/obj/item/weapon/grenade/chem_grenade/incendiary)
 
@@ -108,7 +108,7 @@
 	icon_override = MARINE_OVERRIDE
 	icon_state = "UNSC Marine Medical Belt item"
 	item_state = "UNSC Marine Medical Belt"*/
-	storage_slots = 5
+	storage_slots_w = 5
 
 	can_hold = list(/obj/item/ammo_magazine/m5,/obj/item/ammo_magazine/m127_saphp,/obj/item/ammo_magazine/m127_saphe,/obj/item/weapon/storage/firstaid/unsc)
 

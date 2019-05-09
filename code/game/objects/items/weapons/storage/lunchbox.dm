@@ -1,11 +1,11 @@
 /obj/item/weapon/storage/lunchbox
-	max_storage_space = 8 //slightly smaller than a toolbox
 	name = "rainbow lunchbox"
 	icon_state = "lunchbox_rainbow"
 	item_state = "toolbox_pink"
 	desc = "A little lunchbox. This one is the colors of the rainbow!"
 	w_class = ITEM_SIZE_NORMAL
-	max_w_class = ITEM_SIZE_SMALL
+	storage_slots_w = 6
+	storage_slots_h = 4
 	var/filled = FALSE
 	attack_verb = list("lunched")
 

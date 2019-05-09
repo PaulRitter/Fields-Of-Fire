@@ -108,8 +108,8 @@
 	throw_speed = 1
 	throw_range = 4
 	w_class = ITEM_SIZE_HUGE
-	max_w_class = ITEM_SIZE_HUGE
-	max_storage_space = 32
+	storage_slots_w = 20
+	storage_slots_h = 5
 	can_hold = list(/obj/item/clothing/head/bomb_hood/security/colossus, /obj/item/clothing/suit/bomb_suit/security/colossus)
 	slowdown_general = 0
 

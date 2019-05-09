@@ -24,15 +24,16 @@
 	desc = "It's just an ordinary box."
 	icon_state = "box"
 	item_state = "syringe_kit"
-	max_storage_space = DEFAULT_BOX_STORAGE
+	storage_slots_w = 6
+	storage_slots_h = 3
 	var/foldable = /obj/item/stack/material/cardboard	// BubbleWrap - if set, can be folded (when empty) into a sheet of cardboard
 
 /obj/item/weapon/storage/box/large
 	name = "large box"
 	icon_state = "largebox"
 	w_class = ITEM_SIZE_LARGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = DEFAULT_LARGEBOX_STORAGE
+	storage_slots_w = 9
+	storage_slots_h = 3
 
 // BubbleWrap - A box can be folded up to make card
 /obj/item/weapon/storage/box/attack_self(mob/user as mob)
@@ -340,7 +341,8 @@
 	icon = 'icons/FoF/misc.dmi'
 	icon_state = "matches"
 	item_state = "matches"
-	max_storage_space = 5
+	storage_slots_w = 15
+	storage_slots_h = 3
 	can_hold = list(/obj/item/weapon/flame/match/trench)
 	startswith = list(/obj/item/weapon/flame/match/trench = 5)
 	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
@@ -414,17 +416,18 @@
 	icon_state = "portafreezer"
 	item_state = "medicalpack"
 	foldable = null
-	max_w_class = ITEM_SIZE_NORMAL
+	storage_slots_w = 9
+	storage_slots_h = 3
 	w_class = ITEM_SIZE_HUGE
 	can_hold = list(/obj/item/organ, /obj/item/weapon/reagent_containers/food, /obj/item/weapon/reagent_containers/glass)
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
 	use_to_pickup = 1 // for picking up broken bulbs, not that most people will try
 
 /obj/item/weapon/storage/box/checkers
 	name = "checkers box"
 	desc = "This box holds a nifty portion of checkers. Foam-shaped on the inside so that only checkers may fit."
 	icon_state = "checkers"
-	max_storage_space = 24
+	storage_slots_w = 36
+	storage_slots_h = 6
 	foldable = null
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/checker)
 	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/checker = 12,
@@ -480,7 +483,8 @@
 	icon_state = "lettercase"
 	name = "Envelope"
 	desc = "The envelope they gave you with your tags. Contains a Requisition Receipt and Transportation Receipt. Don't use the Transportation Receipt until you've gotten your gear with the Requisition Receipt."
-	max_storage_space = 2
+	storage_slots_w = 2
+	storage_slots_h = 1
 	w_class = ITEM_SIZE_TINY
 
 /obj/item/weapon/storage/box/letter/brit

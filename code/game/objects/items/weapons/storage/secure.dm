@@ -24,8 +24,8 @@
 	var/emagged = 0
 	var/open = 0
 	w_class = ITEM_SIZE_NORMAL
-	max_w_class = ITEM_SIZE_SMALL
-	max_storage_space = DEFAULT_BOX_STORAGE
+	storage_slots_w = 8
+	storage_slots_h = 2
 
 	examine(mob/user)
 		if(..(user, 1))
@@ -150,8 +150,8 @@
 	throw_speed = 1
 	throw_range = 4
 	w_class = ITEM_SIZE_HUGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
+	storage_slots_w = 12
+	storage_slots_h = 4
 
 	attack_hand(mob/user as mob)
 		if ((src.loc == user) && (src.locked == 1))
@@ -179,8 +179,8 @@
 	icon_sparking = "safespark"
 	force = 8.0
 	w_class = ITEM_SIZE_NO_CONTAINER
-	max_w_class = ITEM_SIZE_HUGE
-	max_storage_space = 56
+	storage_slots_w = 56
+	storage_slots_h = 6
 	anchored = 1.0
 	density = 0
 	cant_hold = list(/obj/item/weapon/storage/secure/briefcase)

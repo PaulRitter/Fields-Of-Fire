@@ -15,8 +15,8 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "satchel"
 	slot_flags = SLOT_BELT
-	max_storage_space = 200
-	max_w_class = ITEM_SIZE_NORMAL
+	storage_slots_w = 20
+	storage_slots_h = 20
 	w_class = ITEM_SIZE_LARGE
 	can_hold = list(/obj/item/weapon/ore)
 	allow_quick_gather = 1
@@ -34,8 +34,8 @@
 	icon = 'icons/obj/hydroponics_machines.dmi'
 	icon_state = "plantbag"
 	slot_flags = SLOT_BELT
-	max_storage_space = 100
-	max_w_class = ITEM_SIZE_SMALL
+	storage_slots_w = 20
+	storage_slots_h = 20
 	w_class = ITEM_SIZE_NORMAL
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/grown,/obj/item/seeds,/obj/item/weapon/grown)
 	allow_quick_gather = 1
@@ -60,7 +60,7 @@
 
 	var/capacity = 300; //the number of sheets it can carry.
 	w_class = ITEM_SIZE_NORMAL
-	storage_slots = 7
+	storage_slots_w = 7
 
 	allow_quick_empty = 1 // this function is superceded
 	use_to_pickup = 1

@@ -19,8 +19,10 @@
 		)
 	w_class = ITEM_SIZE_HUGE
 	slot_flags = SLOT_BACK
-	max_w_class = ITEM_SIZE_LARGE
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
+
+	storage_slots_w = 6
+	storage_slots_h = 12
+
 	use_dynamic_slowdown = 1
 
 /obj/item/weapon/storage/backpack/equipped()
@@ -47,8 +49,8 @@
 	desc = "A backpack that opens into a localized pocket of Blue Space."
 	origin_tech = list(TECH_BLUESPACE = 4)
 	icon_state = "holdingpack"
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = 56
+	storage_slots_w = 10
+	storage_slots_h = 16
 
 	New()
 		..()
@@ -73,8 +75,8 @@
 	icon_state = "giftbag0"
 	item_state = "giftbag"
 	w_class = ITEM_SIZE_HUGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = 400 // can store a ton of shit!
+	storage_slots_w = 10
+	storage_slots_h = 10
 	item_state_slots = null
 
 /obj/item/weapon/storage/backpack/cultpack
@@ -147,7 +149,8 @@
 	icon_state = "duffle"
 	item_state_slots = null
 	w_class = ITEM_SIZE_HUGE
-	max_storage_space = DEFAULT_BACKPACK_STORAGE + 10
+	storage_slots_w = 16
+	storage_slots_h = 6
 /*
 /obj/item/weapon/storage/backpack/dufflebag/New()
 	..()

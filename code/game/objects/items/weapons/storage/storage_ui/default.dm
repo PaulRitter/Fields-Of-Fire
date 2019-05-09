@@ -1,3 +1,4 @@
+#define GRID_PER_ITEM 2
 /datum/storage_ui/default
 	var/list/is_seeing = new/list() //List of mobs which are currently seeing the contents of this item's storage
 
@@ -106,12 +107,7 @@
 	user.client.screen -= storage.contents
 	user.client.screen += closer
 	user.client.screen += storage.contents
-	if(storage.storage_slots)
-		user.client.screen += boxes
-	else
-		user.client.screen += storage_start
-		user.client.screen += storage_continue
-		user.client.screen += storage_end
+	user.client.screen += boxes
 	is_seeing |= user
 	user.s_active = storage
 
@@ -130,11 +126,8 @@
 
 //Creates the storage UI
 /datum/storage_ui/default/prepare_ui()
-	//if storage slots is null then use the storage space UI, otherwise use the slots UI
-	if(storage.storage_slots == null)
-		space_orient_objs()
-	else
-		slot_orient_objs()
+	neo_orient_objs()
+
 
 /datum/storage_ui/default/close_all()
 	for(var/mob/M in can_see_contents())
@@ -149,6 +142,21 @@
 		else
 			is_seeing -= M
 	return cansee
+
+//This proc draws out UI elements based on their 2D size and position
+/datum/storage_ui/default/proc/neo_orient_objs().
+	var/tx = 4
+	var/ty = 4
+
+	boxes.screen_loc = "[tx],[ty] to [tx + round(storage.storage_slots_w/GRID_PER_ITEM)],[ty + round(storage.storage_slots_h/GRID_PER_ITEM)]"
+
+	for(var/obj/O in storage.contents)
+		var/datum/vec2/stored_loc = storage.stored_locations[O]
+		if(istype(stored_loc))
+			var sx = tx + ((stored_loc.x-1)/GRID_PER_ITEM)
+			var sy = ty + ((stored_loc.y-1)/GRID_PER_ITEM)
+			O.screen_loc = "[round(sx)]:[round(sx*32)%32],[round(sy)]:[round(sy*32)%32]"
+			O.hud_layerise()
 
 //This proc draws out the inventory and places the items on it. tx and ty are the upper left tile and mx, my are the bottm right.
 //The numbers are calculated from the bottom-left The bottom-left slot being 1,1.
@@ -170,7 +178,7 @@
 /datum/storage_ui/default/proc/slot_orient_objs()
 	var/adjusted_contents = storage.contents.len
 	var/row_num = 0
-	var/col_count = min(7,storage.storage_slots) -1
+	var/col_count = min(7,storage.storage_slots_w) -1
 	if (adjusted_contents > 7)
 		row_num = round((adjusted_contents-1) / 7) // 7 is the maximum allowed width.
 	arrange_item_slots(row_num, col_count)
@@ -192,6 +200,7 @@
 
 	closer.screen_loc = "[4+cols+1]:16,2:16"
 
+/*
 /datum/storage_ui/default/proc/space_orient_objs()
 
 	var/baseline_max_storage_space = DEFAULT_BOX_STORAGE //storage size corresponding to 224 pixels
@@ -235,6 +244,8 @@
 		O.hud_layerise()
 
 	closer.screen_loc = "4:[storage_width+19],2:16"
+*/
+
 
 // Sets up numbered display to show the stack size of each stored mineral
 // NOTE: numbered display is turned off currently because it's broken
@@ -242,9 +253,11 @@
 	var/adjusted_contents = storage.contents.len
 
 	var/row_num = 0
-	var/col_count = min(7,storage.storage_slots) -1
+	var/col_count = min(7,storage.storage_slots_w) -1
 	if (adjusted_contents > 7)
 		row_num = round((adjusted_contents-1) / 7) // 7 is the maximum allowed width.
 	arrange_item_slots(row_num, col_count)
 	if(user && user.s_active)
 		user.s_active.show_to(user)
+
+#undef GRID_PER_ITEM

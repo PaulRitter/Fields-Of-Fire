@@ -32,8 +32,7 @@
 		w_class++
 
 /obj/item/weapon/storage/bag/get_storage_cost()
-	var/used_ratio = storage_space_used()/max_storage_space
-	return max(base_storage_cost(w_class), round(used_ratio*base_storage_cost(max_w_class), 1))
+	return base_storage_cost(w_class)
 
 // -----------------------------
 //          Trash bag
@@ -46,8 +45,8 @@
 	item_state = "trashbag"
 
 	w_class = ITEM_SIZE_SMALL
-	max_w_class = ITEM_SIZE_HUGE //can fit a backpack inside a trash bag, seems right
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
+	storage_slots_w = 8
+	storage_slots_h = 8
 	can_hold = list() // any
 	cant_hold = list(/obj/item/weapon/disk/nuclear)
 
@@ -74,8 +73,8 @@
 	item_state = "plasticbag"
 
 	w_class = ITEM_SIZE_TINY
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = DEFAULT_BOX_STORAGE
+	storage_slots_w = 4
+	storage_slots_h = 4
 	can_hold = list() // any
 	cant_hold = list(/obj/item/weapon/disk/nuclear)
 
@@ -88,17 +87,16 @@
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "cashbag"
 	desc = "A bag for carrying lots of cash. It's got a big dollar sign printed on the front."
-	max_storage_space = 100
-	max_w_class = ITEM_SIZE_HUGE
-	w_class = ITEM_SIZE_SMALL
+	storage_slots_w = 4
+	storage_slots_h = 4
 	can_hold = list(/obj/item/weapon/coin,/obj/item/weapon/spacecash)
 
 /obj/item/weapon/storage/bag/wwi
 	icon = 'icons/FoF/misc.dmi'
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks,/obj/item/ammo_magazine)
-	w_class = ITEM_SIZE_HUGE
+	storage_slots_w = 4
+	storage_slots_h = 4
 	icon_state = "grainbag"
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
 
 /obj/item/weapon/storage/bag/wwi/oats
 	name = "bag of oats"
