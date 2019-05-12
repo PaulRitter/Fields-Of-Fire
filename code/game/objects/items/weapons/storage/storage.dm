@@ -26,9 +26,11 @@
 	//initializes the contents of the storage with some items based on an assoc list. The assoc key must be an item path,
 	//the assoc value can either be the quantity, or a list whose first value is the quantity and the rest are args.
 	var/list/startswith
+	var/datum/storage_ui/storage_ui = /datum/storage_ui/default
 	var/use_dynamic_slowdown = 1
 
 /obj/item/weapon/storage/Destroy()
+	QDEL_NULL(storage_ui)
 	. = ..()
 
 /obj/item/weapon/storage/proc/update_slowdown()
@@ -90,17 +92,28 @@
 	return L
 
 /obj/item/weapon/storage/proc/show_to(mob/user as mob)
-	ui_interact(usr)
+	storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/hide_from(mob/user as mob)
-	//storage_ui.hide_from(user)
-	//  TODO: How to close Nanoui?
+	storage_ui.hide_from(user)
 
 /obj/item/weapon/storage/proc/open(mob/user as mob)
 	if (src.use_sound)
 		playsound(src.loc, src.use_sound, 50, 1, -5)
 
-	show_to(user)
+	prepare_ui()
+	storage_ui.on_open(user)
+	storage_ui.show_to(user)
+
+/obj/item/weapon/storage/proc/prepare_ui()
+	storage_ui.prepare_ui()
+
+/obj/item/weapon/storage/proc/close(mob/user as mob)
+	hide_from(user)
+	storage_ui.after_close(user)
+
+/obj/item/weapon/storage/proc/close_all()
+	storage_ui.close_all()
 
 /obj/item/weapon/storage/proc/storage_space_used()
 	. = 0
@@ -224,17 +237,19 @@
 	return 1
 
 /obj/item/weapon/storage/proc/update_ui_after_item_insertion()
-	ui_interact(usr)
+	prepare_ui()
+	storage_ui.on_insertion(usr)
 
 /obj/item/weapon/storage/proc/update_ui_after_item_removal()
-	ui_interact(usr)
+	prepare_ui()
+	storage_ui.on_post_remove(usr)
 
 //Call this proc to handle the removal of an item from the storage item. The item will be moved to the atom sent as new_target
 /obj/item/weapon/storage/proc/remove_from_storage(obj/item/W as obj, atom/new_location, var/NoUpdate = 0)
 	if(!istype(W)) return 0
 	new_location = new_location || get_turf(src)
 
-	//storage_ui.on_pre_remove(usr, W)
+	storage_ui.on_pre_remove(usr, W)
 
 	if(ismob(loc))
 		W.dropped(usr)
@@ -306,16 +321,9 @@
 		src.open(user)
 	else
 		..()
-		close_all()
+		storage_ui.on_hand_attack(user)
 	src.add_fingerprint(user)
 	return
-
-/obj/item/weapon/storage/proc/close(var/user as mob)
-	// TODO: Implement
-
-/obj/item/weapon/storage/proc/close_all()
-	for(var/mob/M in range(1))
-		close(M)
 
 /obj/item/weapon/storage/proc/gather_all(var/turf/T, var/mob/user)
 	var/success = 0
@@ -371,6 +379,9 @@
 		verbs += /obj/item/weapon/storage/verb/toggle_gathering_mode
 	else
 		verbs -= /obj/item/weapon/storage/verb/toggle_gathering_mode
+
+	storage_ui = new storage_ui(src)
+	prepare_ui()
 
 	if(startswith)
 		for(var/item_path in startswith)

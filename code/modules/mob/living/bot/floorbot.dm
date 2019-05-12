@@ -225,7 +225,8 @@
 	if(contents.len >= 1)
 		to_chat(user, "<span class='notice'>They wont fit in as there is already stuff inside.</span>")
 		return
-	close(user)
+	if(user.s_active)
+		user.s_active.close(user)
 	if(T.use(10))
 		var/obj/item/weapon/toolbox_tiles/B = new /obj/item/weapon/toolbox_tiles
 		user.put_in_hands(B)

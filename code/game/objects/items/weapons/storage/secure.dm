@@ -160,7 +160,9 @@
 			src.open(usr)
 		else
 			..()
-			close_all()
+			for(var/mob/M in range(1))
+				if (M.s_active == src)
+					src.close(M)
 		src.add_fingerprint(user)
 		return
 

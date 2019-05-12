@@ -124,7 +124,8 @@ var/global/photo_count = 0
 			add_fingerprint(usr)
 			return
 		if(over_object == usr && in_range(src, usr) || usr.contents.Find(src))
-			close(usr)
+			if(usr.s_active)
+				usr.s_active.close(usr)
 			show_to(usr)
 			return
 	return
