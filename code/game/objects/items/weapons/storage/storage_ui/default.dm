@@ -1,128 +1,145 @@
-#define GRID_PER_ITEM 2
+#define num2screen(x) "[round(x)]:[round(x * 32)%32]"
 /datum/storage_ui/default
 	var/list/is_seeing = new/list() //List of mobs which are currently seeing the contents of this item's storage
+	var/list/client_uis = new/list()
 
-	var/obj/screen/storage/boxes
-	var/obj/screen/storage/storage_start //storage UI
-	var/obj/screen/storage/storage_continue
-	var/obj/screen/storage/storage_end
-	var/obj/screen/storage/stored_start
-	var/obj/screen/storage/stored_continue
-	var/obj/screen/storage/stored_end
-	var/obj/screen/close/closer
+/datum/client_storage_ui
+	var/list/grid_boxes = new/list()
+	var/list/grab_bar = new/list()
+	var/obj/screen/close/close_button = null
+	var/client/client = null
+	var/tx = 1
+	var/ty = 4
+
+/datum/client_storage_ui/New(var/client/C)
+	client = C
+
+/obj/screen/storage/gridbox
+	name = "storage"
+	icon = 'icons/mob/screen1_small.dmi'
+	icon_state = "grid"
+	layer = HUD_BASE_LAYER
+	var/store_x = -1
+	var/store_y = -1
+
+/obj/screen/storage/gridbox/New(var/obj/item/weapon/storage/storage, var/x, var/y)
+	..()
+	loc = null
+	master = storage
+	store_x = x
+	store_y = y
+
+/obj/screen/storage/dragbar
+	name = "storage"
+	icon = 'icons/mob/scren1_small.dmi'
+	icon_state = "grab0"
+	layer = HUD_BASE_LAYER
+	var/datum/client_storage_ui/csu
+	var/pos = 0
+
+/obj/screen/storage/dragbar/New(var/datum/client_storage_ui/set_csu,var/ind,var/typ)
+	..()
+	loc = null
+	csu = set_csu
+	pos = ind
+	icon_state = "grab[typ]"
+
+/obj/screen/storage/gridbox/Click()
+	if(!usr.canClick())
+		return 1
+	if(usr.stat || usr.paralysis || usr.stunned || usr.weakened)
+		return 1
+	if (istype(usr.loc,/obj/mecha)) // stops inventory actions in a mech
+		return 1
+	var/obj/item/weapon/storage/storage = master
+	if(istype(storage))
+		var/obj/item/I = usr.get_active_hand()
+		if(I)
+			if(storage.can_be_inserted(I, usr, store_x, store_y))
+				storage.handle_item_insertion(I, store_x, store_y)
+	return 1
 
 /datum/storage_ui/default/New(var/storage)
 	..()
-	boxes = new /obj/screen/storage(  )
-	boxes.name = "storage"
-	boxes.master = storage
-	boxes.icon_state = "block"
-	boxes.screen_loc = "7,7 to 10,8"
-	boxes.layer = HUD_BASE_LAYER
-
-	storage_start = new /obj/screen/storage(  )
-	storage_start.name = "storage"
-	storage_start.master = storage
-	storage_start.icon_state = "storage_start"
-	storage_start.screen_loc = "7,7 to 10,8"
-	storage_start.layer = HUD_BASE_LAYER
-	storage_continue = new /obj/screen/storage(  )
-	storage_continue.name = "storage"
-	storage_continue.master = storage
-	storage_continue.icon_state = "storage_continue"
-	storage_continue.screen_loc = "7,7 to 10,8"
-	storage_continue.layer = HUD_BASE_LAYER
-	storage_end = new /obj/screen/storage(  )
-	storage_end.name = "storage"
-	storage_end.master = storage
-	storage_end.icon_state = "storage_end"
-	storage_end.screen_loc = "7,7 to 10,8"
-	storage_end.layer = HUD_BASE_LAYER
-
-	stored_start = new /obj //we just need these to hold the icon
-	stored_start.icon_state = "stored_start"
-	stored_start.layer = HUD_BASE_LAYER
-	stored_continue = new /obj
-	stored_continue.icon_state = "stored_continue"
-	stored_continue.layer = HUD_BASE_LAYER
-	stored_end = new /obj
-	stored_end.icon_state = "stored_end"
-	stored_end.layer = HUD_BASE_LAYER
-
-	closer = new /obj/screen/close(  )
-	closer.master = storage
-	closer.icon_state = "x"
-	closer.layer = HUD_BASE_LAYER
 
 /datum/storage_ui/default/Destroy()
 	close_all()
-	QDEL_NULL(boxes)
-	QDEL_NULL(storage_start)
-	QDEL_NULL(storage_continue)
-	QDEL_NULL(storage_end)
-	QDEL_NULL(stored_start)
-	QDEL_NULL(stored_continue)
-	QDEL_NULL(stored_end)
-	QDEL_NULL(closer)
+	for(var/client/C in client_uis)
+		var/datum/client_storage_ui/csu = client_uis[C]
+		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
+			QDEL_NULL(box)
+		csu.grid_boxes.Cut()
+		QDEL_NULL(csu)
+	client_uis.Cut()
 	. = ..()
 
 /datum/storage_ui/default/on_open(var/mob/user)
-	if (user.s_active)
-		user.s_active.close(user)
+	// Do nothing for now.
 
 /datum/storage_ui/default/after_close(var/mob/user)
-	user.s_active = null
+	user.s_active -= src
 
 /datum/storage_ui/default/on_insertion(var/mob/user)
-	if(user.s_active)
-		user.s_active.show_to(user)
+	if(storage in user.s_active)
+		storage.show_to(user)
 
 /datum/storage_ui/default/on_pre_remove(var/mob/user, var/obj/item/W)
 	for(var/mob/M in range(1, storage.loc))
-		if (M.s_active == storage)
+		if (storage in M.s_active)
 			if (M.client)
 				M.client.screen -= W
 
 /datum/storage_ui/default/on_post_remove(var/mob/user)
-	if(user.s_active)
-		user.s_active.show_to(user)
+	if(storage in user.s_active)
+		storage.show_to(user)
 
 /datum/storage_ui/default/on_hand_attack(var/mob/user)
 	for(var/mob/M in range(1))
-		if (M.s_active == storage)
+		if (storage in M.s_active)
 			storage.close(M)
 
 /datum/storage_ui/default/show_to(var/mob/user)
-	if(user.s_active != storage)
+	if(!(storage in user.s_active))
 		for(var/obj/item/I in storage)
 			if(I.on_found(user))
 				return
-	if(user.s_active)
-		user.s_active.hide_from(user)
-	user.client.screen -= boxes
-	user.client.screen -= storage_start
-	user.client.screen -= storage_continue
-	user.client.screen -= storage_end
-	user.client.screen -= closer
+	if(storage in user.s_active)
+		storage.hide_from(user)
+	var/datum/client_storage_ui/csu = client_uis[user.client]
+	if(csu)
+		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
+			user.client.screen -= box
+		csu.grid_boxes.Cut()
+		QDEL_NULL(csu)
 	user.client.screen -= storage.contents
-	user.client.screen += closer
+
+	csu = new(user.client)
+	client_uis[user.client] = csu
+
 	user.client.screen += storage.contents
-	user.client.screen += boxes
+	for(var/x = 1 to storage.storage_slots_w)
+		for(var/y = 1 to storage.storage_slots_h)
+			var/obj/screen/storage/gridbox/box = new(storage, x, y)
+			csu.grid_boxes += box
+			box.screen_loc = "[csu.tx + round((box.store_x - 1)/2)]:[((box.store_x - 1)%2) * 16],[csu.ty + round((box.store_y - 1)/2)]:[((box.store_y - 1)%2) * 16]"
+			user.client.screen += box
+
 	is_seeing |= user
-	user.s_active = storage
+	user.s_active |= storage
 
 /datum/storage_ui/default/hide_from(var/mob/user)
 	is_seeing -= user
 	if(!user.client)
 		return
-	user.client.screen -= boxes
-	user.client.screen -= storage_start
-	user.client.screen -= storage_continue
-	user.client.screen -= storage_end
-	user.client.screen -= closer
-	user.client.screen -= storage.contents
-	if(user.s_active == storage)
-		user.s_active = null
+	var/datum/client_storage_ui/csu = client_uis[user.client]
+	if(csu)
+		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
+			user.client.screen -= box
+		csu.grid_boxes.Cut()
+		QDEL_NULL(csu)
+		client_uis[user.client] = null
+	if(storage in user.s_active)
+		user.s_active -= src
 
 //Creates the storage UI
 /datum/storage_ui/default/prepare_ui()
@@ -137,7 +154,7 @@
 /datum/storage_ui/default/proc/can_see_contents()
 	var/list/cansee = list()
 	for(var/mob/M in is_seeing)
-		if(M.s_active == storage && M.client)
+		if((storage in M.s_active) && M.client)
 			cansee |= M
 		else
 			is_seeing -= M
@@ -145,119 +162,15 @@
 
 //This proc draws out UI elements based on their 2D size and position
 /datum/storage_ui/default/proc/neo_orient_objs().
-	var/tx = 4
-	var/ty = 4
+	for(var/client/C in client_uis)
+		var/datum/client_storage_ui/csu = client_uis[C]
+		var/tx = csu.tx
+		var/ty = csu.ty
 
-	boxes.screen_loc = "[tx],[ty] to [tx + round(storage.storage_slots_w/GRID_PER_ITEM)],[ty + round(storage.storage_slots_h/GRID_PER_ITEM)]"
-
-	for(var/obj/O in storage.contents)
-		var/datum/vec2/stored_loc = storage.stored_locations[O]
-		if(istype(stored_loc))
-			var sx = tx + ((stored_loc.x-1)/GRID_PER_ITEM)
-			var sy = ty + ((stored_loc.y-1)/GRID_PER_ITEM)
-			O.screen_loc = "[round(sx)]:[round(sx*32)%32],[round(sy)]:[round(sy*32)%32]"
-			O.hud_layerise()
-
-//This proc draws out the inventory and places the items on it. tx and ty are the upper left tile and mx, my are the bottm right.
-//The numbers are calculated from the bottom-left The bottom-left slot being 1,1.
-/datum/storage_ui/default/proc/orient_objs(tx, ty, mx, my)
-	var/cx = tx
-	var/cy = ty
-	boxes.screen_loc = "[tx]:,[ty] to [mx],[my]"
-	for(var/obj/O in storage.contents)
-		O.screen_loc = "[cx],[cy]"
-		O.hud_layerise()
-		cx++
-		if (cx > mx)
-			cx = tx
-			cy--
-	closer.screen_loc = "[mx+1],[my]"
-	return
-
-//This proc determins the size of the inventory to be displayed. Please touch it only if you know what you're doing.
-/datum/storage_ui/default/proc/slot_orient_objs()
-	var/adjusted_contents = storage.contents.len
-	var/row_num = 0
-	var/col_count = min(7,storage.storage_slots_w) -1
-	if (adjusted_contents > 7)
-		row_num = round((adjusted_contents-1) / 7) // 7 is the maximum allowed width.
-	arrange_item_slots(row_num, col_count)
-
-//This proc draws out the inventory and places the items on it. It uses the standard position.
-/datum/storage_ui/default/proc/arrange_item_slots(var/rows, var/cols)
-	var/cx = 4
-	var/cy = 2+rows
-	boxes.screen_loc = "4:16,2:16 to [4+cols]:16,[2+rows]:16"
-
-	for(var/obj/O in storage.contents)
-		O.screen_loc = "[cx]:16,[cy]:16"
-		O.maptext = ""
-		O.hud_layerise()
-		cx++
-		if (cx > (4+cols))
-			cx = 4
-			cy--
-
-	closer.screen_loc = "[4+cols+1]:16,2:16"
-
-/*
-/datum/storage_ui/default/proc/space_orient_objs()
-
-	var/baseline_max_storage_space = DEFAULT_BOX_STORAGE //storage size corresponding to 224 pixels
-	var/storage_cap_width = 2 //length of sprite for start and end of the box representing total storage space
-	var/stored_cap_width = 4 //length of sprite for start and end of the box representing the stored item
-	var/storage_width = min( round( 224 * storage.max_storage_space/baseline_max_storage_space ,1) ,284) //length of sprite for the box representing total storage space
-
-	storage_start.overlays.Cut()
-
-	var/matrix/M = matrix()
-	M.Scale((storage_width-storage_cap_width*2+3)/32,1)
-	storage_continue.transform = M
-
-	storage_start.screen_loc = "4:16,2:16"
-	storage_continue.screen_loc = "4:[storage_cap_width+(storage_width-storage_cap_width*2)/2+2],2:16"
-	storage_end.screen_loc = "4:[19+storage_width-storage_cap_width],2:16"
-
-	var/startpoint = 0
-	var/endpoint = 1
-
-	for(var/obj/item/O in storage.contents)
-		startpoint = endpoint + 1
-		endpoint += storage_width * O.get_storage_cost()/storage.max_storage_space
-
-		var/matrix/M_start = matrix()
-		var/matrix/M_continue = matrix()
-		var/matrix/M_end = matrix()
-		M_start.Translate(startpoint,0)
-		M_continue.Scale((endpoint-startpoint-stored_cap_width*2)/32,1)
-		M_continue.Translate(startpoint+stored_cap_width+(endpoint-startpoint-stored_cap_width*2)/2 - 16,0)
-		M_end.Translate(endpoint-stored_cap_width,0)
-		stored_start.transform = M_start
-		stored_continue.transform = M_continue
-		stored_end.transform = M_end
-		storage_start.overlays += stored_start
-		storage_start.overlays += stored_continue
-		storage_start.overlays += stored_end
-
-		O.screen_loc = "4:[round((startpoint+endpoint)/2)+2],2:16"
-		O.maptext = ""
-		O.hud_layerise()
-
-	closer.screen_loc = "4:[storage_width+19],2:16"
-*/
-
-
-// Sets up numbered display to show the stack size of each stored mineral
-// NOTE: numbered display is turned off currently because it's broken
-/datum/storage_ui/default/sheetsnatcher/prepare_ui(var/mob/user)
-	var/adjusted_contents = storage.contents.len
-
-	var/row_num = 0
-	var/col_count = min(7,storage.storage_slots_w) -1
-	if (adjusted_contents > 7)
-		row_num = round((adjusted_contents-1) / 7) // 7 is the maximum allowed width.
-	arrange_item_slots(row_num, col_count)
-	if(user && user.s_active)
-		user.s_active.show_to(user)
-
-#undef GRID_PER_ITEM
+		for(var/obj/O in storage.contents)
+			var/datum/vec2/stored_loc = storage.stored_locations[O]
+			if(istype(stored_loc))
+				var sx = tx + ((stored_loc.x-1)/2)
+				var sy = ty + ((stored_loc.y-1)/2)
+				O.screen_loc = "[round(sx)]:[round(sx*32)%32],[round(sy)]:[round(sy*32)%32]"
+				O.hud_layerise()

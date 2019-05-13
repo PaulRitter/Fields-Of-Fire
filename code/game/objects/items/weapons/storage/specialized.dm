@@ -56,7 +56,7 @@
 	icon_state = "sheetsnatcher"
 	desc = "A patented storage system designed for any kind of mineral sheet."
 
-	storage_ui = /datum/storage_ui/default/sheetsnatcher
+	storage_ui = /datum/storage_ui/default
 
 	var/capacity = 300; //the number of sheets it can carry.
 	w_class = ITEM_SIZE_NORMAL
@@ -128,8 +128,8 @@
 			if(!S.amount)
 				qdel(S) // todo: there's probably something missing here
 		prepare_ui()
-		if(usr.s_active)
-			usr.s_active.show_to(usr)
+		if(src in usr.s_active)
+			src.show_to(usr)
 		update_icon()
 
 // Instead of removing

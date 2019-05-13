@@ -82,7 +82,7 @@
 		return 0
 
 	for(var/mob/M in range(1, master_item.loc))
-		if (M.s_active == src)
+		if (src in M.s_active)
 			src.close(M)
 	return 1
 

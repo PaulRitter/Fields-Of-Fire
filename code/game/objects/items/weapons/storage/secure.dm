@@ -161,7 +161,7 @@
 		else
 			..()
 			for(var/mob/M in range(1))
-				if (M.s_active == src)
+				if (src in M.s_active)
 					src.close(M)
 		src.add_fingerprint(user)
 		return
