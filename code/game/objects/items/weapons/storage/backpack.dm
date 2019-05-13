@@ -205,6 +205,9 @@
 	desc = "It's a very fancy satchel made with fine brown leather."
 	icon_state = "satchel"
 
+	storage_slots_w = 12
+	storage_slots_h = 6
+
 /obj/item/weapon/storage/backpack/satchel/withwallet
 	New()
 		..()

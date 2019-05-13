@@ -1,18 +1,37 @@
-#define num2screen(x) "[round(x)]:[round(x * 32)%32]"
+#define num2screen(x) "[round(x)]:[round((x) * 32)%32]"
 /datum/storage_ui/default
 	var/list/is_seeing = new/list() //List of mobs which are currently seeing the contents of this item's storage
 	var/list/client_uis = new/list()
+	var/list/csu_persist = new/list()
 
 /datum/client_storage_ui
 	var/list/grid_boxes = new/list()
 	var/list/grab_bar = new/list()
-	var/obj/screen/close/close_button = null
+	var/list/item_underlays = new/list()
+	var/obj/screen/close/close_button = new()
 	var/client/client = null
-	var/tx = 1
-	var/ty = 4
+	var/obj/item/weapon/storage/storage
+	var/datum/client_storage_ui_persist/csup
 
-/datum/client_storage_ui/New(var/client/C)
+/datum/client_storage_ui/New(var/client/C,var/datum/client_storage_ui_persist/ncsup,var/obj/item/weapon/storage/store)
 	client = C
+	storage = store
+	close_button.master = store
+	csup = ncsup
+
+/datum/client_storage_ui_persist
+	var/dragging = 0
+	var/datum/vec2/held_at = new(0,0)
+	var/datum/vec2/old_pos = new(0,0)
+	var/tx = 2
+	var/ty = 4
+	var/obj/item/weapon/storage/storage
+
+/obj/screen/storage/proc/update_screen()
+	return
+
+/obj/screen/storage/
+	var/datum/client_storage_ui/csu
 
 /obj/screen/storage/gridbox
 	name = "storage"
@@ -22,19 +41,22 @@
 	var/store_x = -1
 	var/store_y = -1
 
-/obj/screen/storage/gridbox/New(var/obj/item/weapon/storage/storage, var/x, var/y)
+/obj/screen/storage/gridbox/New(var/datum/client_storage_ui/set_csu, var/obj/item/weapon/storage/storage, var/x, var/y)
 	..()
+	csu = set_csu
 	loc = null
 	master = storage
 	store_x = x
 	store_y = y
 
+/obj/screen/storage/gridbox/update_screen()
+	screen_loc = "[num2screen(csu.csup.tx + (store_x - 1)/2)],[num2screen(csu.csup.ty + store_y/2)]"
+
 /obj/screen/storage/dragbar
 	name = "storage"
-	icon = 'icons/mob/scren1_small.dmi'
+	icon = 'icons/mob/screen1_small.dmi'
 	icon_state = "grab0"
 	layer = HUD_BASE_LAYER
-	var/datum/client_storage_ui/csu
 	var/pos = 0
 
 /obj/screen/storage/dragbar/New(var/datum/client_storage_ui/set_csu,var/ind,var/typ)
@@ -44,6 +66,77 @@
 	pos = ind
 	icon_state = "grab[typ]"
 
+/datum/client_storage_ui_persist/proc/try_drag(params)
+	if(!dragging)
+		return 0
+	var/p_list = params2list(params)
+	var/datum/vec2/new_held = screenloc2vec2(p_list["screen-loc"])
+	tx = old_pos.x + (new_held.x - held_at.x)
+	ty = old_pos.y + (new_held.y - held_at.y)
+	storage.storage_ui.prepare_ui()
+	storage.show_to(usr)
+
+/*/client/MouseMove(object,location,control,params)
+	if(mob)
+		for(var/obj/item/weapon/storage/stor in mob.s_active)
+			var/datum/storage_ui/default/def = stor.storage_ui
+			var/datum/client_storage_ui_persist/csup = def.csu_persist[src]
+			if(csup)
+				csup.try_drag(params)
+	..()*/
+
+/client/MouseDrag(src_object,over_object,src_location,over_location,src_control,over_control,params)
+	if(mob)
+		for(var/obj/item/weapon/storage/stor in mob.s_active)
+			var/datum/storage_ui/default/def = stor.storage_ui
+			var/datum/client_storage_ui_persist/csup = def.csu_persist[src]
+			if(csup)
+				csup.try_drag(params)
+	..()
+
+/client/MouseUp(object,location,control,params)
+	if(mob)
+		for(var/obj/item/weapon/storage/stor in mob.s_active)
+			var/datum/storage_ui/default/def = stor.storage_ui
+			var/datum/client_storage_ui_persist/csup = def.csu_persist[src]
+			if(csup && csup.dragging)
+				csup.try_drag(params)
+				csup.dragging = 0
+				stor.storage_ui.prepare_ui()
+				stor.show_to(usr)
+	..()
+
+/obj/screen/storage/dragbar/MouseDown(location,control,params)
+	csu.csup.dragging = 1
+	var/p_list = params2list(params)
+	csu.csup.held_at = screenloc2vec2(p_list["screen-loc"])
+	csu.csup.old_pos = new(csu.csup.tx, csu.csup.ty)
+
+/obj/screen/storage/dragbar/update_screen()
+	screen_loc = "[num2screen(csu.csup.tx + pos/2)],[csu.csup.ty]"
+
+/obj/screen/storage/item_underlay
+	name = "storage"
+	icon = 'icons/mob/screen1_small.dmi'
+	icon_state = "store_c00"
+	var/obj/stored
+	var/xoff = 0
+	var/yoff = 0
+
+/obj/screen/storage/item_underlay/New(var/datum/client_storage_ui/set_csu, var/obj/I, var/typ, var/x_off, var/y_off)
+	csu = set_csu
+	stored = I
+	xoff = x_off
+	yoff = y_off
+	icon_state = "store_[typ]"
+
+/obj/screen/storage/item_underlay/Click()
+	return stored.Click()
+
+/obj/screen/storage/item_underlay/update_screen()
+	var/datum/vec2/stored_at = csu.storage.stored_locations[stored]
+	if(stored_at)
+		screen_loc = "[num2screen(csu.csup.tx + (stored_at.x - 1)/2 + xoff/2)],[num2screen(csu.csup.ty + stored_at.y/2 + yoff/2)]"
 /obj/screen/storage/gridbox/Click()
 	if(!usr.canClick())
 		return 1
@@ -69,8 +162,18 @@
 		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
 			QDEL_NULL(box)
 		csu.grid_boxes.Cut()
+		for(var/obj/screen/storage/dragbar/bar in csu.grab_bar)
+			QDEL_NULL(bar)
+		csu.grab_bar.Cut()
+		for(var/obj/screen/storage/item_underlay/und in csu.item_underlays)
+			QDEL_NULL(und)
+		csu.item_underlays.Cut()
+		QDEL_NULL(csu.close_button)
 		QDEL_NULL(csu)
 	client_uis.Cut()
+	for(var/client/C in csu_persist)
+		QDEL_NULL(csu_persist[C])
+	csu_persist.Cut()
 	. = ..()
 
 /datum/storage_ui/default/on_open(var/mob/user)
@@ -98,6 +201,14 @@
 		if (storage in M.s_active)
 			storage.close(M)
 
+// I was doing this manually far too much.
+// I'd make this a macro if they supported multiline.
+/datum/storage_ui/default/proc/add_item_underlay(var/datum/client_storage_ui/csu, var/obj/O, var/typ, var/xoff, var/yoff)
+	var/obj/screen/storage/item_underlay/next_underlay = new(csu, O, typ, xoff, yoff)
+	csu.item_underlays += next_underlay
+	next_underlay.update_screen()
+	csu.client.screen += next_underlay
+
 /datum/storage_ui/default/show_to(var/mob/user)
 	if(!(storage in user.s_active))
 		for(var/obj/item/I in storage)
@@ -109,20 +220,94 @@
 	if(csu)
 		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
 			user.client.screen -= box
+			QDEL_NULL(box)
 		csu.grid_boxes.Cut()
+
+		for(var/obj/screen/storage/dragbar/bar in csu.grab_bar)
+			user.client.screen -= bar
+			QDEL_NULL(bar)
+		csu.grab_bar.Cut()
+
+		for(var/obj/screen/storage/item_underlay/underlay in csu.item_underlays)
+			user.client.screen -= underlay
+			QDEL_NULL(underlay)
+		csu.item_underlays.Cut()
+
+		user.client.screen -= csu.close_button
+		QDEL_NULL(csu.close_button)
+
 		QDEL_NULL(csu)
 	user.client.screen -= storage.contents
 
-	csu = new(user.client)
+	var/datum/client_storage_ui_persist/csup = csu_persist[user.client]
+	if(!csup)
+		csup = new()
+		csup.storage = storage
+		csu_persist[user.client] = csup
+	csu = new(user.client, csup, storage)
 	client_uis[user.client] = csu
 
-	user.client.screen += storage.contents
-	for(var/x = 1 to storage.storage_slots_w)
-		for(var/y = 1 to storage.storage_slots_h)
-			var/obj/screen/storage/gridbox/box = new(storage, x, y)
-			csu.grid_boxes += box
-			box.screen_loc = "[csu.tx + round((box.store_x - 1)/2)]:[((box.store_x - 1)%2) * 16],[csu.ty + round((box.store_y - 1)/2)]:[((box.store_y - 1)%2) * 16]"
-			user.client.screen += box
+	if(!csup.dragging)
+		user.client.screen += storage.contents
+		for(var/x = 1 to storage.storage_slots_w)
+			for(var/y = 1 to storage.storage_slots_h)
+				var/obj/screen/storage/gridbox/box = new(csu, storage, x, y)
+				csu.grid_boxes += box
+				box.update_screen()
+				user.client.screen += box
+
+	if(storage.storage_slots_w == 1)
+		var/obj/screen/storage/dragbar/bar = new(csu,0,"3")
+		csu.grab_bar += bar
+		bar.update_screen()
+		user.client.screen += bar
+	else
+		var/obj/screen/storage/dragbar/bar = new(csu,0,"0")
+		csu.grab_bar += bar
+		bar.update_screen()
+		user.client.screen += bar
+		bar = new(csu,storage.storage_slots_w - 1,"2")
+		csu.grab_bar += bar
+		bar.update_screen()
+		user.client.screen += bar
+		for(var/x = 1 to storage.storage_slots_w - 2)
+			bar = new(csu,x,"1")
+			csu.grab_bar += bar
+			bar.update_screen()
+			user.client.screen += bar
+
+	if(!csup.dragging)
+		for(var/obj/O in storage.contents)
+			// Start with corners.
+			add_item_underlay(csu, O, "c01", 0            , 0            )
+			add_item_underlay(csu, O, "c11", O.x_class - 1, 0            )
+			add_item_underlay(csu, O, "c00", 0            , O.y_class - 1)
+			add_item_underlay(csu, O, "c10", O.x_class - 1, O.y_class - 1)
+
+			// Borders.
+			// VERTICAL
+			for(var/y = 1 to O.y_class - 1)
+				add_item_underlay(csu, O, "v00", 0            , y - 1)
+				add_item_underlay(csu, O, "v01", 0            , y    )
+				add_item_underlay(csu, O, "v10", O.x_class - 1, y - 1)
+				add_item_underlay(csu, O, "v11", O.x_class - 1, y    )
+			// HORIZONTAL
+			for(var/x = 1 to O.x_class - 1)
+				add_item_underlay(csu, O, "h11", x - 1, 0            )
+				add_item_underlay(csu, O, "h01", x    , 0            )
+				add_item_underlay(csu, O, "h10", x - 1, O.y_class - 1)
+				add_item_underlay(csu, O, "h00", x    , O.y_class - 1)
+
+			// BAWKSES
+			for(var/x = 1 to O.x_class - 1)
+				for(var/y = 1 to O.y_class - 1)
+					add_item_underlay(csu, O, "m10", x - 1, y - 1)
+					add_item_underlay(csu, O, "m00", x    , y - 1)
+					add_item_underlay(csu, O, "m11", x - 1, y    )
+					add_item_underlay(csu, O, "m01", x    , y    )
+
+	csu.close_button.screen_loc = "[num2screen(csu.csup.tx + (storage.storage_slots_w - 1)/2)],[num2screen(csu.csup.ty)]"
+	user.client.screen += csu.close_button
 
 	is_seeing |= user
 	user.s_active |= storage
@@ -135,11 +320,22 @@
 	if(csu)
 		for(var/obj/screen/storage/gridbox/box in csu.grid_boxes)
 			user.client.screen -= box
+			QDEL_NULL(box)
 		csu.grid_boxes.Cut()
+		for(var/obj/screen/storage/dragbar/bar in csu.grab_bar)
+			user.client.screen -= bar
+			QDEL_NULL(bar)
+		csu.grab_bar.Cut()
+		for(var/obj/screen/storage/item_underlay/und in csu.item_underlays)
+			user.client.screen -= und
+			QDEL_NULL(und)
+		csu.item_underlays.Cut()
+		user.client.screen -= csu.close_button
 		QDEL_NULL(csu)
 		client_uis[user.client] = null
+	user.client.screen -= storage.contents
 	if(storage in user.s_active)
-		user.s_active -= src
+		user.s_active -= storage
 
 //Creates the storage UI
 /datum/storage_ui/default/prepare_ui()
@@ -161,16 +357,26 @@
 	return cansee
 
 //This proc draws out UI elements based on their 2D size and position
-/datum/storage_ui/default/proc/neo_orient_objs().
+/datum/storage_ui/default/proc/neo_orient_objs()
 	for(var/client/C in client_uis)
 		var/datum/client_storage_ui/csu = client_uis[C]
-		var/tx = csu.tx
-		var/ty = csu.ty
+		var/tx = csu.csup.tx
+		var/ty = csu.csup.ty
 
 		for(var/obj/O in storage.contents)
 			var/datum/vec2/stored_loc = storage.stored_locations[O]
 			if(istype(stored_loc))
-				var sx = tx + ((stored_loc.x-1)/2)
-				var sy = ty + ((stored_loc.y-1)/2)
-				O.screen_loc = "[round(sx)]:[round(sx*32)%32],[round(sy)]:[round(sy*32)%32]"
+				var sx = tx
+				var sy = ty
+
+				sx += (stored_loc.x - 1)/2
+				sy += (stored_loc.y) / 2
+
+				sx -= 0.5
+				sy -= 0.5
+
+				sx += O.x_class / 4
+				sy += O.y_class / 4
+
+				O.screen_loc = "[num2screen(sx)],[num2screen(sy)]"
 				O.hud_layerise()

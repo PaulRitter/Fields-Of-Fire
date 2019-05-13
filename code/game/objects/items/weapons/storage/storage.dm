@@ -146,10 +146,6 @@
 
 	if(src.loc == W)
 		return 0 //Means the item is already in the storage item
-	if(storage_slots_w != null && contents.len >= storage_slots_w)
-		if(!stop_messages)
-			to_chat(user, "<span class='notice'>\The [src] is full, make some space.</span>")
-		return 0 //Storage item is full
 
 	if(W.anchored)
 		return 0
@@ -186,6 +182,9 @@
 			return 0
 		store_x = new_loc.x
 		store_y = new_loc.y
+
+	if(store_x < 1 || store_y < 1 || store_x - 1 + W.x_class > storage_slots_w || store_y - 1 + W.y_class > storage_slots_h)
+		return 0
 
 	if(get_from_point(store_x, store_y, W.x_class, W.y_class)) // Obstructed.
 		return 0
@@ -396,6 +395,15 @@
 				for(var/i in 1 to (isnull(data)? 1 : data))
 					new item_path(src)
 		update_icon()
+
+	for(var/obj/O in contents)
+		var/datum/vec2/stored_at = stored_locations[O]
+		if(!stored_at)
+			stored_at = find_space(O)
+			// If you can't fit it, just... drop where you are.
+			if(!stored_at)
+				O.loc = get_turf(src)
+			stored_locations[O] = stored_at
 
 /obj/item/weapon/storage/emp_act(severity)
 	if(!istype(src.loc, /mob/living))
