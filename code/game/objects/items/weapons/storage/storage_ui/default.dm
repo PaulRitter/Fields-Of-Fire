@@ -37,9 +37,10 @@
 	name = "storage"
 	icon = 'icons/mob/screen1_small.dmi'
 	icon_state = "grid"
-	layer = HUD_BASE_LAYER
+	layer = HUD_BASE_LAYER - 0.1
 	var/store_x = -1
 	var/store_y = -1
+	var/obj/screen/border_overlay
 
 /obj/screen/storage/gridbox/New(var/datum/client_storage_ui/set_csu, var/obj/item/weapon/storage/storage, var/x, var/y)
 	..()
@@ -49,13 +50,81 @@
 	store_x = x
 	store_y = y
 
+/obj/screen/storage/gridbox/proc/place_image(var/ic_state, var/d, var/c, var/px, var/py)
+	var/image/I = image('icons/mob/screen1_small.dmi', ic_state, dir = d, pixel_x = px, pixel_y = py)
+	I.color = c
+	return I
+
+/obj/screen/storage/gridbox/MouseEntered()
+	..()
+	var/obj/item/weapon/storage/storage = master
+	if(istype(storage))
+		var/obj/item/I = usr.get_active_hand()
+		if(I)
+			border_overlay = new()
+			border_overlay.icon_state = "blank"
+			border_overlay.mouse_opacity = 0
+			border_overlay.screen_loc = screen_loc
+
+			// Draw the red overlay box
+			var/c = "#FF0000"
+			if(storage.can_be_inserted(I, usr, store_x, store_y, 1))
+				c = "#00FF00"
+
+			// Corners
+			border_overlay.overlays += place_image("place_c", NORTH, c, 0                   , 0                   )
+			border_overlay.overlays += place_image("place_c", WEST , c, 16 * (I.x_class - 1), 0                   )
+			border_overlay.overlays += place_image("place_c", SOUTH, c, 0                   , 16 * (I.y_class - 1))
+			border_overlay.overlays += place_image("place_c", EAST , c, 16 * (I.x_class - 1), 16 * (I.y_class - 1))
+
+			// Vertical Borders
+			for(var/y = 1 to I.y_class - 1)
+				border_overlay.overlays += place_image("place_v", WEST, c, 0                   , 16 * (y - 0.5))
+				border_overlay.overlays += place_image("place_v", EAST, c, 16 * (I.x_class - 1), 16 * (y - 0.5))
+
+			// Horizontal
+			for(var/x = 1 to I.x_class - 1)
+				border_overlay.overlays += place_image("place_h", SOUTH, c, 16 * (x - 0.5), 0                   )
+				border_overlay.overlays += place_image("place_h", NORTH, c, 16 * (x - 0.5), 16 * (I.y_class - 1))
+
+			var/image/I_img = image(I)
+			I_img.pixel_x = (-16) + I.x_class * 8
+			I_img.pixel_y = (-16) + I.y_class * 8
+			I_img.alpha = 127
+			border_overlay.overlays += I_img
+
+			usr.client.screen.Add(border_overlay)
+
+
+/obj/screen/storage/gridbox/MouseExited()
+	..()
+	if(border_overlay)
+		usr.client.screen -= border_overlay
+		border_overlay.overlays.Cut()
+		qdel(border_overlay)
+
 /obj/screen/storage/gridbox/update_screen()
 	screen_loc = "[num2screen(csu.csup.tx + (store_x - 1)/2)],[num2screen(csu.csup.ty + store_y/2)]"
+
+/obj/screen/storage/gridbox/Click()
+	if(!usr.canClick())
+		return 1
+	if(usr.stat || usr.paralysis || usr.stunned || usr.weakened)
+		return 1
+	if (istype(usr.loc,/obj/mecha)) // stops inventory actions in a mech
+		return 1
+	var/obj/item/weapon/storage/storage = master
+	if(istype(storage))
+		var/obj/item/I = usr.get_active_hand()
+		if(I)
+			if(storage.can_be_inserted(I, usr, store_x, store_y))
+				storage.handle_item_insertion(I, store_x, store_y)
+	return 1
 
 /obj/screen/storage/dragbar
 	name = "storage"
 	icon = 'icons/mob/screen1_small.dmi'
-	icon_state = "grab0"
+	icon_state = "grab"
 	layer = HUD_BASE_LAYER
 	var/pos = 0
 
@@ -64,26 +133,19 @@
 	loc = null
 	csu = set_csu
 	pos = ind
-	icon_state = "grab[typ]"
+	icon_state = "grab"
+	dir = typ
 
 /datum/client_storage_ui_persist/proc/try_drag(params)
 	if(!dragging)
 		return 0
 	var/p_list = params2list(params)
-	var/datum/vec2/new_held = screenloc2vec2(p_list["screen-loc"])
-	tx = old_pos.x + (new_held.x - held_at.x)
-	ty = old_pos.y + (new_held.y - held_at.y)
+	if(p_list["screen-loc"])
+		var/datum/vec2/new_held = screenloc2vec2(p_list["screen-loc"])
+		tx = Clamp(old_pos.x + (new_held.x - held_at.x), 1.5, 15.5 - (storage.storage_slots_w/2))
+		ty = Clamp(old_pos.y + (new_held.y - held_at.y), 1.5, 14 - (storage.storage_slots_h/2))
 	storage.storage_ui.prepare_ui()
 	storage.show_to(usr)
-
-/*/client/MouseMove(object,location,control,params)
-	if(mob)
-		for(var/obj/item/weapon/storage/stor in mob.s_active)
-			var/datum/storage_ui/default/def = stor.storage_ui
-			var/datum/client_storage_ui_persist/csup = def.csu_persist[src]
-			if(csup)
-				csup.try_drag(params)
-	..()*/
 
 /client/MouseDrag(src_object,over_object,src_location,over_location,src_control,over_control,params)
 	if(mob)
@@ -113,7 +175,7 @@
 	csu.csup.old_pos = new(csu.csup.tx, csu.csup.ty)
 
 /obj/screen/storage/dragbar/update_screen()
-	screen_loc = "[num2screen(csu.csup.tx + pos/2)],[csu.csup.ty]"
+	screen_loc = "[num2screen(csu.csup.tx + pos/2)],[num2screen(csu.csup.ty)]"
 
 /obj/screen/storage/item_underlay
 	name = "storage"
@@ -137,20 +199,6 @@
 	var/datum/vec2/stored_at = csu.storage.stored_locations[stored]
 	if(stored_at)
 		screen_loc = "[num2screen(csu.csup.tx + (stored_at.x - 1)/2 + xoff/2)],[num2screen(csu.csup.ty + stored_at.y/2 + yoff/2)]"
-/obj/screen/storage/gridbox/Click()
-	if(!usr.canClick())
-		return 1
-	if(usr.stat || usr.paralysis || usr.stunned || usr.weakened)
-		return 1
-	if (istype(usr.loc,/obj/mecha)) // stops inventory actions in a mech
-		return 1
-	var/obj/item/weapon/storage/storage = master
-	if(istype(storage))
-		var/obj/item/I = usr.get_active_hand()
-		if(I)
-			if(storage.can_be_inserted(I, usr, store_x, store_y))
-				storage.handle_item_insertion(I, store_x, store_y)
-	return 1
 
 /datum/storage_ui/default/New(var/storage)
 	..()
@@ -203,8 +251,9 @@
 
 // I was doing this manually far too much.
 // I'd make this a macro if they supported multiline.
-/datum/storage_ui/default/proc/add_item_underlay(var/datum/client_storage_ui/csu, var/obj/O, var/typ, var/xoff, var/yoff)
+/datum/storage_ui/default/proc/add_item_underlay(var/datum/client_storage_ui/csu, var/obj/O, var/typ, var/d, var/xoff, var/yoff)
 	var/obj/screen/storage/item_underlay/next_underlay = new(csu, O, typ, xoff, yoff)
+	next_underlay.dir = d
 	csu.item_underlays += next_underlay
 	next_underlay.update_screen()
 	csu.client.screen += next_underlay
@@ -247,64 +296,57 @@
 	csu = new(user.client, csup, storage)
 	client_uis[user.client] = csu
 
-	if(!csup.dragging)
-		user.client.screen += storage.contents
-		for(var/x = 1 to storage.storage_slots_w)
-			for(var/y = 1 to storage.storage_slots_h)
-				var/obj/screen/storage/gridbox/box = new(csu, storage, x, y)
-				csu.grid_boxes += box
-				box.update_screen()
-				user.client.screen += box
+	neo_orient_objs()
+
+	user.client.screen += storage.contents
+	for(var/x = 1 to storage.storage_slots_w)
+		for(var/y = 1 to storage.storage_slots_h)
+			var/obj/screen/storage/gridbox/box = new(csu, storage, x, y)
+			csu.grid_boxes += box
+			box.update_screen()
+			user.client.screen += box
 
 	if(storage.storage_slots_w == 1)
-		var/obj/screen/storage/dragbar/bar = new(csu,0,"3")
+		var/obj/screen/storage/dragbar/bar = new(csu,0,WEST)
 		csu.grab_bar += bar
 		bar.update_screen()
 		user.client.screen += bar
 	else
-		var/obj/screen/storage/dragbar/bar = new(csu,0,"0")
+		var/obj/screen/storage/dragbar/bar = new(csu,0,SOUTH)
 		csu.grab_bar += bar
 		bar.update_screen()
 		user.client.screen += bar
-		bar = new(csu,storage.storage_slots_w - 1,"2")
+		bar = new(csu,storage.storage_slots_w - 1,EAST)
 		csu.grab_bar += bar
 		bar.update_screen()
 		user.client.screen += bar
 		for(var/x = 1 to storage.storage_slots_w - 2)
-			bar = new(csu,x,"1")
+			bar = new(csu,x,NORTH)
 			csu.grab_bar += bar
 			bar.update_screen()
 			user.client.screen += bar
 
-	if(!csup.dragging)
-		for(var/obj/O in storage.contents)
-			// Start with corners.
-			add_item_underlay(csu, O, "c01", 0            , 0            )
-			add_item_underlay(csu, O, "c11", O.x_class - 1, 0            )
-			add_item_underlay(csu, O, "c00", 0            , O.y_class - 1)
-			add_item_underlay(csu, O, "c10", O.x_class - 1, O.y_class - 1)
+	for(var/obj/O in storage.contents)
+		// Start with corners.
+		add_item_underlay(csu, O, "c", NORTH, 0            , 0            )
+		add_item_underlay(csu, O, "c", WEST , O.x_class - 1, 0            )
+		add_item_underlay(csu, O, "c", SOUTH, 0            , O.y_class - 1)
+		add_item_underlay(csu, O, "c", EAST , O.x_class - 1, O.y_class - 1)
 
-			// Borders.
-			// VERTICAL
+		// Borders.
+		// VERTICAL
+		for(var/y = 1 to O.y_class - 1)
+			add_item_underlay(csu, O, "v", WEST, 0            , y - 0.5)
+			add_item_underlay(csu, O, "v", EAST, O.x_class - 1, y - 0.5)
+		// HORIZONTAL
+		for(var/x = 1 to O.x_class - 1)
+			add_item_underlay(csu, O, "h", SOUTH, x - 0.5, 0            )
+			add_item_underlay(csu, O, "h", NORTH, x - 0.5, O.y_class - 1)
+
+		// BAWKSES
+		for(var/x = 1 to O.x_class - 1)
 			for(var/y = 1 to O.y_class - 1)
-				add_item_underlay(csu, O, "v00", 0            , y - 1)
-				add_item_underlay(csu, O, "v01", 0            , y    )
-				add_item_underlay(csu, O, "v10", O.x_class - 1, y - 1)
-				add_item_underlay(csu, O, "v11", O.x_class - 1, y    )
-			// HORIZONTAL
-			for(var/x = 1 to O.x_class - 1)
-				add_item_underlay(csu, O, "h11", x - 1, 0            )
-				add_item_underlay(csu, O, "h01", x    , 0            )
-				add_item_underlay(csu, O, "h10", x - 1, O.y_class - 1)
-				add_item_underlay(csu, O, "h00", x    , O.y_class - 1)
-
-			// BAWKSES
-			for(var/x = 1 to O.x_class - 1)
-				for(var/y = 1 to O.y_class - 1)
-					add_item_underlay(csu, O, "m10", x - 1, y - 1)
-					add_item_underlay(csu, O, "m00", x    , y - 1)
-					add_item_underlay(csu, O, "m11", x - 1, y    )
-					add_item_underlay(csu, O, "m01", x    , y    )
+				add_item_underlay(csu, O, "m", 0, x - 0.5, y - 0.5)
 
 	csu.close_button.screen_loc = "[num2screen(csu.csup.tx + (storage.storage_slots_w - 1)/2)],[num2screen(csu.csup.ty)]"
 	user.client.screen += csu.close_button
@@ -331,8 +373,8 @@
 			QDEL_NULL(und)
 		csu.item_underlays.Cut()
 		user.client.screen -= csu.close_button
+		client_uis.Remove(csu)
 		QDEL_NULL(csu)
-		client_uis[user.client] = null
 	user.client.screen -= storage.contents
 	if(storage in user.s_active)
 		user.s_active -= storage
@@ -360,23 +402,24 @@
 /datum/storage_ui/default/proc/neo_orient_objs()
 	for(var/client/C in client_uis)
 		var/datum/client_storage_ui/csu = client_uis[C]
-		var/tx = csu.csup.tx
-		var/ty = csu.csup.ty
+		if(csu)
+			var/tx = csu.csup.tx
+			var/ty = csu.csup.ty
 
-		for(var/obj/O in storage.contents)
-			var/datum/vec2/stored_loc = storage.stored_locations[O]
-			if(istype(stored_loc))
-				var sx = tx
-				var sy = ty
+			for(var/obj/O in storage.contents)
+				var/datum/vec2/stored_loc = storage.stored_locations[O]
+				if(istype(stored_loc))
+					var sx = tx
+					var sy = ty
 
-				sx += (stored_loc.x - 1)/2
-				sy += (stored_loc.y) / 2
+					sx += (stored_loc.x - 1)/2
+					sy += (stored_loc.y) / 2
 
-				sx -= 0.5
-				sy -= 0.5
+					sx -= 0.5
+					sy -= 0.5
 
-				sx += O.x_class / 4
-				sy += O.y_class / 4
+					sx += O.x_class / 4
+					sy += O.y_class / 4
 
-				O.screen_loc = "[num2screen(sx)],[num2screen(sy)]"
-				O.hud_layerise()
+					O.screen_loc = "[num2screen(sx)],[num2screen(sy)]"
+					O.hud_layerise()
