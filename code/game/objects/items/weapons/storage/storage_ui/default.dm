@@ -143,7 +143,7 @@
 	if(p_list["screen-loc"])
 		var/datum/vec2/new_held = screenloc2vec2(p_list["screen-loc"])
 		tx = Clamp(old_pos.x + (new_held.x - held_at.x), 1.5, 15.5 - (storage.storage_slots_w/2))
-		ty = Clamp(old_pos.y + (new_held.y - held_at.y), 1.5, 14 - (storage.storage_slots_h/2))
+		ty = Clamp(old_pos.y + (new_held.y - held_at.y), 1.5, 15 - (storage.storage_slots_h/2))
 	storage.storage_ui.prepare_ui()
 	storage.show_to(usr)
 

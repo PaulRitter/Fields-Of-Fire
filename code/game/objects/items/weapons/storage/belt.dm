@@ -223,7 +223,7 @@
 
 /obj/item/weapon/storage/belt/trenchmed/New()
 	..()
+	new /obj/item/weapon/storage/pill_bottle/iron(src)
 	new /obj/item/stack/medical/bruise_pack/trench(src)
 	new /obj/item/stack/medical/splint/ghetto/three(src)
 	new /obj/item/weapon/reagent_containers/syringe/steroid(src)
-	new /obj/item/weapon/storage/pill_bottle/iron(src)

@@ -131,8 +131,8 @@
 	return 0
 
 /obj/item/weapon/storage/proc/find_space(var/obj/item/W)
-	for(var/y = 1 to storage_slots_h)
-		for(var/x = 1 to storage_slots_w)
+	for(var/y = 1 to storage_slots_h - (W.y_class - 1))
+		for(var/x = 1 to storage_slots_w - (W.x_class - 1))
 			if(!get_from_point(x,y,W.x_class,W.y_class))
 				return new/datum/vec2(x,y)
 
@@ -403,6 +403,7 @@
 			// If you can't fit it, just... drop where you are.
 			if(!stored_at)
 				O.loc = get_turf(src)
+				log_debug("<span class='warning'>[type] spawned with item that does not fit [O]</span>")
 			stored_locations[O] = stored_at
 
 /obj/item/weapon/storage/emp_act(severity)
