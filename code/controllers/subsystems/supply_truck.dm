@@ -4,7 +4,7 @@ relevant files:
 contains all supplypacks
 - /code/datums/command_orders/
 contains all command orders
-- /code/game/objects/structures/supply_truck.dm TODO
+- /code/game/objects/structures/supply_truck.dm
 contains supply truck
 - code/game/machinery/computer/supply.dm TODO
 contains supply radio
@@ -17,6 +17,9 @@ Possible TODO:
 - supply radio ((needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
 */
+
+//set by a landmark with the name "supply_truck", cannot be multiple
+var/supply_truck_pos
 
 /*
 SUPPLY TRUCK SUBSYSTEM
@@ -47,6 +50,7 @@ SUBSYSTEM_DEF(supply_truck)
 	var/moving = 0 // 0 = shuttle not moving; 1 = shuttle is moving
 	var/eta_timeofday //eta used by the ticker
 	var/eta //eta to used in uis
+	var/obj/structure/supply_truck/truck //to keep track of our spawned truck
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)
@@ -71,7 +75,12 @@ SUBSYSTEM_DEF(supply_truck)
 //receives truck_contents and handles selling to command
 /datum/controller/subsystem/supply_truck/proc/arrive()
 	if(!at_base) //not at station
-		//spawn truck with truck_contents TODO
+		if(!supply_truck_pos)
+			message_admins("No Truck pos set, some smoothbrain mapper fucked up")
+			return
+		truck = new (supply_truck_pos)
+		truck.contents = truck_contents
+		truck_contents.len = 0
 		allSay("Truck arrived at base.")
 		at_base = 1
 	else //at station
@@ -85,7 +94,13 @@ SUBSYSTEM_DEF(supply_truck)
 //basically sets truck_contents and handles buying from command
 /datum/controller/subsystem/supply_truck/proc/depart()
 	if(at_base)//at station
-		//add truck contents to truck_contents TODO
+		if(!truck)
+			//this could also trigger on truck destruction, but having this feedback only when using the radio adds a bit of immersion
+			allSay("We received message your truck was destroyed. We have a new one standing by at command, watch your assets!")
+			at_base = 0
+			return 0
+		truck_contents = truck.contents
+		truck.forceMove(null)
 		allSay("Truck is sent. Arrival at Command in T-2 Minutes.")
 	else
 		//buys all of shopping list

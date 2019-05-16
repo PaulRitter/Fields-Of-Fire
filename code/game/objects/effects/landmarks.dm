@@ -62,6 +62,10 @@
 			endgame_exits += loc
 			delete_me = 1
 			return
+		if("supply_truck")
+			supply_truck_pos = loc
+			delete_me = 1
+			return
 
 	landmarks_list += src
 	return 1
