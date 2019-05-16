@@ -1,6 +1,6 @@
-var/global/current_centcomm_order_id=124901
+var/global/current_command_order_id=124901
 
-/datum/centcomm_order
+/datum/command_order
 	var/id = 0 // Some bullshit ID we use for fluff.
 	var/name = "Command" // Name of the ordering entity. Fluff.
 
@@ -15,12 +15,12 @@ var/global/current_centcomm_order_id=124901
 
 	var/listed = 0 //if the order is to be listed on the cargo radio
 
-/datum/centcomm_order/New()
+/datum/command_order/New()
 	..()
-	id = current_centcomm_order_id++
+	id = current_command_order_id++
 
 //tries to sell obj; 0 = fail; 1 = success, obj got removed
-/datum/centcomm_order/proc/trySellObj(var/obj/O, var/in_crate)
+/datum/command_order/proc/trySellObj(var/obj/O, var/in_crate)
 	if(must_be_in_crate && !in_crate)
 		return 0
 	if(!O)
@@ -40,7 +40,7 @@ var/global/current_centcomm_order_id=124901
 	return 0
 
 //if the order is fulfilled, returns what they get paid
-/datum/centcomm_order/proc/CheckFulfilled()
+/datum/command_order/proc/CheckFulfilled()
 	for(var/typepath in requested)
 		if(!(typepath in fulfilled) || fulfilled[typepath] < requested[typepath])
 			return 0
@@ -49,7 +49,7 @@ var/global/current_centcomm_order_id=124901
 
 //UI FLUFF
 //creates a requests manifest
-/datum/centcomm_order/proc/getRequestsByName(var/html_format = 0)
+/datum/command_order/proc/getRequestsByName(var/html_format = 0)
 	var/manifest = ""
 	if(html_format)
 		manifest = "<ul>"
@@ -66,7 +66,7 @@ var/global/current_centcomm_order_id=124901
 	return manifest
 
 //creates a fulfilled manifest
-/datum/centcomm_order/proc/getFulfilledByName(var/html_format = 0)
+/datum/command_order/proc/getFulfilledByName(var/html_format = 0)
 	var/manifest = ""
 	if(html_format)
 		manifest = "<ul>"
@@ -82,16 +82,21 @@ var/global/current_centcomm_order_id=124901
 		manifest += "</ul>"
 	return manifest
 
-/datum/centcomm_order/proc/onFulfilled()
+/datum/command_order/proc/onFulfilled()
 	return
 
-// These run *last*.
-/datum/centcomm_order/per_unit
+// These run last to not steal items from other orders
+/datum/command_order/per_unit
 	recurring=1
 	var/list/unit_prices=list()
 
+/datum/command_order/per_unit/New()
+	..()
+	for(var/i in requested)
+		requested[i] = INFINITY
+
 // Same as normal, but will take every last bit of what you provided.
-/datum/centcomm_order/per_unit/trySellObj(var/obj/O, var/in_crate)
+/datum/command_order/per_unit/trySellObj(var/obj/O, var/in_crate)
 	if(must_be_in_crate && !in_crate)
 		return 0
 	if(!O)
@@ -103,7 +108,7 @@ var/global/current_centcomm_order_id=124901
 		qdel(O)
 		return 1
 
-/datum/centcomm_order/per_unit/CheckFulfilled()
+/datum/command_order/per_unit/CheckFulfilled()
 	var/toPay=0
 	for(var/typepath in fulfilled)
 		var/worth_per_unit = unit_prices[typepath]
@@ -117,19 +122,20 @@ var/global/current_centcomm_order_id=124901
 	return toPay
 
 //example plasma order
-/datum/centcomm_order/per_unit/plasma
+/datum/command_order/per_unit/plasma
 	recurring = 1
 	requested = list(
-		/obj/item/stack/sheet/mineral/plasma = INFINITY
+		/obj/item/stack/sheet/mineral/plasma
 	)
 	unit_prices=list(
 		/obj/item/stack/sheet/mineral/plasma = 0.5 // 1 credit per two plasma sheets.
 	)
 
-/datum/centcomm_order/per_unit/manifest
+//example manifest order
+/datum/command_order/per_unit/manifest
 	recurring = 1
 	requested = list(
-		/obj/item/weapon/paper/manifest = INFINITY
+		/obj/item/weapon/paper/manifest
 	)
 	unit_prices=list(
 		/obj/item/weapon/paper/manifest = 2

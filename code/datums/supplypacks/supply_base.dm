@@ -1,17 +1,16 @@
-var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality","Engineering","Medical","Science","Hydroponics","Vending Machine packs")
+var/list/all_supply_groups = list("Supplies","Clothing","Engineering","Medical")
 
 /datum/supply_pack
 	var/name = null
-	var/list/contains = list()
+	var/list/contains = list() //type = amount
 	var/manifest = ""
-	var/amount = null
 	var/cost = null
-	var/containertype = null
-	var/containername = null
-	var/access = null // See code/game/jobs/access.dm
-	var/one_access = null // See above
-	var/hidden = 0 //Emaggable
-	var/contraband = 0 //Hackable via tools
+	var/containertype = /obj/structure/closet/basic
+	var/containername = "Crate"
+	var/list/req_access = null // See code/game/jobs/access.dm
+	var/list/req_one_access = null // See above
+	var/hidden = 0 //1 = only shows up when emagged (is this needed?)
+	var/contraband = 0 //1 = only shows up when hacked (is this needed?)
 	var/group = "Supplies"
 
 /datum/supply_pack/New()
@@ -20,7 +19,7 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 		if(!path)
 			continue
 		var/atom/movable/AM = new path()
-		manifest += "<li>[AM.name]</li>"
+		manifest += "<li>[AM.name] ([contains[path]])</li>"
 		AM.forceMove(null)	//just to make sure they're deleted by the garbage collector
 	manifest += "</ul>"
 
