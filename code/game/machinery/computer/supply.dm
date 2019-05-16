@@ -1,91 +1,11 @@
 /* Contents:
- - supplycomp (This one approves orders)
+ - supplyradio (This one approves orders)
  - ordercomp (This is the public-facing one)
 For the shuttle controller, see supplyshuttle.dm
 For cargo crates, see supplypacks.dm
 For vending packs, see vending_packs.dm*/
 
-// returns an associate list of information needed for cargo consoles.  returns 0 if ID or account is missing
-
-#define ACCOUNT_DB_OFFLINE (!linked_db.activated || linked_db.stat & (BROKEN|NOPOWER))
-#define MENTION_DB_OFFLINE to_chat(user, "<span class='warning'>Account database connection lost. Please retry.</span>")
-#define USE_ACCOUNT_ON_ID acc_info["account"] = user.get_worn_id_account(0, user)
-#define USE_CARGO_ACCOUNT acc_info["account"] = department_accounts["Cargo"]
-#define REQUISITION SSsupply_shuttle.requisition
-
-/proc/get_account_info(mob/user, var/obj/machinery/account_database/linked_db)
-	var/list/acc_info = new
-	var/obj/item/weapon/card/id/usr_id = user.get_id_card()
-	acc_info["authorized_name"] = ""
-	if(ishuman(user))
-		if(usr_id == null)
-			to_chat(user, "<span class='warning'>Please wear an ID for authentication.</span>")
-			return 0
-		if(ACCOUNT_DB_OFFLINE)
-			MENTION_DB_OFFLINE
-			return
-
-		var/datum/money_account/bank_account
-		if(REQUISITION)
-			bank_account = department_accounts["Cargo"]
-			acc_info["check"] = FALSE
-		else
-			// Humans, or really physical people at the terminal, can present a debit card. Let's find one or just find the same ID.
-			var/obj/item/weapon/card/debit/debit_card = user.get_card()
-			var/using_debit = FALSE
-			var/account_number = null
-			if(istype(debit_card))
-				account_number = debit_card.associated_account_number
-				acc_info["authorized_name"] = debit_card.authorized_name
-				using_debit = TRUE
-			else
-				account_number = usr_id.associated_account_number
-			bank_account = linked_db.get_account(account_number)
-			if(!bank_account)
-				to_chat(user, "<span class='warning'>A valid bank account does not exist for \the [using_debit ? "[bicon(debit_card)] [debit_card]" : "[bicon(usr_id)] [usr_id]"]. Please try a different card.</span>")
-				return
-			acc_info["card"] = using_debit ? debit_card : usr_id
-			acc_info["check"] = TRUE
-		acc_info["idname"] = usr_id.registered_name
-		acc_info["idrank"] = usr_id.GetJobName()
-		acc_info["account"] = bank_account
-	else if(isAdminGhost(user))
-		acc_info["idname"] = "Commander Green"
-		acc_info["idrank"] = "Central Commander"
-		acc_info["check"] = FALSE
-		if(REQUISITION)
-			USE_CARGO_ACCOUNT
-		else
-			USE_ACCOUNT_ON_ID
-	else if(isAI(user))
-		acc_info["idname"] = user.real_name
-		acc_info["idrank"] = "AI"
-		acc_info["check"] = FALSE
-		if(ACCOUNT_DB_OFFLINE)
-			MENTION_DB_OFFLINE
-			return
-		if(REQUISITION)
-			USE_CARGO_ACCOUNT
-		else
-			USE_ACCOUNT_ON_ID
-	else if(issilicon(user))
-		acc_info["idname"] = user.real_name
-		acc_info["idrank"] = "Cyborg"
-		acc_info["check"] = FALSE
-		if(ACCOUNT_DB_OFFLINE)
-			MENTION_DB_OFFLINE
-			return
-		if(REQUISITION)
-			USE_CARGO_ACCOUNT
-		else
-			USE_ACCOUNT_ON_ID
-
-	return acc_info
-
-#undef ACCOUNT_DB_OFFLINE
-#undef MENTION_DB_OFFLINE
-#undef USE_ACCOUNT_ON_ID
-
+//request form to spawn
 /obj/item/weapon/paper/request_form/New(var/loc, var/list/account_information, var/datum/supply_packs/pack, var/number_of_crates, var/reason = "No reason provided.")
 	. = ..(loc)
 	name = "[pack.name] Requisition Form - [account_information["idname"]], [account_information["idrank"]]"
@@ -106,123 +26,62 @@ For vending packs, see vending_packs.dm*/
 		STAMP BELOW TO APPROVE THIS REQUISITION:<br>"}
 	update_icon()
 
-#define SCR_MAIN 1
-#define SCR_CENTCOM 2
-
-/obj/machinery/computer/supplycomp
-	name = "Supply shuttle console"
+/obj/machinery/computer/supplyradio
+	name = "Supply radio"
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "supply"
 	req_access = list(access_cargo)
-	circuit = "/obj/item/weapon/circuitboard/supplycomp"
+	circuit = "/obj/item/weapon/circuitboard/supplyradio"
 	var/reqtime = 0 //Cooldown for requisitions - Quarxink
-	var/hacked = 0
-	var/can_order_contraband = 0
-	var/permissions_screen = FALSE
-	var/last_viewed_group = "Supplies" // not sure how to get around hard coding this
-	var/list/current_acct
+	var/hacked = 0 //is this needed?
+	var/can_order_contraband = 0 //is this needed?
+	var/permissions_screen = FALSE // permissions setting screen toggle
+	var/last_viewed_group = all_supply_groups[1]
 	var/screen = SCR_MAIN
 	light_color = LIGHT_COLOR_BROWN
 
-/obj/machinery/computer/supplycomp/New()
+/obj/machinery/computer/supplyradio/New()
 	..()
-	SSsupply_shuttle.supply_consoles.Add(src)
-	reconnect_database()
+	SSsupply_truck.supply_radios.Add(src)
 
-/obj/machinery/computer/supplycomp/initialize()
-	reconnect_database()
-
-/obj/machinery/computer/supplycomp/Destroy()
-	SSsupply_shuttle.supply_consoles.Remove(src)
+/obj/machinery/computer/supplyradio/Destroy()
+    SSsupply_truck.supply_radios.Remove(src)
 	..()
 
-
-/obj/machinery/computer/supplycomp/attack_ai(var/mob/user as mob)
+/obj/machinery/computer/supplyradio/attack_ai(var/mob/user)
 	add_hiddenprint(user)
 	return attack_hand(user)
 
-/obj/machinery/computer/supplycomp/proc/check_restriction(mob/user)
+/obj/machinery/computer/supplyradio/proc/check_restriction(mob/user)
 	if(!user)
 		return FALSE
 	var/result = FALSE
-	switch(SSsupply_shuttle.restriction)
+	switch(SSsupply_truck.restriction)
 		if(0)
 			result = TRUE
 		if(1)
 			result = allowed(user)
 		if(2)
 			result = allowed(user) && iscarbon(user)
-		if(3)
-			result = pin_query(user)
 	if(!result) //This saves a lot of pasted to_chat everywhere else
 		to_chat(user, "<span class='warning'>Your credentials were rejected by the current permissions protocol.</span>")
 	return result
 
-/obj/machinery/computer/supplycomp/proc/pin_query(mob/user)
-	if(!user)
-		return FALSE
-	var/datum/money_account/D = department_accounts["Cargo"]
-	var/attemptedpin = input(user, "Please input the Cargo departmental pin.","Department Head Access Required", null) as num|null
-	if(attemptedpin == D.remote_access_pin)
-		return TRUE
-	return FALSE
-
-/obj/machinery/computer/supplycomp/attack_hand(var/mob/user as mob)
-	/*if(!check_restriction(user)) Let's allow anyone to READ the computer, but you need access to... (1) approve orders (2) send/call shuttle (3) delete requests (4) change permissions
-		to_chat(user, "<span class='warning'>Access Denied.</span>")
-		return*/
-
+/obj/machinery/computer/supplyradio/attack_hand(var/mob/user)
 	if(..())
 		return
 
-	current_acct = get_account_info(user, linked_db)
-
 	user.set_machine(src)
-	post_signal("supply")
-
 	ui_interact(user)
 
-	onclose(user, "computer")
-
-/obj/machinery/computer/supplycomp/attackby(obj/item/I as obj, user as mob)
+/obj/machinery/computer/supplyradio/attackby(var/obj/item/I, var/mob/user)
 	if(istype(I,/obj/item/weapon/card/emag) && !hacked)
 		to_chat(user, "<span class='notice'>Special supplies unlocked.</span>")
 		hacked = 1
 		return
-	if(I.is_screwdriver(user))
-		playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, src, 20))
-			if (stat & BROKEN)
-				to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				getFromPool(/obj/item/weapon/shard, loc)
-				var/obj/item/weapon/circuitboard/supplycomp/M = new /obj/item/weapon/circuitboard/supplycomp( A )
-				for (var/obj/C in src)
-					C.forceMove(loc)
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = 1
-				qdel(src)
-			else
-				to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				var/obj/item/weapon/circuitboard/supplycomp/M = new /obj/item/weapon/circuitboard/supplycomp( A )
-				if(can_order_contraband)
-					M.contraband_enabled = 1
-				for (var/obj/C in src)
-					C.forceMove(loc)
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = 1
-				qdel(src)
-	else
-		return ..()
+	return ..()
 
-/obj/machinery/computer/supplycomp/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open=NANOUI_FOCUS)
-	if(!current_acct)
-		return
+/obj/machinery/computer/supplyradio/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open=NANOUI_FOCUS)
 	// data to send to ui
 	var/data[0]
 	// make assoc list for supply groups because either I'm retarded or nanoui is retarded
@@ -234,10 +93,9 @@ For vending packs, see vending_packs.dm*/
 
 	// list of packs we are displaying
 	var/packs_list[0]
-	for(var/set_name in SSsupply_shuttle.supply_packs)
-		var/datum/supply_packs/pack = SSsupply_shuttle.supply_packs[set_name]
-		// Check if the pack is allowed to be shown
-		if((pack.hidden && src.hacked) || (pack.contraband && src.can_order_contraband) || (!pack.contraband && !pack.hidden))
+	for(var/set_name in SSsupply_truck.supply_packs)
+		var/datum/supply_pack/pack = SSsupply_truck.supply_packs[set_name]
+		if((pack.hidden && src.hacked) || (pack.contraband && src.can_order_contraband) || (!pack.contraband && !pack.hidden)) // Check if the pack is allowed to be shown
 			if(last_viewed_group == pack.group)
 				packs_list.Add(list(list("name" = pack.name, "amount" = pack.amount, "cost" = pack.cost, "command1" = list("doorder" = "[set_name]0"), "command2" = list("doorder" = "[set_name]1"))))
 				// command1 is for a single crate order, command2 is for multi crate order
@@ -245,7 +103,7 @@ For vending packs, see vending_packs.dm*/
 	data["supply_packs"] = packs_list
 
 	var/requests_list[0]
-	for(var/set_name in SSsupply_shuttle.requestlist)
+	for(var/set_name in SSsupply_truck.requestlist)
 		var/datum/supply_order/SO = set_name
 		if(SO)
 			if(!SO.comment)
@@ -254,26 +112,24 @@ For vending packs, see vending_packs.dm*/
 	data["requests"] = requests_list
 
 	var/orders_list[0]
-	for(var/set_name in SSsupply_shuttle.shoppinglist)
+	for(var/set_name in SSsupply_truck.shoppinglist)
 		var/datum/supply_order/SO = set_name
 		if(SO)
 			orders_list.Add(list(list("ordernum" = SO.ordernum, "supply_type" = SO.object.name, "orderedby" = SO.orderedby, "authorized_name" = SO.authorized_name, "comment" = SO.comment)))
 	data["orders"] = orders_list
 
 	var/centcomm_list[0]
-	for(var/datum/centcomm_order/O in SSsupply_shuttle.centcomm_orders)
-		centcomm_list.Add(list(list("id" = O.id, "requested" = O.getRequestsByName(), "fulfilled" = O.getFulfilledByName(), "name" = O.name, "worth" = O.worth, "to" = O.acct_by_string)))
+	for(var/datum/centcomm_order/O in SSsupply_truck.centcomm_orders)
+		centcomm_list.Add(list(list("id" = O.id, "requested" = O.getRequestsByName(), "fulfilled" = O.getFulfilledByName(), "name" = O.name, "worth" = O.worth)))
 	data["centcomm_orders"] = centcomm_list
 
-	data["name_of_source_account"] = current_acct["account"].owner_name
-	data["authorized_name"] = current_acct["authorized_name"]
-	data["money"] = current_acct["account"].fmtBalance()
+	data["money"] = SSsupply_truck.commandMoney
 	data["send"] = list("send" = 1)
-	data["moving"] = SSsupply_shuttle.moving
-	data["at_station"] = SSsupply_shuttle.at_station
+	data["moving"] = SSsupply_truck.moving
+	data["at_station"] = SSsupply_truck.at_base
 	data["show_permissions"] = permissions_screen
-	data["restriction"] = SSsupply_shuttle.restriction
-	data["requisition"] = SSsupply_shuttle.requisition
+	data["restriction"] = SSsupply_truck.restriction
+	data["requisition"] = SSsupply_truck.requisition
 
 	data["screen"] = screen
 
@@ -283,62 +139,37 @@ For vending packs, see vending_packs.dm*/
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/computer/supplycomp/Topic(href, href_list)
+/obj/machinery/computer/supplyradio/Topic(href, href_list)
 	if(..())
 		return 1
 	add_fingerprint(usr)
-	current_acct = get_account_info(usr, linked_db)
-	var/idname
-	var/datum/money_account/account
-	if(!current_acct && !href_list["close"])
-		return
-	else
-		idname = current_acct["idname"]
-		account = current_acct["account"]
+	
 	//Handle access and requisitions
 	if(href_list["permissions"])
 		if(!permissions_screen && pin_query(usr))
 			permissions_screen = TRUE
 		else
 			permissions_screen = FALSE
-		return 1
 	//Calling the shuttle
 	else if(href_list["send"])
-		if(!map.linked_to_centcomm)
-			to_chat(usr, "<span class='warning'>You aren't able to establish contact with central command, so the shuttle won't move.</span>")
-		else if(!SSsupply_shuttle.can_move())
-			to_chat(usr, "<span class='warning'>For safety reasons the automated supply shuttle cannot transport live organisms, classified nuclear weaponry or homing beacons.</span>")
-		else if(!check_restriction(usr))
+		if(!check_restriction(usr))
 			to_chat(usr, "<span class='warning'>Your credentials were rejected by the current permissions protocol.</span>")
-
-		else if(SSsupply_shuttle.at_station)
-			SSsupply_shuttle.moving = -1
-			SSsupply_shuttle.sell()
-			SSsupply_shuttle.send()
 		else
-			SSsupply_shuttle.moving = 1
-			SSsupply_shuttle.buy()
-			SSsupply_shuttle.eta_timeofday = (world.timeofday + SSsupply_shuttle.movetime) % 864000
-			post_signal("supply")
-		return 1
+			SSsupply_truck.depart()
 	else if (href_list["doorder"])
 		if(world.time < reqtime)
 			for(var/mob/V in hearers(src))
 				V.show_message("<b>[src]</b>'s monitor flashes, \"[world.time - reqtime] seconds remaining until another requisition form may be printed.\"")
-			return
+			return 1
 
 		var/pack_name = copytext(href_list["doorder"], 1, lentext(href_list["doorder"]))
 		var/multi = text2num(copytext(href_list["doorder"], -1))
-		if(!isnum(multi))
-			return
+		if(!multi)
+			return 1
 		//Find the correct supply_pack datum
-		var/datum/supply_packs/P = SSsupply_shuttle.supply_packs[pack_name]
+		var/datum/supply_pack/P = SSsupply_truck.supply_packs[pack_name]
 		if(!istype(P))
-			return
-
-		if(current_acct["check"] && charge_flow_verify_security(linked_db, current_acct["card"], usr, account) != CARD_CAPTURE_SUCCESS)
-			to_chat(usr, "<span class='warning'>Security violation when attempting to authenticate with bank account.</span>")
-			return
+			return 1
 
 		var/crates = 1
 		if(multi)
@@ -347,124 +178,84 @@ For vending packs, see vending_packs.dm*/
 
 		// Calculate money tied up in requests
 		var/total_money_req = 0
-		for(var/i = 1; i <= length(SSsupply_shuttle.requestlist); i++)
-			var/datum/supply_order/R = SSsupply_shuttle.requestlist[i]
-			var/datum/money_account/R_acc = R.account
-			if(R_acc.account_number == account.account_number)
-				var/datum/supply_packs/R_pack = R.object
-				total_money_req += R_pack.cost
+		for(var/datum/supply_order/R in SSsupply_truck.requestlist)
+            var/datum/supply_packs/R_pack = R.object
+            total_money_req += R_pack.cost
 		// check they can afford the order
-		if(P.cost * crates + total_money_req > account.money)
-			var/max_crates = round((account.money - total_money_req) / P.cost)
+		if((P.cost * crates + total_money_req) > SSsupply_truck.commandMoney)
+			var/max_crates = round((SSsupply_truck.commandMoney - total_money_req) / P.cost)
 			to_chat(usr, "<span class='warning'>You can only afford [max_crates] crates.</span>")
-			return
+			return 1
 		var/timeout = world.time + 600
 		var/reason = stripped_input(usr,"Reason:","Why do you require this item?","",REASON_LEN)
 		if(world.time > timeout)
-			return
+			return 1
 		if(!reason)
-			return
+			return 1
 
 		new /obj/item/weapon/paper/request_form(loc, current_acct, P, crates, reason)
 		reqtime = (world.time + 5) % 1e5
 		//make our supply_order datum
 		for(var/i = 1; i <= crates; i++)
-			SSsupply_shuttle.ordernum++
+			SSsupply_truck.ordernum++
 			var/datum/supply_order/O = new /datum/supply_order()
-			O.ordernum = SSsupply_shuttle.ordernum
 			O.object = P
 			O.orderedby = idname
-			O.authorized_name = current_acct["authorized_name"]
 			O.account = account
 			O.comment = reason
 
-			SSsupply_shuttle.requestlist += O
+			SSsupply_truck.requestlist += O
 
-			if(!SSsupply_shuttle.restriction) //If set to 0 restriction, auto-approve
-				SSsupply_shuttle.confirm_order(O,usr,SSsupply_shuttle.requestlist.len)
-		return 1
+			if(!SSsupply_truck.restriction) //If set to 0 restriction, auto-approve
+				SSsupply_truck.confirm_order(O,usr,SSsupply_truck.requestlist.len, 1)
 	else if(href_list["confirmorder"])
 		//Find the correct supply_order datum
 		if(!check_restriction(usr))
-			return
+			return 1
 		var/ordernum = text2num(href_list["confirmorder"])
-		var/datum/supply_order/O
-		for(var/i=1, i<=SSsupply_shuttle.requestlist.len, i++)
-			var/datum/supply_order/SO = SSsupply_shuttle.requestlist[i]
-			if(SO.ordernum == ordernum)
-				O = SO
-				SSsupply_shuttle.confirm_order(O,usr,i)
-				O.OnConfirmed(usr)
-				break
-		return 1
+        if(!ordernum)
+            return 1
+		var/datum/supply_order/O = SSsupply_truck.requestlist[ordernum]
+        SSsupply_truck.confirm_order(O,usr,ordernum)
 	else if (href_list["rreq"])
 		if(!check_restriction(usr))
 			return
 		var/ordernum = text2num(href_list["rreq"])
-		for(var/i=1, i<=SSsupply_shuttle.requestlist.len, i++)
-			var/datum/supply_order/SO = SSsupply_shuttle.requestlist[i]
-			if(SO.ordernum == ordernum)
-				SSsupply_shuttle.requestlist.Cut(i,i+1)
-				break
-		return 1
+		if(!ordernum)
+            return 1
+		var/datum/supply_order/O = SSsupply_truck.requestlist[ordernum]
+        SSsupply_truck.requestlist.Cut(ordernum,ordernum+1)
 	else if (href_list["last_viewed_group"])
 		last_viewed_group = href_list["last_viewed_group"]
-		return 1
 	else if (href_list["access_restriction"])
 		if(!check_restriction(usr))
-			return
-		SSsupply_shuttle.restriction = text2num(href_list["access_restriction"])
-		return 1
+			return 1
+		SSsupply_truck.restriction = text2num(href_list["access_restriction"])
 	else if (href_list["requisition_status"])
 		if(!check_restriction(usr))
-			return
-		SSsupply_shuttle.requisition = text2num(href_list["requisition_status"])
-		current_acct = get_account_info(usr, linked_db)
-		return 1
+			return 1
+		SSsupply_truck.requisition = text2num(href_list["requisition_status"])
 	else if (href_list["screen"])
 		if(!check_restriction(usr))
-			return
+			return 1
 		var/result = text2num(href_list["screen"])
 		if(result == SCR_MAIN || result == SCR_CENTCOM)
 			screen = result
-		return 1
 	else if (href_list["close"])
-		current_acct = null
 		if(usr.machine == src)
 			usr.unset_machine()
-		return 1
+	return 1
 
-/obj/machinery/computer/supplycomp/proc/post_signal(var/command)
-
-
-	var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
-
-	if(!frequency)
-		return
-
-	var/datum/signal/status_signal = getFromPool(/datum/signal)
-	status_signal.source = src
-	status_signal.transmission_method = 1
-	status_signal.data["command"] = command
-
-	frequency.post_signal(src, status_signal)
-
+//TODO
 /obj/machinery/computer/ordercomp
 	name = "Supply ordering console"
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "request"
 	circuit = "/obj/item/weapon/circuitboard/ordercomp"
 	var/reqtime = 0 //Cooldown for requisitions - Quarxink
-	var/last_viewed_group = "Supplies" // not sure how to get around hard coding this
-	var/list/current_acct
+	var/last_viewed_group = all_supply_groups[1]
 	light_color = LIGHT_COLOR_BROWN
 
-/obj/machinery/computer/ordercomp/New()
-	. = ..()
-	reconnect_database()
-
-/obj/machinery/computer/ordercomp/initialize()
-	reconnect_database()
 
 /obj/machinery/computer/ordercomp/attack_ai(var/mob/user as mob)
 	add_hiddenprint(user)
@@ -473,16 +264,12 @@ For vending packs, see vending_packs.dm*/
 /obj/machinery/computer/ordercomp/attack_hand(var/mob/user as mob)
 	if(..())
 		return
-	current_acct = get_account_info(user, linked_db)
 
 	user.set_machine(src)
 	ui_interact(user)
-	onclose(user, "computer")
 	return
 
 /obj/machinery/computer/ordercomp/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open=NANOUI_FOCUS)
-	if(!current_acct)
-		return
 	// ui data
 	var/data[0]
 	// make assoc list for supply groups because either I'm retarded or nanoui is retarded
