@@ -278,3 +278,9 @@ var/list/slot_equipment_priority = list( \
 		var/obj/item/I = entry
 		if(I.body_parts_covered & body_parts)
 			. += I
+
+//gets id
+/mob/proc/get_id_card()
+	for(var/obj/item/I in src.get_equipped_items(1))
+		if(istype(I, /obj/item/weapon/card/id))
+			return I

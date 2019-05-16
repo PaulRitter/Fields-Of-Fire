@@ -18,6 +18,8 @@ Possible TODO:
 - ((overlay boxes on truck))
 */
 
+var/station_name = "TODO find where to get this var"
+
 //set by a landmark with the name "supply_truck", cannot be multiple
 var/supply_truck_pos
 
@@ -54,7 +56,6 @@ SUBSYSTEM_DEF(supply_truck)
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)
-	materials_list = new
 	for(var/typepath in subtypesof(/datum/supply_pack))
 		var/datum/supply_pack/P = new typepath
 		supply_packs[P.name] = P
@@ -117,8 +118,8 @@ SUBSYSTEM_DEF(supply_truck)
 
 /datum/controller/subsystem/supply_truck/proc/getOrderPrice()
 	. = 0
-	for(var/datum/supply_order in shoppinglist)
-		. += supply_order.object.cost
+	for(var/datum/supply_order/SO in shoppinglist)
+		. += SO.object.cost
 
 /datum/controller/subsystem/supply_truck/proc/SellObjToOrders(var/atom/A,var/in_crate)
 	// Per-unit orders run last so they don't steal shit.
@@ -180,16 +181,17 @@ SUBSYSTEM_DEF(supply_truck)
 
 		slip.name = "Shipping Manifest for [SO.orderedby]'s Order"
 		slip.info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
-			Order #[SO.ordernum]<br>
 			Destination: [station_name]<br>
 			[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
 			CONTENTS:<br><ul>"}
 		//spawn the stuff, finish generating the manifest while you're at it
-		if(SP.access && istype(A, /obj/structure/closet))
-			A.req_access = SP.req_access
+		if(istype(A, /obj/structure/closet))
+			var/obj/structure/closet/C = A
+			if(SP.req_access)
+				C.req_access = SP.req_access
 
-		if(SP.one_access && istype(A, /obj/structure/closet))
-			A.req_one_access = SP.req_one_access
+			if(SP.req_one_access)
+				C.req_one_access = SP.req_one_access
 
 		for(var/typepath in SP.contains)
 			if(!typepath)
@@ -199,7 +201,7 @@ SUBSYSTEM_DEF(supply_truck)
 				B2:amount = SP.contains[typepath]
 			else
 				for(var/i=1, i<SP.contains[typepath], i++) //one less since we already made one (B2)
-					var/atom/tempB = new typepath(A)
+					new typepath(A)
 			slip.info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
 
 		SP.post_creation(A)
@@ -236,7 +238,7 @@ SUBSYSTEM_DEF(supply_truck)
 	 			MUST BE IN CRATE: [C.must_be_in_crate ? "YES" : "NO"]<br>
 	 			REQUESTED ITEMS:<br>
 	 			[C.getRequestsByName(1)]
-	 			WORTH: [C.worth] credits TO [C.acct_by_string]
+	 			WORTH: [C.worth]
 	 			"}
 
 	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
@@ -249,7 +251,7 @@ SUBSYSTEM_DEF(supply_truck)
 
 /datum/controller/subsystem/supply_truck/proc/allSay(var/message)
 	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
-		S.say(message)
+		S.visible_message("<span class='notice'>[message]</span>")
 
 
 /*
@@ -262,4 +264,4 @@ SUPPLY ORDER
 	var/comment = null
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)
-	object.OnConfirmed(user)
+	object.onApproved(user)

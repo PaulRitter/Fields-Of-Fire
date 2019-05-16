@@ -42,7 +42,7 @@
 			debug_variables(radio_controller)
 			feedback_add_details("admin_verb","DRadio")
 		if("Supply")
-			debug_variables(supply_controller)
+			debug_variables(SSsupply_truck)
 			feedback_add_details("admin_verb","DSupply")
 		if("Shuttles")
 			debug_variables(shuttle_controller)

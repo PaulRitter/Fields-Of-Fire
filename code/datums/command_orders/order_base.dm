@@ -121,16 +121,6 @@ var/global/current_command_order_id=124901
 		onFulfilled()
 	return toPay
 
-//example plasma order
-/datum/command_order/per_unit/plasma
-	recurring = 1
-	requested = list(
-		/obj/item/stack/sheet/mineral/plasma
-	)
-	unit_prices=list(
-		/obj/item/stack/sheet/mineral/plasma = 0.5 // 1 credit per two plasma sheets.
-	)
-
 //example manifest order
 /datum/command_order/per_unit/manifest
 	recurring = 1

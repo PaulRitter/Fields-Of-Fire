@@ -39,14 +39,6 @@ Used In File(s): \code\game\supplyshuttle.dm
 			{{:helper.link('Any', '', {'access_restriction' : 0}, data.restriction ? null : 'selected')}}{{:helper.link('Allowed', '', {'access_restriction' : 1}, data.restriction==1 ? 'selected' : null)}}{{:helper.link('ID Only', '', {'access_restriction' : 2}, data.restriction==2 ? 'selected' : null)}}{{:helper.link('Enter PIN', '', {'access_restriction' : 3}, data.restriction==3 ? 'selected' : null)}}
 		</div>
 	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Requisitions Status:
-		</div>
-		<div class="itemContent">
-			{{:helper.link('Never', '', {'requisition_status' : 0}, data.requisition ? null : 'selected')}}{{:helper.link('Always', '', {'requisition_status' : 1}, data.requisition==1 ? 'selected' : null)}}
-		</div>
-	</div>
 {{else}}
 	<div style="float: left; width: 32%;">
 		<div class="itemLabel" style="margin-bottom: 3px;margin-top: 12px">
@@ -97,7 +89,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 					<br>
 					{{for data.requests}}
 						<div class="line">
-							{{:value.ordernum}} - {{:value.supply_type}} for {{:value.orderedby}}
+							{{:index+1}} - {{:value.supply_type}} for {{:value.orderedby}}
 							{{if value.authorized_name != ""}}
 								<br/>DEBIT AS: {{:value.authorized_name}}
 							{{/if}}
@@ -114,7 +106,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 					<br>
 					{{for data.orders}}
 						<div class="line">
-							#{{:value.ordernum}} - {{:value.supply_type}} for {{:value.orderedby}}
+							#{{:index}} - {{:value.supply_type}} for {{:value.orderedby}}
 							{{if value.authorized_name != ""}}
 								<br/>DEBIT AS: {{:value.authorized_name}}
 							{{/if}}
@@ -136,7 +128,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 				<div class="line" style="overflow-y: auto; overflow-x: hidden; scrollbar-base-color: #336699; scrollbar-arrow-color: #ffffff; height: 220px;">
 					<u><b>Requests</b></u>
 					<br>
-					{{for data.centcomm_orders}}
+					{{for data.command_orders}}
 						<div class="line">
 							#{{:value.id}}<br>
 							Requested:<br>

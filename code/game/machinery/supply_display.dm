@@ -6,20 +6,12 @@
 		message1 = "CARGO"
 		message2 = ""
 
-		var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
-		if (!shuttle)
-			message2 = "Error"
-		else if(shuttle.has_arrive_time())
+		if(SSsupply_truck.moving)
 			message2 = get_supply_shuttle_timer()
 			if(lentext(message2) > CHARS_PER_LINE)
 				message2 = "Error"
-		else if (shuttle.is_launching())
-			if (shuttle.at_station())
-				message2 = "Launch"
-			else
-				message2 = "ETA"
 		else
-			if(shuttle.at_station())
+			if(SSsupply_truck.at_base)
 				message2 = "Docked"
 			else
 				message1 = ""

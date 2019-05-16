@@ -5,7 +5,7 @@ var/list/all_supply_groups = list("Supplies","Clothing","Engineering","Medical")
 	var/list/contains = list() //type = amount
 	var/manifest = ""
 	var/cost = null
-	var/containertype = /obj/structure/closet/basic
+	var/containertype = /obj/structure/closet
 	var/containername = "Crate"
 	var/list/req_access = null // See code/game/jobs/access.dm
 	var/list/req_one_access = null // See above

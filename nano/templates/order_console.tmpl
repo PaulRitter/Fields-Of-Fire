@@ -58,7 +58,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 				<br>
 				{{for data.requests}}
 					<div class="line">
-						{{:value.ordernum}} - {{:value.supply_type}}
+						{{:index}} - {{:value.supply_type}}
 						{{:helper.link('CANCEL', null, value.command1, null)}}
 					</div>
 				{{empty}}
@@ -69,7 +69,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 				<br>
 				{{for data.orders}}
 					<div class="line">
-						#{{:value.ordernum}} - {{:value.supply_type}} for {{:value.orderedby}}
+						#{{:index}} - {{:value.supply_type}} for {{:value.orderedby}}
 					</div>
 				{{empty}}
 					No confirmed orders.

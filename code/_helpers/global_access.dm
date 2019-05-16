@@ -303,10 +303,6 @@
 			return global.captain_announcement;
 		if("cargo_positions")
 			return global.cargo_positions;
-		if("cargo_supply_pack_root")
-			return global.cargo_supply_pack_root;
-		if("cargo_supply_packs")
-			return global.cargo_supply_packs;
 		if("changelog_hash")
 			return global.changelog_hash;
 		if("channel_to_radio_key")
@@ -827,8 +823,6 @@
 			return global.plant_seed_sprites;
 		if("playable_species")
 			return global.playable_species;
-		if("point_source_descriptions")
-			return global.point_source_descriptions;
 		if("points_of_interest")
 			return global.points_of_interest;
 		if("possible_cable_coil_colours")
@@ -1045,12 +1039,8 @@
 			return global.string_part_flags;
 		if("string_slot_flags")
 			return global.string_slot_flags;
-		if("supply_controller")
-			return global.supply_controller;
 		if("supply_drop")
 			return global.supply_drop;
-		if("supply_methods_")
-			return global.supply_methods_;
 		if("supply_positions")
 			return global.supply_positions;
 		if("support_positions")
@@ -1526,10 +1516,6 @@
 			global.captain_announcement=newval;
 		if("cargo_positions")
 			global.cargo_positions=newval;
-		if("cargo_supply_pack_root")
-			global.cargo_supply_pack_root=newval;
-		if("cargo_supply_packs")
-			global.cargo_supply_packs=newval;
 		if("changelog_hash")
 			global.changelog_hash=newval;
 		if("channel_to_radio_key")
@@ -2050,8 +2036,6 @@
 			global.plant_seed_sprites=newval;
 		if("playable_species")
 			global.playable_species=newval;
-		if("point_source_descriptions")
-			global.point_source_descriptions=newval;
 		if("points_of_interest")
 			global.points_of_interest=newval;
 		if("possible_cable_coil_colours")
@@ -2268,12 +2252,8 @@
 			global.string_part_flags=newval;
 		if("string_slot_flags")
 			global.string_slot_flags=newval;
-		if("supply_controller")
-			global.supply_controller=newval;
 		if("supply_drop")
 			global.supply_drop=newval;
-		if("supply_methods_")
-			global.supply_methods_=newval;
 		if("supply_positions")
 			global.supply_positions=newval;
 		if("support_positions")
