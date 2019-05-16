@@ -12,7 +12,7 @@ contains supply radio
 
 /*
 Possible TODO:
-- truck
+- supply radio circuit
 - arrive and depart in general
 - supply radio ((needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
@@ -32,7 +32,7 @@ SUBSYSTEM_DEF(supply_truck)
 
 	//CONFIG VARS
 	var/money_per_crate = 5 //how much command pays per crate
-	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons); 3 = actions require PIN
+	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
 	var/movetime = 2 MINUTES //how long the truck takes
 
 	//SYSTEM VARS
@@ -41,7 +41,7 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/shoppinglist = list() //approved orders that will be bought with the next shipment
 	var/list/requestlist = list() //requested orders that haven't been approved yet
 	var/list/supply_packs = list() //all packs that can be ordered
-	var/list/supply_radio = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
+	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
 	var/commandMoney = 0 //Money currently stored at command
 
@@ -216,12 +216,14 @@ SUBSYSTEM_DEF(supply_truck)
 		contents += A
 	return contents
 
-/datum/controller/subsystem/supply_truck/proc/confirm_order(datum/supply_order/O,mob/user,var/position) //position represents where it falls in the request list
+/datum/controller/subsystem/supply_truck/proc/confirm_order(datum/supply_order/O,mob/user,var/position, var/wasAutoConfirmed) //position represents where it falls in the request list
 	var/datum/supply_pack/P = O.object
 
 	if((commandMoney - getOrderPrice()) >= P.cost)
 		requestlist.Cut(position,position+1)
 		shoppinglist += O
+		if(!wasAutoConfirmed)
+			O.OnConfirmed(user)
 	else
 		to_chat(user, "<span class='warning'>Command does not have enough funds for this request.</span>")
 
@@ -237,7 +239,7 @@ SUBSYSTEM_DEF(supply_truck)
 	 			WORTH: [C.worth] credits TO [C.acct_by_string]
 	 			"}
 
-	for(var/obj/machinery/computer/supplyradio/S in supply_consoles)
+	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
 		var/obj/item/weapon/paper/reqform = new /obj/item/weapon/paper(S.loc)
 		reqform.name = name
 		reqform.info = info
@@ -246,7 +248,7 @@ SUBSYSTEM_DEF(supply_truck)
 	allSay("New buy order by [C.name] available.")
 
 /datum/controller/subsystem/supply_truck/proc/allSay(var/message)
-	for(var/obj/machinery/computer/supplyradio/S in supply_consoles)
+	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
 		S.say(message)
 
 
