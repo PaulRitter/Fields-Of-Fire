@@ -2,52 +2,53 @@ var/global/current_centcomm_order_id=124901
 
 /datum/centcomm_order
 	var/id = 0 // Some bullshit ID we use for fluff.
-	var/name = "CentComm" // Name of the ordering entity. Fluff.
-	var/datum/money_account/acct // account we pay to
-	var/acct_by_string = "unknown"
+	var/name = "Command" // Name of the ordering entity. Fluff.
 
 	// Amount decided upon
 	var/worth = 0
 
-	var/must_be_in_crate = 1
+	var/must_be_in_crate = 0
 	var/recurring = 0
 
-	// /type = amount
 	var/list/requested=list()
 	var/list/fulfilled=list()
+
+	var/listed = 0 //if the order is to be listed on the cargo radio
 
 /datum/centcomm_order/New()
 	..()
 	id = current_centcomm_order_id++
 
-/datum/centcomm_order/proc/CheckShuttleObject(var/obj/O, var/in_crate)
+//tries to sell obj; 0 = fail; 1 = success, obj got removed
+/datum/centcomm_order/proc/trySellObj(var/obj/O, var/in_crate)
 	if(must_be_in_crate && !in_crate)
 		return 0
 	if(!O)
 		return 0
 	if(O.type in requested)
 		var/amount = 1
-		if(istype(O, /obj/item/stack))
+		if(istype(O, /obj/item/stack)) //use stack amount if O is stack
 			var/obj/item/stack/S = O
 			amount = S.amount
-		if(!(O.type in fulfilled))
+		if(!(O.type in fulfilled)) //create entry in fulfilled if noone already exists
 			fulfilled[O.type]=0
-		// Don't claim stuff that other orders may want.
-		if(fulfilled[O.type]==requested[O.type])
+		if(fulfilled[O.type]==requested[O.type]) // if we already have our desired amount
 			return 0
 		fulfilled[O.type]+=amount
 		qdel(O)
 		return 1
+	return 0
 
-/datum/centcomm_order/proc/CheckFulfilled(var/obj/O, var/in_crate)
+//if the order is fulfilled, returns what they get paid
+/datum/centcomm_order/proc/CheckFulfilled()
 	for(var/typepath in requested)
 		if(!(typepath in fulfilled) || fulfilled[typepath] < requested[typepath])
 			return 0
-	return 1
+	onFulfilled()
+	return worth
 
-/datum/centcomm_order/proc/Pay()
-	acct.charge(-worth,null,"Payment for order #[id]",dest_name = name)
-
+//UI FLUFF
+//creates a requests manifest
 /datum/centcomm_order/proc/getRequestsByName(var/html_format = 0)
 	var/manifest = ""
 	if(html_format)
@@ -64,6 +65,7 @@ var/global/current_centcomm_order_id=124901
 		manifest += "</ul>"
 	return manifest
 
+//creates a fulfilled manifest
 /datum/centcomm_order/proc/getFulfilledByName(var/html_format = 0)
 	var/manifest = ""
 	if(html_format)
@@ -80,7 +82,7 @@ var/global/current_centcomm_order_id=124901
 		manifest += "</ul>"
 	return manifest
 
-/datum/centcomm_order/proc/OnPostUnload()
+/datum/centcomm_order/proc/onFulfilled()
 	return
 
 // These run *last*.
@@ -89,7 +91,7 @@ var/global/current_centcomm_order_id=124901
 	var/list/unit_prices=list()
 
 // Same as normal, but will take every last bit of what you provided.
-/datum/centcomm_order/per_unit/CheckShuttleObject(var/obj/O, var/in_crate)
+/datum/centcomm_order/per_unit/trySellObj(var/obj/O, var/in_crate)
 	if(must_be_in_crate && !in_crate)
 		return 0
 	if(!O)
@@ -98,7 +100,6 @@ var/global/current_centcomm_order_id=124901
 		if(!(O.type in fulfilled))
 			fulfilled[O.type]=0
 		fulfilled[O.type]=fulfilled[O.type]+1
-
 		qdel(O)
 		return 1
 
@@ -112,5 +113,24 @@ var/global/current_centcomm_order_id=124901
 			requested[typepath] = max(0,requested[typepath] - fulfilled[typepath])
 		fulfilled[typepath]=0
 	if(toPay)
-		acct.charge(-toPay,null,"Payment for order #[id]",dest_name = name)
-	return
+		onFulfilled()
+	return toPay
+
+//example plasma order
+/datum/centcomm_order/per_unit/plasma
+	recurring = 1
+	requested = list(
+		/obj/item/stack/sheet/mineral/plasma = INFINITY
+	)
+	unit_prices=list(
+		/obj/item/stack/sheet/mineral/plasma = 0.5 // 1 credit per two plasma sheets.
+	)
+
+/datum/centcomm_order/per_unit/manifest
+	recurring = 1
+	requested = list(
+		/obj/item/weapon/paper/manifest = INFINITY
+	)
+	unit_prices=list(
+		/obj/item/weapon/paper/manifest = 2
+	)

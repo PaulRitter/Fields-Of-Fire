@@ -1,6 +1,6 @@
 var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality","Engineering","Medical","Science","Hydroponics","Vending Machine packs")
 
-/datum/supply_packs
+/datum/supply_pack
 	var/name = null
 	var/list/contains = list()
 	var/manifest = ""
@@ -14,7 +14,7 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 	var/contraband = 0 //Hackable via tools
 	var/group = "Supplies"
 
-/datum/supply_packs/New()
+/datum/supply_pack/New()
 	manifest += "<ul>"
 	for(var/path in contains)
 		if(!path)
@@ -25,8 +25,9 @@ var/list/all_supply_groups = list("Supplies","Clothing","Security","Hospitality"
 	manifest += "</ul>"
 
 // Called after a crate containing the items specified by this datum is created
-/datum/supply_packs/proc/post_creation(var/atom/movable/container)
+/datum/supply_pack/proc/post_creation(var/atom/movable/container)
 	return
 
-/datum/supply_packs/proc/OnConfirmed(var/mob/user)
+//called when the order gets approved, for adminlog stuff
+/datum/supply_pack/proc/onApproved(var/mob/user)
 	return // Blank proc
