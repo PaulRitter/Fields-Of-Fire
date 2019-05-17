@@ -887,7 +887,6 @@
 #include "code\game\objects\structures\mirror.dm"
 #include "code\game\objects\structures\mop_bucket.dm"
 #include "code\game\objects\structures\morgue.dm"
-#include "code\game\objects\structures\multitile_static.dm"
 #include "code\game\objects\structures\musician.dm"
 #include "code\game\objects\structures\noticeboard.dm"
 #include "code\game\objects\structures\pit.dm"
