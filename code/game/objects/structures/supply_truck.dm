@@ -15,7 +15,6 @@
 	//take the last atom of the list and give it to our mob
 	var/atom/movable/A = contents[contents.len]
 	A.forceMove(get_turf(user))
-	contents.len--
 
 	return 1
 
@@ -24,4 +23,11 @@
 		return 0
 	
 	W.forceMove(src)
+	return 1
+
+/obj/structure/supply_truck/MouseDrop_T(atom/movable/dropping, mob/user)
+	if(contents.len >= maxContents)
+		return 0
+	
+	dropping.forceMove(src)
 	return 1
