@@ -6,8 +6,10 @@ For cargo crates, see supplypacks.dm
 For vending packs, see vending_packs.dm*/
 
 //request form to spawn
-/obj/item/weapon/paper/request_form/New(var/loc, var/datum/supply_pack/pack, var/number_of_crates, var/name, var/reason = "No reason provided.")
+/obj/item/weapon/paper/request_form/New(var/loc, var/datum/supply_pack/pack, var/number_of_crates, var/mob/requestor, var/reason = "No reason provided.")
 	. = ..(loc)
+	var/obj/item/weapon/card/id/card = requestor.get_id_card()
+	var/name = (card && card.registered_name) ? card.registered_name : requestor.name)
 	name = "[pack.name] Requisition Form"
 	info += {"<h3>[station_name] Supply Requisition Form</h3><hr>
 		REQUESTED BY: [name]<br>"}
@@ -44,7 +46,7 @@ For vending packs, see vending_packs.dm*/
 	ui_interact(user)
 	return
 
-/obj/machinery/computer/supply/proc/makeBaseNanoData(var/mob/user)
+/obj/machinery/computer/supply/proc/makeBaseNanoData(var/mob/user, var/ignore_ownership = 0)
 	// ui data
 	var/data[0]
 	// make assoc list for supply groups because either I'm retarded or nanoui is retarded
@@ -64,24 +66,26 @@ For vending packs, see vending_packs.dm*/
 				// command1 is for a single crate order, command2 is for multi crate order
 	data["supply_packs"] = packs_list
 
-	var/obj/item/weapon/card/id/I = user.get_id_card()
 	// current usr's cargo requests
 	var/requests_list[0]
 	for(var/i = 1; i <= SSsupply_truck.requestlist.len; i++)
 		var/datum/supply_order/SO = SSsupply_truck.requestlist[i]
 		if(SO)
+			if(!((SO.orderedby == usr) && ignore_ownership)) //check if user own this
+				continue
 			if(!SO.comment)
 				SO.comment = "No reason provided."
-			requests_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = SO.orderedby, "authorized_name" = SO.authorized_name, "comment" = SO.comment, "command1" = list("confirmorder" = i), "command2" = list("rreq" = i))))
-	data["requests"] = requests_list
+			requests_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = getName(SO.orderedby), "authorized_name" = getName(SO.authorizedby), "comment" = SO.comment, "command1" = list("rreq" = i), "command2" = list("confirmorder" = i))))
 
 	var/orders_list[0]
 	for(var/set_name in SSsupply_truck.shoppinglist)
 		var/datum/supply_order/SO = set_name
-		if(SO )
-			// Check if usr owns the order
-			if(I && SO.orderedby == I.registered_name)
-				orders_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = SO.orderedby, "authorized_name" = SO.authorized_name, "comment" = SO.comment)))
+		if(SO)
+			if(!(SO.orderedby == usr && !ignore_ownership) //check if user own this
+				continue
+			if(!SO.comment)
+				SO.comment = "No reason provided."
+			orders_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = getName(SO.orderedby), "authorized_name" = getName(SO.authorizedby), "comment" = SO.comment)))
 	data["orders"] = orders_list
 	data["money"] = SSsupply_truck.commandMoney
 	return data
@@ -94,6 +98,10 @@ For vending packs, see vending_packs.dm*/
 		ui = new(user, src, ui_key, "order_console.tmpl", name, 600, 660)
 		ui.set_initial_data(data)
 		ui.open()
+
+/obj/machinery/computer/supply/proc/getName(var/mob/user)
+	var/obj/item/weapon/card/id/card = user.get_id_card()
+	return ((card && card.registered_name) ? card.registered_name : user.name)
 
 /obj/machinery/computer/supply/proc/check_restriction(mob/user)
 	if(!user)
@@ -144,15 +152,13 @@ For vending packs, see vending_packs.dm*/
 		if(!reason)
 			return 1
 
-		var/obj/item/weapon/card/id/I = usr.get_id_card()
-
-		new /obj/item/weapon/paper/request_form(loc, P, crates, (I && I.registered_name) ? I.registered_name : usr.name, reason)
+		new /obj/item/weapon/paper/request_form(loc, P, crates, usr, reason)
 		reqtime = (world.time + 5) % 1e5
 		//make our supply_order datum
 		for(var/i = 1; i <= crates; i++)
 			var/datum/supply_order/O = new /datum/supply_order()
 			O.object = P
-			O.orderedby = (I && I.registered_name) ? I.registered_name : usr.name
+			O.orderedby = usr
 			O.comment = reason
 
 			SSsupply_truck.requestlist += O
@@ -205,7 +211,7 @@ For vending packs, see vending_packs.dm*/
 	return ..()
 
 /obj/machinery/computer/supply/administration/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null)
-	var/data = makeBaseNanoData(user)
+	var/data = makeBaseNanoData(user, 1)
 
 	var/centcomm_list[0]
 	for(var/datum/command_order/O in SSsupply_truck.command_orders)

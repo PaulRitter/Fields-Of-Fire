@@ -14,10 +14,8 @@ contains supply radio
 TODO:
 - ((supply radio needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
-- rework orderedby and authorizedby to not be shit
 - qualitycontrol
 -- templates could be combined eg. categoryview
--- much of the consoles is copy pasta
 -- find more copypasta and make procs or something
 - make truck content check only count crates
 - sent 3 crates each with a manifest, only got paid 17 credits (should be 5 per crates, 2 per manifest = 21), maybe per_unit not working correctly
@@ -239,7 +237,7 @@ SUBSYSTEM_DEF(supply_truck)
 	if((commandMoney - getOrderPrice()) >= P.cost)
 		requestlist.Cut(position,position+1)
 		var/obj/item/weapon/card/id/I = user.get_id_card()
-		O.authorized_name = (I && I.registered_name) ? I.registered_name : user.name
+		O.authorizedby = user
 		shoppinglist += O
 		if(!wasAutoConfirmed)
 			O.OnConfirmed(user)
@@ -280,8 +278,8 @@ SUPPLY ORDER
 */
 /datum/supply_order
 	var/datum/supply_pack/object = null
-	var/orderedby = "" // who ordered it
-	var/authorized_name = "" // who approved it
+	var/mob/orderedby = "" // who ordered it
+	var/mob/authorizedby = "" // who approved it
 	var/comment = ""
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)

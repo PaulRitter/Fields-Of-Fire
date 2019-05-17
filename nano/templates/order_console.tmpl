@@ -63,10 +63,10 @@ Used In File(s): \code\game\machinery/computer/supply.dm
 				{{for data.requests}}
 					<div class="line">
 						{{:value.supply_type}} for {{:value.orderedby}}
-						{{:helper.link('CANCEL', null, value.command1, null)}}
 						<div class="line" style="font-style: italic;">
-							{{:value.comment}}
+							REASON: {{:value.comment}}
 						</div>
+						{{:helper.link('CANCEL', null, value.command1, null)}}
 					</div>
 				{{empty}}
 					No active requests.
