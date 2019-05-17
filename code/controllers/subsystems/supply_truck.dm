@@ -6,7 +6,7 @@ contains all supplypacks
 contains all command orders
 - /code/game/objects/structures/supply_truck.dm
 contains supply truck
-- code/game/machinery/computer/supply.dm TODO
+- code/game/machinery/computer/supply.dm
 contains supply radio
 */
 
@@ -18,9 +18,8 @@ TODO:
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
 - make truck content check only count crates
-- sent 3 crates each with a manifest, only got paid 17 credits (should be 5 per crates, 2 per manifest = 21), maybe per_unit not working correctly
-- orders aren't displayed anymore
-- order cancel doesnt work
+- truck should have chance to loose crate on route
+- print truck manifest on arrival (or let that be the first thing you pull out)
 */
 
 var/station_name = "TODO find where to get this var"
@@ -168,7 +167,7 @@ SUBSYSTEM_DEF(supply_truck)
 		for(var/datum/command_order/O in command_orders)
 			var/pay = O.CheckFulfilled()
 			money += pay
-			if(pay)
+			if(pay && !O.recurring)
 				command_orders.Remove(O)
 		qdel(MA)
 	return money
