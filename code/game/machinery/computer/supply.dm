@@ -9,7 +9,7 @@ For vending packs, see vending_packs.dm*/
 /obj/item/weapon/paper/request_form/New(var/loc, var/datum/supply_pack/pack, var/number_of_crates, var/mob/requestor, var/reason = "No reason provided.")
 	. = ..(loc)
 	var/obj/item/weapon/card/id/card = requestor.get_id_card()
-	var/name = (card && card.registered_name) ? card.registered_name : requestor.name)
+	var/name = (card && card.registered_name) ? card.registered_name : requestor.name
 	name = "[pack.name] Requisition Form"
 	info += {"<h3>[station_name] Supply Requisition Form</h3><hr>
 		REQUESTED BY: [name]<br>"}
@@ -71,17 +71,18 @@ For vending packs, see vending_packs.dm*/
 	for(var/i = 1; i <= SSsupply_truck.requestlist.len; i++)
 		var/datum/supply_order/SO = SSsupply_truck.requestlist[i]
 		if(SO)
-			if(!((SO.orderedby == usr) && ignore_ownership)) //check if user own this
+			if((SO.orderedby != usr) && !ignore_ownership) //check if user owns this
 				continue
 			if(!SO.comment)
 				SO.comment = "No reason provided."
 			requests_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = getName(SO.orderedby), "authorized_name" = getName(SO.authorizedby), "comment" = SO.comment, "command1" = list("rreq" = i), "command2" = list("confirmorder" = i))))
+	data["requests"] = requests_list
 
 	var/orders_list[0]
 	for(var/set_name in SSsupply_truck.shoppinglist)
 		var/datum/supply_order/SO = set_name
 		if(SO)
-			if(!(SO.orderedby == usr && !ignore_ownership) //check if user own this
+			if((SO.orderedby != usr) && !ignore_ownership) //check if user owns this
 				continue
 			if(!SO.comment)
 				SO.comment = "No reason provided."

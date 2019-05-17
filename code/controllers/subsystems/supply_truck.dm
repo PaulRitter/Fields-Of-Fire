@@ -236,7 +236,6 @@ SUBSYSTEM_DEF(supply_truck)
 
 	if((commandMoney - getOrderPrice()) >= P.cost)
 		requestlist.Cut(position,position+1)
-		var/obj/item/weapon/card/id/I = user.get_id_card()
 		O.authorizedby = user
 		shoppinglist += O
 		if(!wasAutoConfirmed)
@@ -278,9 +277,9 @@ SUPPLY ORDER
 */
 /datum/supply_order
 	var/datum/supply_pack/object = null
-	var/mob/orderedby = "" // who ordered it
-	var/mob/authorizedby = "" // who approved it
-	var/comment = ""
+	var/mob/orderedby = null // who ordered it
+	var/mob/authorizedby = null // who approved it
+	var/comment = null
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)
 	object.onApproved(user)
