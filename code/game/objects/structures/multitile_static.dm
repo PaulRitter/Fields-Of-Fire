@@ -12,8 +12,8 @@
     ..()
     for(var/list/offset in offset)
         var/obj/structure/S = new /obj/structure()
-        S.loc.x = loc + offset[IDX_OFFSET_X]
-        S.loc.y = loc + offset[IDX_OFFSET_Y]
+        var/newloc = locate(loc.x + offset[IDX_OFFSET_X], loc.y + offset[IDX_OFFSET_Y], loc.z)
+        S.Move(newloc)
         strucs += S
 
 /obj/structure/multitile/Destroy()
