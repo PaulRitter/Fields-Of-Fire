@@ -156,7 +156,7 @@
 "cZ" = (/obj/item/ammo_magazine/a45,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "da" = (/obj/item/clothing/head/helmet/frenchsoft,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "db" = (/obj/item/clothing/shoes/french,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dc" = (/obj/item/weapon/paper/trench/blank,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dc" = (/mob/living/carbon/human/blank,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dd" = (/obj/item/weapon/pen,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "de" = (/obj/structure/target_stake,/obj/item/target/alien,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "df" = (/obj/structure/bardbedwire,/turf/simulated/floor/planet/dirt,/area/the_shit)

@@ -186,7 +186,9 @@ For vending packs, see vending_packs.dm*/
 			to_chat(usr, "<span class='warning'>You can only afford [max_crates] crates.</span>")
 			return 1
 		var/timeout = world.time + 600
-		var/reason = input(usr,"Reason:","Why do you require this item?","",REASON_LEN)
+		var/reason = input(usr,"Reason:","Why do you require this item?","") as null|text
+		if(length(reason) > REASON_LEN)
+			return 1
 		if(world.time > timeout)
 			return 1
 		if(!reason)
@@ -357,7 +359,9 @@ For vending packs, see vending_packs.dm*/
 			to_chat(usr, "<span class='warning'>You can only afford [max_crates] crates.</span>")
 			return 1
 		var/timeout = world.time + 600
-		var/reason = input(usr,"Reason:","Why do you require this item?","",REASON_LEN)
+		var/reason = input(usr,"Reason:","Why do you require this item?","") as null|text
+		if(length(reason) > REASON_LEN)
+			return 1
 		if(world.time > timeout)
 			return 1
 		if(!reason)

@@ -45,7 +45,7 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/supply_packs = list() //all packs that can be ordered
 	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
-	var/commandMoney = 0 //Money currently stored at command
+	var/commandMoney = 100 //Money currently stored at command
 
 	//truck movement
 	var/at_base = 0 //if shuttle is at base
@@ -197,8 +197,9 @@ SUBSYSTEM_DEF(supply_truck)
 			if(!typepath)
 				continue
 			var/atom/B2 = new typepath(A)
-			if(B2:amount)
-				B2:amount = SP.contains[typepath]
+			if(istype(B2, /obj/item/stack))
+				var/obj/item/stack/ST = B2
+				ST.amount = SP.contains[typepath]
 			else
 				for(var/i=1, i<SP.contains[typepath], i++) //one less since we already made one (B2)
 					new typepath(A)
