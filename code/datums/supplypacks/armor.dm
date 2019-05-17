@@ -16,7 +16,7 @@
 		/obj/item/clothing/gloves/thick/germanarmor = 1,
 		/obj/item/clothing/head/helmet/germanarmor = 1,
 		/obj/item/clothing/shoes/germanarmor = 1,
-		// /obj/item/clothing/suit/armor/special/wwi/germanarmor = 1 -- doesn't exist YET
+		/obj/item/clothing/suit/storage/wwi/germanarmor = 1
 	)
 	containername = "German Armor Crate"
 	cost = 20
