@@ -101,6 +101,8 @@ For vending packs, see vending_packs.dm*/
 		ui.open()
 
 /obj/machinery/computer/supply/proc/getName(var/mob/user)
+	if(!user)
+		return ""
 	var/obj/item/weapon/card/id/card = user.get_id_card()
 	return ((card && card.registered_name) ? card.registered_name : user.name)
 
