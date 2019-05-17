@@ -511,6 +511,12 @@ div.notice {
 	float: left;
 }
 
+.noOverflow {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 /* Used in PDA */
 
 .wholeScreen {

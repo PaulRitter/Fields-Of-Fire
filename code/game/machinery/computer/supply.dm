@@ -13,7 +13,7 @@ For vending packs, see vending_packs.dm*/
 		REQUESTED BY: [name]<br>"}
 
 	info+= {"REASON: [reason]<br>
-		SUPPLY CRATE TYPE: [pack.name]<br>
+		SUPPLY CRATE: [pack.name]<br>
 		NUMBER OF CRATES: [number_of_crates]<br>
 		ACCESS RESTRICTION: [get_access_desc(pack.req_access)]<br>
 		CONTENTS:<br>"}
@@ -175,16 +175,6 @@ For vending packs, see vending_packs.dm*/
 			var/tempcount = input(usr, "Amount:", "How many crates?", "") as num
 			crates = Clamp(round(text2num(tempcount)), 1, 20)
 
-		// Calculate money tied up in requests
-		var/total_money_req = 0
-		for(var/datum/supply_order/R in SSsupply_truck.requestlist)
-			var/datum/supply_pack/R_pack = R.object
-			total_money_req += R_pack.cost
-		// check they can afford the order
-		if((P.cost * crates + total_money_req) > SSsupply_truck.commandMoney)
-			var/max_crates = round((SSsupply_truck.commandMoney - total_money_req) / P.cost)
-			to_chat(usr, "<span class='warning'>You can only afford [max_crates] crates.</span>")
-			return 1
 		var/timeout = world.time + 600
 		var/reason = input(usr,"Reason:","Why do you require this item?","") as null|text
 		if(length(reason) > REASON_LEN)
@@ -196,13 +186,13 @@ For vending packs, see vending_packs.dm*/
 
 		var/obj/item/weapon/card/id/I = usr.get_id_card()
 
-		new /obj/item/weapon/paper/request_form(loc, P, crates, I ? I.registered_name : usr.name,reason)
+		new /obj/item/weapon/paper/request_form(loc, P, crates, (I && I.registered_name) ? I.registered_name : usr.name, reason)
 		reqtime = (world.time + 5) % 1e5
 		//make our supply_order datum
 		for(var/i = 1; i <= crates; i++)
 			var/datum/supply_order/O = new /datum/supply_order()
 			O.object = P
-			O.orderedby = I ? I.registered_name : usr.name
+			O.orderedby = (I && I.registered_name) ? I.registered_name : usr.name
 			O.comment = reason
 
 			SSsupply_truck.requestlist += O
@@ -216,7 +206,19 @@ For vending packs, see vending_packs.dm*/
 		var/ordernum = text2num(href_list["confirmorder"])
 		if(!ordernum)
 			return 1
+
 		var/datum/supply_order/O = SSsupply_truck.requestlist[ordernum]
+
+		// Calculate money tied up in shoppinglist
+		var/total_cost = 0
+		for(var/datum/supply_order/R in SSsupply_truck.shoppinglist)
+			var/datum/supply_pack/R_pack = R.object
+			total_cost += R_pack.cost
+		// check they can afford the order
+		if((O.object.cost + total_cost) > SSsupply_truck.commandMoney)
+			to_chat(usr, "<span class='warning'>You can't affort to approve this order.</span>")
+			return 1
+
 		SSsupply_truck.confirm_order(O,usr,ordernum)
 	else if (href_list["rreq"])
 		if(!check_restriction(usr))
@@ -289,7 +291,7 @@ For vending packs, see vending_packs.dm*/
 		var/datum/supply_order/SO = SSsupply_truck.requestlist[i]
 		if(SO)
 			// Check if usr owns the request
-			if(I && SO.orderedby == I.registered_name)
+			if(I && SO.orderedby == ((I && I.registered_name) ? I.registered_name : usr.name))
 				requests_list.Add(list(list("supply_type" = SO.object.name, "command1" = list("rreq" = i))))
 	data["requests"] = requests_list
 
@@ -369,14 +371,14 @@ For vending packs, see vending_packs.dm*/
 
 		var/obj/item/weapon/card/id/I = usr.get_id_card()
 
-		new /obj/item/weapon/paper/request_form(loc, P, crates, I ? I.registered_name : usr.name, reason)
+		new /obj/item/weapon/paper/request_form(loc, P, crates, (I && I.registered_name) ? I.registered_name : usr.name, reason)
 		reqtime = (world.time + 5) % 1e5
 
 		//make our supply_order datum
 		for(var/i = 1; i <= crates; i++)
 			var/datum/supply_order/O = new /datum/supply_order()
 			O.object = P
-			O.orderedby = I ? I.registered_name : usr.name
+			O.orderedby = (I && I.registered_name) ? I.registered_name : usr.name
 			O.comment = reason
 
 			SSsupply_truck.requestlist += O

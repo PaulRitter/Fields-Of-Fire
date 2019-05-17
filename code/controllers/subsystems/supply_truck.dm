@@ -12,9 +12,15 @@ contains supply radio
 
 /*
 Possible TODO:
-- taking one crate out of the cargo trucks removes two entries (may have been fixed already)
 - ((supply radio needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
+- rework orderedby and authorizedby to not be shit
+- doafter on truck unloading
+- qualitycontrol
+-- templates could be combined eg. categoryview
+-- much of the consoles is copy pasta
+-- find more copypasta and make procs or something
+- make truck content check only count crates
 */
 
 var/station_name = "TODO find where to get this var"
@@ -34,7 +40,8 @@ SUBSYSTEM_DEF(supply_truck)
 	//CONFIG VARS
 	var/money_per_crate = 5 //how much command pays per crate
 	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
-	var/movetime = 2 MINUTES //how long the truck takes
+	var/movetimeMax = 3 MINUTES //how long the truck takes
+	var/movetimeMin = 1.5 MINUTES
 
 	//SYSTEM VARS
 	//control
@@ -58,6 +65,8 @@ SUBSYSTEM_DEF(supply_truck)
 	for(var/typepath in subtypesof(/datum/supply_pack))
 		var/datum/supply_pack/P = new typepath
 		supply_packs[P.name] = P
+
+	add_command_order(new /datum/command_order/per_unit/manifest(), 1) //so we pay 2 bucks for every returned manifest
 	..()
 
 //ticker for the eta
@@ -96,12 +105,13 @@ SUBSYSTEM_DEF(supply_truck)
 	if(at_base)//at station
 		if(!truck)
 			//this could also trigger on truck destruction, but having this feedback only when using the radio adds a bit of immersion
+			//~also its easier this way~
 			allSay("We received message your truck was destroyed. We have a new one standing by at command, watch your assets!")
 			at_base = 0
 			return 0
 		truck_contents = truck.contents
 		truck.forceMove(null)
-		allSay("Truck is sent. Arrival at Command in T-2 Minutes.")
+		allSay("Truck is sent.")
 	else
 		//buys all of shopping list
 		truck_contents = buy()
@@ -111,7 +121,7 @@ SUBSYSTEM_DEF(supply_truck)
 		allSay("Order received - Truck is sent.")
 	
 	//sets the eta timer
-	eta_timeofday = world.timeofday + movetime
+	eta_timeofday = world.timeofday + rand(movetimeMin, movetimeMax)
 	moving = 1
 	return 1
 
@@ -141,7 +151,8 @@ SUBSYSTEM_DEF(supply_truck)
 	var/money = 0
 	for(var/atom/movable/MA in stuff)
 		if(istype(MA,/obj/structure/closet/crate)) //is crate
-			money += money_per_crate
+			var/obj/structure/closet/crate/C = MA
+			money += C.points_per_crate
 
 			for(var/atom/A in MA)
 				SellObjToOrders(A,1)
@@ -223,14 +234,20 @@ SUBSYSTEM_DEF(supply_truck)
 
 	if((commandMoney - getOrderPrice()) >= P.cost)
 		requestlist.Cut(position,position+1)
+		var/obj/item/weapon/card/id/I = user.get_id_card()
+		O.authorized_name = (I && I.registered_name) ? I.registered_name : user.name
 		shoppinglist += O
 		if(!wasAutoConfirmed)
 			O.OnConfirmed(user)
 	else
 		to_chat(user, "<span class='warning'>Command does not have enough funds for this request.</span>")
 
-/datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C)
+/datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C, var/no_notice = 0)
 	command_orders.Add(C)
+
+	if(no_notice)
+		return
+	
 	var/name = "External order form - [C.name] order number [C.id]"
 	var/info = {"<h3>Central command supply requisition form</h3><hr>
 	 			INDEX: #[C.id]<br>
@@ -259,9 +276,9 @@ SUPPLY ORDER
 */
 /datum/supply_order
 	var/datum/supply_pack/object = null
-	var/orderedby = null // who ordered it
-	var/authorized_name = null // who approved it
-	var/comment = null
+	var/orderedby = "" // who ordered it
+	var/authorized_name = "" // who approved it
+	var/comment = ""
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)
 	object.onApproved(user)

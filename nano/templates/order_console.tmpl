@@ -1,6 +1,6 @@
 <!--
 Title: Supply Console UI
-Used In File(s): \code\game\supplyshuttle.dm
+Used In File(s): \code\game\machinery/computer/supply.dm
 -->
 
 <style type='text/css'>
@@ -12,7 +12,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 </style>
 <div class="item" style="width:100%; margin-bottom: 3px;">
 	<div class="itemLabel">
-		Account Funds:
+		Command Funds:
 	</div>
 	<div class="itemContent">
 		{{:data.money}}
@@ -32,6 +32,10 @@ Used In File(s): \code\game\supplyshuttle.dm
 							{{:helper.link('#', null, value.command2, null)}}${{:value.cost}}
 						</div>
 					</div>
+				{{empty}}
+						<div class="line">
+							No entries available for this category.
+						</div>
 				{{/for}}
 			</div>
 		</div>
@@ -43,7 +47,7 @@ Used In File(s): \code\game\supplyshuttle.dm
 	</div>
 	{{for data.all_supply_groups}}
 	<div class="line">
-		{{:helper.link(value.category, null, {'last_viewed_group': value.category}, (data.last_viewed_group==value.category)?'linkOn':'', 'noOverflow', 'category')}}
+		{{:helper.link(value.category, null, {'last_viewed_group': value.category}, (data.last_viewed_group==value.category)?'linkOn': null, 'noOverflow', 'category')}}
 	</div>
 	{{/for}}
 </div>
@@ -58,8 +62,11 @@ Used In File(s): \code\game\supplyshuttle.dm
 				<br>
 				{{for data.requests}}
 					<div class="line">
-						{{:index}} - {{:value.supply_type}}
+						{{:value.supply_type}} for {{:value.orderedby}}
 						{{:helper.link('CANCEL', null, value.command1, null)}}
+						<div class="line" style="font-style: italic;">
+							{{:value.comment}}
+						</div>
 					</div>
 				{{empty}}
 					No active requests.
@@ -69,7 +76,10 @@ Used In File(s): \code\game\supplyshuttle.dm
 				<br>
 				{{for data.orders}}
 					<div class="line">
-						#{{:index}} - {{:value.supply_type}} for {{:value.orderedby}}
+						{{:value.supply_type}} for {{:value.orderedby}}
+					</div>
+					<div class="line" style="font-style: italic;">
+						{{:value.comment}}
 					</div>
 				{{empty}}
 					No confirmed orders.
