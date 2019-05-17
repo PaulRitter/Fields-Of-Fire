@@ -11,16 +11,18 @@ contains supply radio
 */
 
 /*
-Possible TODO:
+TODO:
 - ((supply radio needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
 - rework orderedby and authorizedby to not be shit
-- doafter on truck unloading
 - qualitycontrol
 -- templates could be combined eg. categoryview
 -- much of the consoles is copy pasta
 -- find more copypasta and make procs or something
 - make truck content check only count crates
+- sent 3 crates each with a manifest, only got paid 17 credits (should be 5 per crates, 2 per manifest = 21), maybe per_unit not working correctly
+- orders aren't displayed anymore
+- order cancel doesnt work
 */
 
 var/station_name = "TODO find where to get this var"
@@ -40,8 +42,10 @@ SUBSYSTEM_DEF(supply_truck)
 	//CONFIG VARS
 	var/money_per_crate = 5 //how much command pays per crate
 	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
-	var/movetimeMax = 3 MINUTES //how long the truck takes
-	var/movetimeMin = 1.5 MINUTES
+	var/movetimeMax = 5 SECONDS
+	var/movetimeMin = 1 SECONDS
+	// var/movetimeMax = 3 MINUTES //how long the truck takes
+	// var/movetimeMin = 1.5 MINUTES
 
 	//SYSTEM VARS
 	//control
@@ -58,7 +62,7 @@ SUBSYSTEM_DEF(supply_truck)
 	var/moving = 0 // 0 = shuttle not moving; 1 = shuttle is moving
 	var/eta_timeofday //eta used by the ticker
 	var/eta //eta to used in uis
-	var/obj/structure/multitile/rectangle/supply_truck/truck //to keep track of our spawned truck
+	var/obj/structure/supply_truck/truck //to keep track of our spawned truck
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)
@@ -258,7 +262,7 @@ SUBSYSTEM_DEF(supply_truck)
 	 			WORTH: [C.worth]
 	 			"}
 
-	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
+	for(var/obj/machinery/computer/supply/administration/S in supply_radios)
 		var/obj/item/weapon/paper/reqform = new /obj/item/weapon/paper(S.loc)
 		reqform.name = name
 		reqform.info = info
@@ -267,7 +271,7 @@ SUBSYSTEM_DEF(supply_truck)
 	allSay("New buy order by [C.name] available.")
 
 /datum/controller/subsystem/supply_truck/proc/allSay(var/message)
-	for(var/obj/machinery/computer/supplyradio/S in supply_radios)
+	for(var/obj/machinery/computer/supply/administration/S in supply_radios)
 		S.visible_message("<span class='notice'>[message]</span>")
 
 

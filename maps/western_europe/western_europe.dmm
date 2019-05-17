@@ -188,8 +188,8 @@
 "dF" = (/obj/item/weapon/flame/candle/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dG" = (/obj/effect/landmark{name = "supply_truck"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dH" = (/obj/item/device/flashlight/lantern/mining,/obj/structure/sandbag{tag = "icon-sandbag (NORTH)"; icon_state = "sandbag"; dir = 1},/mob,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dI" = (/obj/machinery/computer/orderradio,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dJ" = (/obj/machinery/computer/supplyradio{step_x = 0},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dI" = (/obj/machinery/computer/supply,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dJ" = (/obj/machinery/computer/supply/administration,/turf/simulated/floor/planet/dirt,/area/the_shit)
 
 (1,1,1) = {"
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
