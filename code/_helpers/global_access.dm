@@ -689,8 +689,8 @@
 			return global.master_controller;
 		if("master_mode")
 			return global.master_mode;
-		if("matchmaker")
-			return global.matchmaker;
+		//if("matchmaker")
+		//	return global.matchmaker;
 		if("maze_cell_count")
 			return global.maze_cell_count;
 		if("mechas_list")
@@ -1912,8 +1912,8 @@
 			global.master_controller=newval;
 		if("master_mode")
 			global.master_mode=newval;
-		if("matchmaker")
-			global.matchmaker=newval;
+		//if("matchmaker")
+		//	global.matchmaker=newval;
 		if("maze_cell_count")
 			global.maze_cell_count=newval;
 		if("mechas_list")
@@ -2790,7 +2790,7 @@
 	"mark",
 	"master_controller",
 	"master_mode",
-	"matchmaker",
+	//"matchmaker",
 	"maze_cell_count",
 	"mechas_list",
 	"mechtoys",
