@@ -90,11 +90,6 @@ var/global/current_command_order_id=124901
 	recurring=1
 	var/list/unit_prices=list()
 
-/datum/command_order/per_unit/New()
-	..()
-	for(var/i in requested)
-		requested[i] = INFINITY
-
 // Same as normal, but will take every last bit of what you provided.
 /datum/command_order/per_unit/trySellObj(var/obj/O, var/in_crate)
 	if(must_be_in_crate && !in_crate)
@@ -125,7 +120,7 @@ var/global/current_command_order_id=124901
 /datum/command_order/per_unit/manifest
 	recurring = 1
 	requested = list(
-		/obj/item/weapon/paper/manifest
+		/obj/item/weapon/paper/manifest = INFINITY
 	)
 	unit_prices=list(
 		/obj/item/weapon/paper/manifest = 2

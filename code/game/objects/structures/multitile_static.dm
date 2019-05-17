@@ -3,7 +3,7 @@
 
 /obj/structure/multitile
     //config vars
-    var/offsets = list() // list of all tiles which need to be impassable
+    var/list/offsets = list() // list of all tiles which need to be impassable
 
     //system vars
     var/list/strucs = list() //list of all the structures we spawned
