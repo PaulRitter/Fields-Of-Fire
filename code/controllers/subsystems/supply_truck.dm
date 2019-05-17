@@ -12,7 +12,6 @@ contains supply radio
 
 /*
 Possible TODO:
-- supply radio circuits
 - taking one crate out of the cargo trucks removes two entries (may have been fixed already)
 - ((supply radio needs to be connected off map with reinforced cable))
 - ((overlay boxes on truck))
