@@ -1,10 +1,10 @@
 obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	icon_opened = "crateopen"
-	icon_closed = "crate"
+	icon = 'icons/placeholders/furniture.dmi'
+	icon_state = "large-crate"
+	icon_opened = "large-crate_open"
+	icon_closed = "large-crate"
 	flags = OBJ_CLIMBABLE
 	setup = 0
 
