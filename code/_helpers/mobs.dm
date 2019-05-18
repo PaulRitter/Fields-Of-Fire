@@ -183,6 +183,7 @@ proc/age2agedescription(age)
 	if (progbar)
 		qdel(progbar)
 
+//set progress to 2 to let the progressbar appear above the user instead of the target
 /proc/do_after(mob/user, delay, atom/target = null, needhand = 1, progress = 1, var/incapacitation_flags = INCAPACITATION_DEFAULT, var/same_direction = 0)
 	if(!user)
 		return 0
@@ -201,7 +202,10 @@ proc/age2agedescription(age)
 
 	var/datum/progressbar/progbar
 	if (progress)
-		progbar = new(user, delay, target)
+		if(progress == 2)
+			progbar = new(user, delay, user)
+		else
+			progbar = new(user, delay, target)
 
 	var/endtime = world.time + delay
 	var/starttime = world.time

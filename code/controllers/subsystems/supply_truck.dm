@@ -8,6 +8,8 @@ contains all command orders
 contains supply truck
 - code/game/machinery/computer/supply.dm
 contains supply radio
+- code\game\objects\items\weapons\circuitboards\computer\supply.dm
+supply radio circuits
 */
 
 /*
@@ -20,6 +22,8 @@ TODO:
 - make truck content check only count crates
 - truck should have chance to loose crate on route
 - print truck manifest on arrival (or let that be the first thing you pull out)
+- multiple people can't pull out of the truck at the same time
+- can only add crates to truck when they are closed/ use only the closed sprite
 */
 
 var/station_name = "TODO find where to get this var"
@@ -38,7 +42,8 @@ SUBSYSTEM_DEF(supply_truck)
 
 	//CONFIG VARS
 	var/money_per_crate = 5 //how much command pays per crate
-	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
+	//SHOULD BE 1, IS 0 FOR DEBUGGING
+	var/restriction = 0 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
 	var/movetimeMax = 5 SECONDS
 	var/movetimeMin = 1 SECONDS
 	// var/movetimeMax = 3 MINUTES //how long the truck takes
@@ -90,6 +95,7 @@ SUBSYSTEM_DEF(supply_truck)
 			return
 		truck = new (supply_truck_pos)
 		truck.contents = truck_contents
+		truck.update_icon()
 		truck_contents.len = 0
 		allSay("Truck arrived at base.")
 		at_base = 1
