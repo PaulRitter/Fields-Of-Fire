@@ -26,40 +26,33 @@
 	var/list/truck_images = list()
 
 //rendering the crates ontop of the truck
+//save all possible positions truck_images[z][x][y] = null
+//helper getAvailablePositions(), since some may only be available through stacking, returns list(x,y,z)
+// pick() and set address in truck_images to image
 /obj/structure/supply_truck/update_icon()
 	. = ..()
 	overlays -= truck_images
 	truck_images.len = 0
 	var/x = 0
-	var/y = 0
+	var/y = maxY-1
 	var/z = 0
-	var/list/temp_images = list()
 	for(var/atom/content in contents)
 		var/image/I = image(content.icon, content.icon_state)
 		message_admins("creating crate at [x],[y],[z]")
 		I.pixel_x = (start_pixel_x * WORLD_ICON_SIZE) + (x * (step_pixel_x * WORLD_ICON_SIZE))
 		I.pixel_y = (start_pixel_y * WORLD_ICON_SIZE) + (y * (step_pixel_y * WORLD_ICON_SIZE)) + (z * (step_pixel_z * WORLD_ICON_SIZE))
-		if(y < maxY-1)
-			y++
+		if(y > 0)
+			y--
 		else
 			x++
-			y = 0
-
-		if(z > 0) //remove when stacking is added
-			message_admins("breaked loop since we dont have stacking")
-			break
+			y = maxY-1
 
 		if(x == maxX)
-			message_admins("add stacking you lazy person")
 			x = 0
-			y = 0
+			y = maxY-1
 			z++
 
-		temp_images += I
-
-	//handling layering
-	for(var/i = temp_images.len; i > 0; i--)
-		truck_images += temp_images[i]
+		truck_images += I
 	
 	truck_images += image('icons/placeholders/truck.dmi', "truck-placeholder foreground")
 	
