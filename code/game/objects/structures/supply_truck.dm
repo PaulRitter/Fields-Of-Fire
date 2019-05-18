@@ -15,7 +15,7 @@
 	var/start_pixel_x = 2.65
 	var/start_pixel_y = 0.6
 	//the x and y steps for crate rendering
-	var/step_pixel_x = 1
+	var/step_pixel_x = 0.95
 	var/step_pixel_y = 0.45
 	var/step_pixel_z = 0.5
 	//rendering limits
@@ -45,12 +45,15 @@
 			x++
 			y = 0
 
+		if(z > 0) //remove when stacking is added
+			message_admins("breaked loop since we dont have stacking")
+			break
+
 		if(x == maxX)
 			message_admins("add stacking you lazy person")
 			x = 0
 			y = 0
 			z++
-			break
 
 		temp_images += I
 
