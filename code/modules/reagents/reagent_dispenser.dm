@@ -88,8 +88,8 @@
 /obj/structure/reagent_dispensers/fueltank
 	name = "fueltank"
 	desc = "A tank containing fuel."
-	icon = 'icons/obj/objects.dmi'
-	icon_state = "weldtank"
+	icon = 'icons/placeholders/furniture.dmi'
+	icon_state = "barrel"
 	amount_per_transfer_from_this = 10
 	var/modded = 0
 	var/obj/item/device/assembly_holder/rig = null

@@ -15,7 +15,6 @@ supply radio circuits
 /*
 TODO:
 - ((supply radio needs to be connected off map with reinforced cable))
-- ((overlay boxes on truck))
 - qualitycontrol
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
@@ -24,6 +23,7 @@ TODO:
 - print truck manifest on arrival (or let that be the first thing you pull out)
 - multiple people can't pull out of the truck at the same time
 - can only add crates to truck when they are closed/ use only the closed sprite
+- add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 */
 
 var/station_name = "TODO find where to get this var"
