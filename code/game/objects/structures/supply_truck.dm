@@ -1,5 +1,7 @@
 /obj/structure/closet/crate/small
 	icon_state = "crate"
+	icon_opened = "crate_open"
+	icon_closed = "crate"
 
 /obj/structure/supply_truck
 	name = "Supply Truck"
@@ -30,6 +32,7 @@
 	var/maxX = 3
 	var/maxY = 2
 	var/maxZ = 2
+	var/modifier = 1.5
 	//so we can update our images
 	var/list/truck_images = list()
 	var/image/foreground = null
@@ -119,7 +122,6 @@
 	var/list/renderOrder = getWeightedContentList()
 	var/list/alreadyRendered = list()
 	for(var/atom/A in renderOrder)
-		message_admins("=== started rendering [A] ===")
 		var/index = "\ref[A]"
 		if(!(index in temp_images))
 			temp_images[index] = image(A.icon, A.icon_state)
@@ -127,12 +129,10 @@
 		var/doBreak = 0
 		var/alreadyLooped = 0
 		while(skipCoords(x,y,z,alreadyRendered,getSize(A)))
-			message_admins("skipping pos [x],[y],[z]")
 			var/nextPos = nextPos(x, y, z)
 			x = nextPos[1]
 			y = nextPos[2]
 			z = nextPos[3]
-			message_admins("next pos [x],[y],[z]")
 
 			if(z >= maxZ)
 				if(!alreadyLooped)
@@ -145,12 +145,10 @@
 					break
 
 		if(doBreak)
-			message_admins("had to force renderbreak! this should not have happened")
+			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev.")
 			break
 
-		message_admins("creating icon at [x],[y],[z]")
-		var/man_y = y + getPosSize(x, y, z, alreadyRendered) //for half boxes
-		message_admins("manipulated y: [man_y]")
+		var/man_y = y + (getPosSize(x, y, z, alreadyRendered)/modifier) //for half boxes
 		I.pixel_x = (start_pixel_x * WORLD_ICON_SIZE) + (x * (step_pixel_x * WORLD_ICON_SIZE))
 		I.pixel_y = (start_pixel_y * WORLD_ICON_SIZE) + (man_y * (step_pixel_y * WORLD_ICON_SIZE)) + (z * (step_pixel_z * WORLD_ICON_SIZE))
 		
@@ -160,12 +158,9 @@
 		x = nextPos[1]
 		y = nextPos[2]
 		z = nextPos[3]
-		message_admins("next pos [x],[y],[z]")
 
 		truck_images += I
-		message_admins("=== finished rendering [A] ===")
 
-	message_admins("finished rendering")
 	overlays |= truck_images
 
 	if(!foreground)
@@ -175,35 +170,28 @@
 /obj/structure/supply_truck/proc/getPosSize(var/x, var/y, var/z, var/list/already_rendered)
 	var/sum = 0
 	for(var/list/R in already_rendered)
-		message_admins("query [x],[y],[z]")
-		message_admins("quest [R[1]],[R[2]],[R[3]]")
 		if((x == R[1]) && (y == R[2]) && (z == R[3]))
-			message_admins("add [R[4]]")
 			sum += R[4]
-	message_admins("returning: [sum]")
 	return sum
 
 /obj/structure/supply_truck/proc/skipCoords(var/x, var/y, var/z, var/list/already_rendered, var/size)
+	var/base = 0
 	for(var/list/R in already_rendered)
-		message_admins("comparing [x],[y],[z]")
-		message_admins("with      [R[1]],[R[2]],[R[3]]")
 		if((x == R[1]) && (y == R[2]))
 			if(z == R[3]) //this is our position
 				if((getPosSize(x, y, z, already_rendered)+size) <= 1) //check if we can fit ontop of the already existing obj
-					message_admins("skipCoords: ([x],[y],[z]) we fit on another obj")
 					return 0
 				else //we can't
-					message_admins("skipCoords: ([x],[y],[z]) another obj is occupying")
 					return 1
-			else if((z == (R[3]+1)) && (getPosSize(x, y, z-1, already_rendered) == 1)) //check if there is a filled pos underneath
-				message_admins("skipCoords: ([x],[y],[z]) there is a pos underneath, we are good to go")
-				return 0
+			else if((z == (R[3]+1)) && (((getPosSize(x, y, z-1, already_rendered) + size) <= 2) && (getPosSize(x, y, z-1, already_rendered) >= 1))) //check if there is a filled pos underneath and if we fit on it
+				base = 1 //this could be invalid due to something already occupying our pos that wasn't looped over yet, so we prospone the return to after the loop, since it will end if our pos is full
+
+	if(base)
+		return 0 
 
 	if(z == 0)
-		message_admins("skipCoords: ([x],[y],[z]) no entry found and z == 0")
 		return 0
 	else
-		message_admins("skipCoords: ([x],[y],[z]) no entry found and z != 0")
 		return 1
 
 /obj/structure/supply_truck/proc/getSize(var/atom/A)
@@ -212,7 +200,6 @@
 
 	for(var/type in allowedTypes)
 		if(istype(A, type))
-			message_admins("getting size [allowedTypes[type]]")
 			return allowedTypes[type]
 
 	return 1
@@ -227,7 +214,6 @@
 				var/atom/T = L[i]
 				L[i] = L[i+1]
 				L[i+1] = T
-	message_admins("returning ordered list ([L.len])")
 	return L
 
 /obj/structure/supply_truck/proc/nextPos(var/x, var/y, var/z)
