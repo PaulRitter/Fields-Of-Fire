@@ -24,6 +24,7 @@ TODO:
 - multiple people can't pull out of the truck at the same time
 - can only add crates to truck when they are closed/ use only the closed sprite
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
+- add some general truck fluff (examine text) (improve feedback messages)
 */
 
 var/station_name = "TODO find where to get this var"
