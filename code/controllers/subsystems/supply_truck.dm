@@ -66,6 +66,8 @@ SUBSYSTEM_DEF(supply_truck)
 	var/eta_timeofday //eta used by the ticker
 	var/eta //eta to used in uis
 	var/obj/structure/supply_truck/truck //to keep track of our spawned truck
+
+	var/datum/radionet/radionet
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)

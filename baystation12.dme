@@ -895,6 +895,7 @@
 #include "code\game\objects\structures\showcase.dm"
 #include "code\game\objects\structures\signs.dm"
 #include "code\game\objects\structures\skele_stand.dm"
+#include "code\game\objects\structures\supply_cable.dm"
 #include "code\game\objects\structures\supply_truck.dm"
 #include "code\game\objects\structures\tank_dispenser.dm"
 #include "code\game\objects\structures\target_stake.dm"
