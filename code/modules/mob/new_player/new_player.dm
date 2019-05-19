@@ -374,7 +374,7 @@
 			ticker.minds += character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
 		else
 			AnnounceCyborg(character, job, spawnpoint.msg)
-		matchmaker.do_matchmaking()
+	//	matchmaker.do_matchmaking()
 	AnnounceArrival(character, job, spawnpoint.msg)
 	log_and_message_admins("has joined the round as [character.mind.assigned_role].", character)
 	qdel(src)
