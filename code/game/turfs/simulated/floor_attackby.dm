@@ -3,7 +3,7 @@
 	if(!C || !user)
 		return 0
 
-	if(istype(C, /obj/item/stack/cable_coil) || (flooring && istype(C, /obj/item/stack/rods)))
+	if(istype(C, /obj/item/stack/cable_coil) || flooring && istype(C, /obj/item/stack/rods) || istype(C, /obj/item/stack/radio_cable))
 		return ..(C, user)
 
 	if(flooring)

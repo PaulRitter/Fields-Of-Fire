@@ -183,4 +183,8 @@
 		var/obj/item/stack/cable_coil/coil = thing
 		coil.turf_place(src, user)
 		return
+	if(istype(thing, /obj/item/stack/radio_cable))
+		var/obj/item/stack/radio_cable/coil = thing
+		coil.turf_place(src, user)
+		return
 	return ..()

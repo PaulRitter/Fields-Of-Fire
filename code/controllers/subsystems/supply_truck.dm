@@ -14,17 +14,16 @@ supply radio circuits
 
 /*
 TODO:
-- ((supply radio needs to be connected off map with reinforced cable))
 - qualitycontrol
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
-- make truck content check only count crates
 - truck should have chance to loose crate on route
 - print truck manifest on arrival (or let that be the first thing you pull out)
 - multiple people can't pull out of the truck at the same time
 - can only add crates to truck when they are closed/ use only the closed sprite
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 - add some general truck fluff (examine text) (improve feedback messages)
+- cable amount not changing on placement
 */
 
 var/station_name = "TODO find where to get this var"
@@ -66,8 +65,6 @@ SUBSYSTEM_DEF(supply_truck)
 	var/eta_timeofday //eta used by the ticker
 	var/eta //eta to used in uis
 	var/obj/structure/supply_truck/truck //to keep track of our spawned truck
-
-	var/datum/radionet/radionet
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)

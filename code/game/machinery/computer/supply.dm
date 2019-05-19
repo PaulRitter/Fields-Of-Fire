@@ -34,6 +34,8 @@ For vending packs, see vending_packs.dm*/
 	var/reqtime = 0 //Cooldown for requisitions - Quarxink
 	var/last_viewed_group = "Supplies"
 
+	var/datum/radionet/radionet
+
 /obj/machinery/computer/supply/attack_ai(var/mob/user as mob)
 	add_hiddenprint(user)
 	return attack_hand(user)
@@ -248,6 +250,10 @@ For vending packs, see vending_packs.dm*/
 			permissions_screen = FALSE
 	//Calling the shuttle
 	else if(href_list["send"])
+		if(!radionet || !radionet.hubs.len)
+			to_chat(usr, "<span class='warning'>Order failed - Command didn't respond.</span>")
+			return
+
 		if(!check_restriction(usr))
 			to_chat(usr, "<span class='warning'>Your credentials were rejected by the current permissions protocol.</span>")
 		else

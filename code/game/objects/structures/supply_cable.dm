@@ -1,4 +1,4 @@
-//kinda similar to the powercable but no enough to be a subtype
+// *** STRUCTURE ***
 /obj/structure/supply_cable
 	level = 1
 	anchored =1
@@ -61,7 +61,7 @@
 /obj/structure/supply_cable/attackby(obj/item/W, mob/user)
 
 	if(istype(W, /obj/item/device/multitool))
-		//radionet readout
+		radionet.readout(user)
 	else if(istype(W, /obj/item/stack/radio_cable))
 		var/obj/item/stack/radio_cable/coil = W
 		if (coil.get_amount() < 1)
@@ -81,13 +81,14 @@
 	
 	var/dist = get_dist(loc, O.loc)
 	if(istype(O, /obj/structure/supply_cable))
+		var/obj/structure/supply_cable/SC = O
 		if(dist == 1)
-			var/r1 = GLOB.reverse_dir[d1]
-			var/r2 = GLOB.reverse_dir[d2]
-			if(O.d1 == r1 || O.d1 == r2 || O.d2 == r1 || O.d2 == r2)
+			var/r1 = turn(d1, 180)
+			var/r2 = turn(d2, 180)
+			if(SC.d1 == r1 || SC.d1 == r2 || SC.d2 == r1 || SC.d2 == r2)
 				return 1
-		else if(O.loc == loc)
-			if(O.d1 == d1 || O.d2 == d1 || O.d1 == d2 || O.d2 == d2)
+		else if(SC.loc == loc)
+			if(SC.d1 == d1 || SC.d2 == d1 || SC.d1 == d2 || SC.d2 == d2)
 				return 1
 	
 	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/supply_hub)) && (O.loc == loc))
@@ -96,7 +97,6 @@
 	return 0
 
 /obj/structure/supply_cable/proc/propagateRadionet(var/datum/radionet/RN = new (), var/obj/source) //source override
-	message_admins("propagateNetwork called")
 	var/list/worklist = list()
 	var/list/found_radios = list()
 	var/list/found_hubs = list()
@@ -106,7 +106,6 @@
 
 	while(index<=worklist.len)
 		var/obj/P = worklist[index] //get the next power object found
-		message_admins("working index [index], current length [worklist.len]")
 		index++
 
 		if(istype(P,/obj/structure/supply_cable))
@@ -125,7 +124,7 @@
 				RN.add_hub(H)
 			found_hubs |= H
 
-//needed for placing the cable
+// *** INHAND ***
 /obj/item/stack/radio_cable
 	name = "radio cable coil"
 	icon = 'icons/obj/power.dmi'
@@ -136,7 +135,7 @@
 	color = COLOR_BROWN_ORANGE
 	desc = "A coil of power cable."
 	throwforce = 10
-	w_class = ITEM_SIZE_HUGE
+	w_class = ITEM_SIZE_SMALL
 	throw_speed = 1
 	throw_range = 1
 	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20)
@@ -236,17 +235,16 @@
 	var/obj/structure/supply_cable/C = new(F, nicon_state = "[d1]-[d2]")
 	C.add_fingerprint(user)
 
-//needs to be connected to
+// *** HUB ***
 /obj/structure/supply_hub
 	name = "Supply HUB"
 	desc = "This HUB relays all received signals to command. Do not tamper."
 	icon = 'icons/placeholders/comm_tower.dmi'
 	icon_state = "comm_tower"
-	bound_width = 6 * WORLD_ICON_SIZE
-	bound_height = 2 * WORLD_ICON_SIZE
 	anchored = 1
 	var/datum/radionet/radionet
 
+// *** NET ***
 /datum/radionet
 	//we only save radios and hubs cause what the fuck would we even do with cables
 	var/cables = 0
