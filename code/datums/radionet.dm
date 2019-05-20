@@ -4,6 +4,14 @@
 // 2. add logic on how to add it to the network in /obj/structure/radio_cable/propagateRadionet
 // 3. if you want the network to be redone when something gets placed, check for a cable underneath and call propagateRadionet on it
 
+/*
+>  9   1   5
+>    \ | /
+>  8 - 0 - 4
+>    / | \
+>  10  2   6
+*/
+
 // *** STRUCTURE ***
 /obj/structure/radio_cable
 	level = 1
@@ -21,10 +29,8 @@
 
 	color = COLOR_BROWN_ORANGE
 
-/obj/structure/radio_cable/New(var/nicon_state = "0-1")
+/obj/structure/radio_cable/New()
 	..()
-	icon_state = nicon_state
-
 	// ensure d1 & d2 reflect the icon_state for entering and exiting cable
 	var/dash = findtext(icon_state, "-")
 	d1 = text2num( copytext( icon_state, 1, dash ) )
@@ -232,14 +238,25 @@
 				return
 
 		qdel(C)
-		var/obj/structure/radio_cable/SC = new (T, nicon_state = "[nd1]-[nd2]")
+		var/obj/structure/radio_cable/SC = new (T)
+		SC.icon_state = "[nd1]-[nd2]"
+		SC.d1 = nd1
+		SC.d2 = nd2
 		SC.add_fingerprint()
 
 /obj/item/stack/radio_cable/proc/put_cable(turf/simulated/F, mob/user, d1, d2)
 	if(!istype(F))
 		return
 
-	var/obj/structure/radio_cable/C = new(F, nicon_state = "[d1]-[d2]")
+	if(d1 > d2)		// swap directions to match icons/states
+		var/t = d1
+		d1 = d2
+		d2 = t
+
+	var/obj/structure/radio_cable/C = new(F)
+	C.icon_state = "[d1]-[d2]"
+	C.d1 = d1
+	C.d2 = d2
 	use(1)
 	C.add_fingerprint(user)
 

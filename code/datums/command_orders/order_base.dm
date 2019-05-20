@@ -116,13 +116,16 @@ var/global/current_command_order_id=124901
 		onFulfilled()
 	return toPay
 
-//example manifest order
-/datum/command_order/per_unit/manifest
+//default order
+//contains all items which will always be bought
+/datum/command_order/per_unit/default
 	recurring = 1
 	listed = 0
 	requested = list(
-		/obj/item/weapon/paper/manifest = INFINITY
+		/obj/item/weapon/paper/manifest = INFINITY,
+		/obj/structure/reagent_dispensers/fueltank = INFINITY
 	)
 	unit_prices=list(
-		/obj/item/weapon/paper/manifest = 2
+		/obj/item/weapon/paper/manifest = 2,
+		/obj/structure/reagent_dispensers/fueltank = 150
 	)

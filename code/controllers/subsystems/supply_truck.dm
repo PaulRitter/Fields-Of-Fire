@@ -23,7 +23,7 @@ TODO:
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 - add some general truck fluff (improve feedback messages)
 - add decals when cables get blown up
-- some runtime when you place a cable, still works tho
+- add a reagent command order, should be iterated over first and should only remove the reagent from the container
 */
 
 var/station_name = "TODO find where to get this var"
@@ -72,7 +72,7 @@ SUBSYSTEM_DEF(supply_truck)
 		var/datum/supply_pack/P = new typepath
 		supply_packs[P.name] = P
 
-	add_command_order(new /datum/command_order/per_unit/manifest(), 1) //so we pay 2 bucks for every returned manifest
+	add_command_order(new /datum/command_order/per_unit/default(), 1) //so we pay 2 bucks for every returned manifest
 	..()
 
 //ticker for the eta
