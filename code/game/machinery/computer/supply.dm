@@ -36,6 +36,13 @@ For vending packs, see vending_packs.dm*/
 
 	var/datum/radionet/radionet
 
+/obj/machinery/computer/supply/New()
+	..()
+	var/datum/radionet/RN = new()
+	for(var/obj/structure/radio_cable/C in loc)
+		if(C.radionet != RN)
+			C.propagateRadionet(RN)
+
 /obj/machinery/computer/supply/attack_ai(var/mob/user as mob)
 	add_hiddenprint(user)
 	return attack_hand(user)

@@ -10,6 +10,8 @@ contains supply truck
 contains supply radio
 - code\game\objects\items\weapons\circuitboards\computer\supply.dm
 supply radio circuits
+- code/datums/radionet.dm
+radionet cable + hub + net datum
 */
 
 /*

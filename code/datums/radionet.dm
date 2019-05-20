@@ -1,5 +1,11 @@
+// HOW DO ADD NEW TYPES TO THE NETWORK
+// (WE CAN'T USE AN UNIVERSAL SUBTYPE SINCE WE ARE USING COMPUTERS AND STRUCTURES)
+// 1. add logic on how it will connect in /obj/structure/radio_cable/get_connections
+// 2. add logic on how to add it to the network in /obj/structure/radio_cable/propagateRadionet
+// 3. if you want the network to be redone when something gets placed, check for a cable underneath and call propagateRadionet on it
+
 // *** STRUCTURE ***
-/obj/structure/supply_cable
+/obj/structure/radio_cable
 	level = 1
 	anchored =1
 	var/datum/radionet/radionet //to see if we actually have a proper connection
@@ -15,7 +21,7 @@
 
 	color = COLOR_BROWN_ORANGE
 
-/obj/structure/supply_cable/New(var/nicon_state = "0-1")
+/obj/structure/radio_cable/New(var/nicon_state = "0-1")
 	..()
 	icon_state = nicon_state
 
@@ -26,19 +32,20 @@
 
 	propagateRadionet()
 
-/obj/structure/supply_cable/Destroy()
+/obj/structure/radio_cable/Destroy()
 	var/list/connectedThings = get_connections()
 	forceMove(null) //so we wont be propagated over
+	//add some decals TODO
 	var/list/newRNs = list()
 	for(var/A in connectedThings)
-		if(istype(A, /obj/structure/supply_cable))
-			var/obj/structure/supply_cable/C = A
-			if(!(C.radionet in newRNs)) //did we already propagate over this one? optimization, would produce errors but just prevents unneeded propagations
+		if(istype(A, /obj/structure/radio_cable))
+			var/obj/structure/radio_cable/C = A
+			if(!(C.radionet in newRNs)) //did we already propagate over this one? optimization, this wouldn't produce errors but just prevents unneeded propagations
 				var/datum/radionet/RN = new ()
 				propagateRadionet(RN, C)
 				newRNs += RN
 
-/obj/structure/supply_cable/proc/get_connections()
+/obj/structure/radio_cable/proc/get_connections()
 	. = list()
 	for(var/cable_dir in list(d1, d2))
 		var/turf/step = get_step(loc, cable_dir)
@@ -51,14 +58,16 @@
 			. += AM
 
 //explosion handling
-/obj/structure/supply_cable/ex_act(severity)
+/obj/structure/radio_cable/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			if (prob(50))
-				//add some decals
+				qdel(src)
+		if(2.0)
+			if(prob(25))
 				qdel(src)
 
-/obj/structure/supply_cable/attackby(obj/item/W, mob/user)
+/obj/structure/radio_cable/attackby(obj/item/W, mob/user)
 
 	if(istype(W, /obj/item/device/multitool))
 		radionet.readout(user)
@@ -72,16 +81,16 @@
 	src.add_fingerprint(user)
 
 //Telekinesis has no effect on a cable
-/obj/structure/supply_cable/attack_tk(mob/user)
+/obj/structure/radio_cable/attack_tk(mob/user)
 	return
 
-/obj/structure/supply_cable/proc/isConnected(var/obj/O)
+/obj/structure/radio_cable/proc/isConnected(var/obj/O)
 	if(!O)
 		return 0
 	
 	var/dist = get_dist(loc, O.loc)
-	if(istype(O, /obj/structure/supply_cable))
-		var/obj/structure/supply_cable/SC = O
+	if(istype(O, /obj/structure/radio_cable))
+		var/obj/structure/radio_cable/SC = O
 		if(dist == 1)
 			var/r1 = turn(d1, 180)
 			var/r2 = turn(d2, 180)
@@ -96,7 +105,7 @@
 
 	return 0
 
-/obj/structure/supply_cable/proc/propagateRadionet(var/datum/radionet/RN = new (), var/obj/source) //source override
+/obj/structure/radio_cable/proc/propagateRadionet(var/datum/radionet/RN = new (), var/obj/source) //source override
 	var/list/worklist = list()
 	var/list/found_radios = list()
 	var/list/found_hubs = list()
@@ -108,8 +117,8 @@
 		var/obj/P = worklist[index] //get the next power object found
 		index++
 
-		if(istype(P,/obj/structure/supply_cable))
-			var/obj/structure/supply_cable/C = P
+		if(istype(P,/obj/structure/radio_cable))
+			var/obj/structure/radio_cable/C = P
 			if(C.radionet != RN)
 				RN.add_cable(C)
 			worklist |= C.get_connections()
@@ -164,14 +173,14 @@
 	else
 		dirn = get_dir(F, user)
 
-	for(var/obj/structure/supply_cable/LC in F)
+	for(var/obj/structure/radio_cable/LC in F)
 		if((LC.d1 == dirn && LC.d2 == 0 ) || ( LC.d2 == dirn && LC.d1 == 0))
 			to_chat(user, "<span class='warning'>There's already a cable at that position.</span>")
 			return
 
 	put_cable(F, user, 0, dirn)
 
-/obj/item/stack/radio_cable/proc/cable_join(obj/structure/supply_cable/C, mob/user)
+/obj/item/stack/radio_cable/proc/cable_join(obj/structure/radio_cable/C, mob/user)
 	var/turf/U = user.loc
 	if(!isturf(U))
 		return
@@ -198,7 +207,7 @@
 
 		var/fdirn = GLOB.reverse_dir[dirn] // the opposite direction
 
-		for(var/obj/structure/supply_cable/LC in U)		// check to make sure there's not a cable there already
+		for(var/obj/structure/radio_cable/LC in U)		// check to make sure there's not a cable there already
 			if(LC.d1 == fdirn || LC.d2 == fdirn)
 				to_chat(user, "There's already a cable at that position.")
 				return
@@ -217,7 +226,7 @@
 			nd2 = C.d2
 
 
-		for(var/obj/structure/supply_cable/LC in T)		// check to make sure there's no matching cable
+		for(var/obj/structure/radio_cable/LC in T)		// check to make sure there's no matching cable
 			if(LC == C)			// skip the cable we're interacting with
 				continue
 			if((LC.d1 == nd1 && LC.d2 == nd2) || (LC.d1 == nd2 && LC.d2 == nd1) )	// make sure no cable matches either direction
@@ -225,24 +234,32 @@
 				return
 
 		qdel(C)
-		var/obj/structure/supply_cable/SC = new (T, nicon_state = "[nd1]-[nd2]")
+		var/obj/structure/radio_cable/SC = new (T, nicon_state = "[nd1]-[nd2]")
 		SC.add_fingerprint()
 
 /obj/item/stack/radio_cable/proc/put_cable(turf/simulated/F, mob/user, d1, d2)
 	if(!istype(F))
 		return
 
-	var/obj/structure/supply_cable/C = new(F, nicon_state = "[d1]-[d2]")
+	var/obj/structure/radio_cable/C = new(F, nicon_state = "[d1]-[d2]")
 	C.add_fingerprint(user)
 
 // *** HUB ***
-/obj/structure/supply_hub
-	name = "Supply HUB"
+/obj/structure/radio_hub
+	name = "Radio HUB"
 	desc = "This HUB relays all received signals to command. Do not tamper."
 	icon = 'icons/placeholders/comm_tower.dmi'
 	icon_state = "comm_tower"
 	anchored = 1
+	density = 1
 	var/datum/radionet/radionet
+
+/obj/structure/radio_hub/New()
+	..()
+	var/datum/radionet/RN = new()
+	for(var/obj/structure/radio_cable/C in loc)
+		if(C.radionet != RN)
+			C.propagateRadionet(RN)
 
 // *** NET ***
 /datum/radionet
@@ -252,7 +269,7 @@
 	var/list/hubs = list()
 
 //only need an add_cable cause we do a new net anyways whenever one gets removed
-/datum/radionet/proc/add_cable(var/obj/structure/supply_cable/C)
+/datum/radionet/proc/add_cable(var/obj/structure/radio_cable/C)
 	C.radionet = src
 	cables++
 
