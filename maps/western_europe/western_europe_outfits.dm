@@ -71,7 +71,7 @@
 
 	flags = 0
 
-/decl/hierarchy/outfit/job/germknight/equip_id(mob/living/carbon/human/H)
+/decl/hierarchy/outfit/job/britknight/equip_id(mob/living/carbon/human/H)
 	var/obj/item/weapon/card/id/wwi/britbrass/C = ..()
 	C.assignment = "British Knight"
 	H.set_id_info(C)
