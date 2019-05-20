@@ -6,8 +6,8 @@
 	icon_state = "lockbox+l"
 	item_state = "syringe_kit"
 	w_class = ITEM_SIZE_HUGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = 32 //The sum of the w_classes of all the items in this storage item.
+	storage_slots_w = 4
+	storage_slots_h = 24
 	req_access = list()
 	var/locked = 1
 	var/broken = 0

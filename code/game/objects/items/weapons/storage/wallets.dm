@@ -4,8 +4,8 @@
 	icon = 'icons/obj/wallet.dmi'
 	icon_state = "wallet-white"
 	w_class = ITEM_SIZE_SMALL
-	max_w_class = ITEM_SIZE_SMALL //Don't worry, see can_hold[]
-	max_storage_space = 8
+	storage_slots_w = 6
+	storage_slots_h = 4
 	can_hold = list(
 		/obj/item/weapon/spacecash,
 		/obj/item/weapon/card,
