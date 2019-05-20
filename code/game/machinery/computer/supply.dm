@@ -152,6 +152,9 @@ For vending packs, see vending_packs.dm*/
 				V.show_message("<b>[src]</b>'s monitor flashes, \"[world.time - reqtime] seconds remaining until another requisition form may be printed.\"")
 			return 1
 
+		if(!checkRadioconnection())
+			return
+
 		var/pack_name = copytext(href_list["doorder"], 1, lentext(href_list["doorder"]))
 		var/multi = text2num(copytext(href_list["doorder"], -1))
 		if(!isnum(multi))
@@ -195,6 +198,8 @@ For vending packs, see vending_packs.dm*/
 	else if (href_list["rreq"])
 		if(!check_restriction(usr))
 			return 1
+		if(!checkRadioconnection())
+			return
 		var/ordernum = text2num(href_list["rreq"])
 		if(!ordernum)
 			return 1
@@ -204,6 +209,12 @@ For vending packs, see vending_packs.dm*/
 		if(usr.machine == src)
 			usr.unset_machine()
 		return 1
+
+/obj/machinery/computer/supply/proc/checkRadioconnection()
+	if(!radionet || !radionet.hubs.len)
+		to_chat(usr, "<span class='warning'>Command didn't respond.</span>")
+		return 0
+	return 1
 
 #define SCR_MAIN 1
 #define SCR_CENTCOM 2
@@ -270,8 +281,7 @@ For vending packs, see vending_packs.dm*/
 			permissions_screen = FALSE
 	//Calling the shuttle
 	else if(href_list["send"])
-		if(!radionet || !radionet.hubs.len)
-			to_chat(usr, "<span class='warning'>Order failed - Command didn't respond.</span>")
+		if(!checkRadioconnection())
 			return
 
 		if(!check_restriction(usr))
@@ -285,6 +295,9 @@ For vending packs, see vending_packs.dm*/
 		var/ordernum = text2num(href_list["confirmorder"])
 		if(!ordernum)
 			return 1
+
+		if(!checkRadioconnection())
+			return
 
 		var/datum/supply_order/O = SSsupply_truck.requestlist[ordernum]
 
