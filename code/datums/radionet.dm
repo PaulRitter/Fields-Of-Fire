@@ -7,7 +7,7 @@
 // *** STRUCTURE ***
 /obj/structure/radio_cable
 	level = 1
-	anchored =1
+	anchored = 1
 	var/datum/radionet/radionet //to see if we actually have a proper connection
 	name = "Radio cable"
 	desc = "A heavy cable for transmitting radio signals. Nearly indestructable."
@@ -100,7 +100,7 @@
 			if(SC.d1 == d1 || SC.d2 == d1 || SC.d1 == d2 || SC.d2 == d2)
 				return 1
 	
-	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/supply_hub)) && (O.loc == loc))
+	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/radio_hub)) && (O.loc == loc))
 		return 1
 
 	return 0
@@ -127,8 +127,8 @@
 			if(R.radionet != RN)
 				RN.add_radio(R)
 			found_radios |= R
-		else if(P.anchored && istype(P,/obj/structure/supply_hub) && !(P in found_hubs))
-			var/obj/structure/supply_hub/H = P
+		else if(P.anchored && istype(P,/obj/structure/radio_hub) && !(P in found_hubs))
+			var/obj/structure/radio_hub/H = P
 			if(H.radionet != RN) 
 				RN.add_hub(H)
 			found_hubs |= H
@@ -220,11 +220,9 @@
 		var/nd1 = C.d2	// these will be the new directions
 		var/nd2 = dirn
 
-
 		if(nd1 > nd2)		// swap directions to match icons/states
 			nd1 = dirn
 			nd2 = C.d2
-
 
 		for(var/obj/structure/radio_cable/LC in T)		// check to make sure there's no matching cable
 			if(LC == C)			// skip the cable we're interacting with
@@ -253,6 +251,8 @@
 	icon_state = "comm_tower"
 	anchored = 1
 	density = 1
+	plane = ABOVE_HUMAN_PLANE
+	layer = ABOVE_HUMAN_LAYER
 	var/datum/radionet/radionet
 
 /obj/structure/radio_hub/New()
@@ -284,11 +284,11 @@
 	radios -= R
 	//fluff message about loosing connection to radiooperator
 
-/datum/radionet/proc/add_hub(var/obj/structure/supply_hub/H)
+/datum/radionet/proc/add_hub(var/obj/structure/radio_hub/H)
 	H.radionet = src
 	hubs += H
 
-/datum/radionet/proc/remove_hub(var/obj/structure/supply_hub/H)
+/datum/radionet/proc/remove_hub(var/obj/structure/radio_hub/H)
 	H.radionet = null
 	hubs -= H
 

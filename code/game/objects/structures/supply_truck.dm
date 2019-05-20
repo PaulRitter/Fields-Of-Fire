@@ -103,10 +103,13 @@
 	return 0
 
 /obj/structure/supply_truck/proc/hasSpace(var/num)
-	var/remainingSize = maxX * maxY * maxZ
+	var/remainingSize = getSpace()
 	for(var/atom/A in contents)
 		remainingSize -= getSize(A)
 	return (remainingSize >= num)
+
+/obj/structure/supply_truck/proc/getSpace()
+	return maxX * maxY * maxZ
 
 //rendering the crates ontop of the truck
 //render order:
@@ -153,7 +156,7 @@
 					doBreak = 1 
 					break
 
-		if(doBreak)
+		if(doBreak || (z >= maxZ))
 			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev.")
 			break
 

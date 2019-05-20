@@ -19,10 +19,11 @@ TODO:
 - qualitycontrol
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
-- truck should have chance to loose crate on route
 - multiple people can't pull out of the truck at the same time + people can load multiple things at once
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 - add some general truck fluff (improve feedback messages)
+- add decals when cables get blown up
+- some runtime when you place a cable, still works tho
 */
 
 var/station_name = "TODO find where to get this var"
@@ -56,7 +57,7 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/supply_packs = list() //all packs that can be ordered
 	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
-	var/commandMoney = 100 //Money currently stored at command
+	var/commandMoney = 10000 //Money currently stored at command
 
 	//truck movement
 	var/at_base = 0 //if shuttle is at base
@@ -94,10 +95,10 @@ SUBSYSTEM_DEF(supply_truck)
 			return
 		truck = new (supply_truck_pos)
 		truck.contents = truck_contents
-		truck.update_icon()
 		truck_contents.len = 0
+		truck.update_icon()
 		for(var/obj/machinery/computer/supply/administration/R in supply_radios)
-			var/obj/item/weapon/paper/truck_manifest/M = new (R.loc, truck.getGroupedContentList())
+			new /obj/item/weapon/paper/truck_manifest(R.loc, truck.getGroupedContentList())
 		allSay("Truck arrived at base.")
 		at_base = 1
 	else //at station
@@ -130,6 +131,7 @@ SUBSYSTEM_DEF(supply_truck)
 	
 	//sets the eta timer
 	eta_timeofday = world.timeofday + rand(movetimeMin, movetimeMax)
+
 	moving = 1
 	return 1
 
@@ -138,16 +140,19 @@ SUBSYSTEM_DEF(supply_truck)
 	for(var/datum/supply_order/SO in shoppinglist)
 		. += SO.object.cost
 
+//tries to sell an obj to the command orders
 /datum/controller/subsystem/supply_truck/proc/SellObjToOrders(var/atom/A,var/in_crate)
 	// Per-unit orders run last so they don't steal shit.
 	var/list/deferred_order_checks=list()
 	var/order_idx=0
+	//first we loop through the not-per-unit orders
 	for(var/datum/command_order/O in command_orders)
 		order_idx++
-		if(istype(O,/datum/command_order/per_unit))
+		if(istype(O,/datum/command_order/per_unit)) //here we memorize the per-unit orders to do later
 			deferred_order_checks += order_idx
 		if(O.trySellObj(A,in_crate))
 			return 1
+	//check if we can sell to per-unit orders
 	for(var/oid in deferred_order_checks)
 		var/datum/command_order/O = command_orders[oid]
 		if(O.trySellObj(A,in_crate))
@@ -188,7 +193,23 @@ SUBSYSTEM_DEF(supply_truck)
 		return 0
 
 	var/list/contents = list()
-	for(var/datum/supply_order/SO in shoppinglist)
+	
+	//how much space will a truck have
+	var/obj/structure/supply_truck/T = new ()
+	var/space = T.getSpace()
+	T.forceMove(null)
+
+	var/list/toBuy = list()
+	if(shoppinglist.len > space)
+		toBuy = shoppinglist.Copy(1,space+1)
+		shoppinglist.Cut(1,space+1)
+	else
+		toBuy = shoppinglist.Copy()
+		shoppinglist.len = 0
+
+	for(var/datum/supply_order/SO in toBuy)
+		var/datum/supply_pack/SP = SO.object
+
 		//paying for the order
 		commandMoney -= SP.cost
 		shoppinglist.Remove(SO)
@@ -196,7 +217,6 @@ SUBSYSTEM_DEF(supply_truck)
 		if(prob(0.5)) //1 in 200 crates will be lost
 			continue
 
-		var/datum/supply_pack/SP = SO.object
 		var/atom/A = new SP.containertype()
 		A.name = "[SP.containername] [SO.comment ? "([SO.comment])":"" ]"
 
@@ -268,7 +288,7 @@ SUBSYSTEM_DEF(supply_truck)
 
 	if(no_notice)
 		return
-	
+
 	var/name = "External order form - [C.name] order number [C.id]"
 	var/info = {"<h3>Central command supply requisition form</h3><hr>
 	 			INDEX: #[C.id]<br>
