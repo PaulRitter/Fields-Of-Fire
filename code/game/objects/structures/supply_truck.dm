@@ -19,6 +19,7 @@
 		/obj/structure/closet/crate = 1,
 		/obj/structure/reagent_dispensers/fueltank = 2
 	)// /type = size(0<size<2)
+	// this allows floatingpoint numbers
 
 	//vars for the overlay rendering
 	//the starting point of the crate rendering, basically crate (0,0)
@@ -39,10 +40,10 @@
 
 /obj/structure/supply_truck/examine(mob/user, distance, infix, suffix)
 	if(contents.len)
-		var/txt_cont = jointext(contents,", ")
-		to_chat(user, "Currently loaded are [txt_cont].") //byond gets all errory when put it inside the string
+		var/txt_cont = jointext(getGroupedContentList(),"\n - ")
+		to_chat(user, "Contents:\n - [txt_cont].") //byond gets all errory when put it inside the string
 	else
-		to_chat(user, "It is currently empty")
+		to_chat(user, "\the [src] is empty")
 
 /obj/structure/supply_truck/proc/sanityCheck(var/mob/user)
 	if(Adjacent(user))
@@ -68,6 +69,12 @@
 		to_chat(user, "<span class='notice'>\the [A] doesn't fit!</span>")
 		return 0
 
+	if(istype(A, /obj/structure/closet))
+		var/obj/structure/closet/C = A
+		if(C.opened)
+			to_chat(user, "<span class='notice'>\the [A] needs to be closed!</span>")
+			return 0
+
 	user.visible_message("<span class='notice'>[user] starts putting \the [A] into \the [src]</span>")
 	to_chat(user, "<span class='notice'>You start to put \the [A] into \the [src]")
 	if(do_after(user, 5 SECONDS, src, progress = 2))
@@ -80,7 +87,7 @@
 
 /obj/structure/supply_truck/proc/unload(var/mob/user)
 	if(!contents.len)
-		to_chat(user, "<span class='notice'>The Truck is empty.</span>")
+		to_chat(user, "<span class='notice'>\the [src] is empty.</span>")
 		return 0
 
 	//take the last atom of the list and give it to our mob
@@ -122,6 +129,8 @@
 	var/list/renderOrder = getWeightedContentList()
 	var/list/alreadyRendered = list()
 	for(var/atom/A in renderOrder)
+		if(!getSize(A))
+			continue
 		var/index = "\ref[A]"
 		if(!(index in temp_images))
 			temp_images[index] = image(A.icon, A.icon_state)
@@ -202,7 +211,7 @@
 		if(istype(A, type))
 			return allowedTypes[type]
 
-	return 1
+	return 0 //if it got added but we don't know it, it'll probably fuck up the renderer, so we let it ignore it using this
 
 //use this to determine if something can be added too
 //basic desc bubblesort, since we want to render the biggest objs first
@@ -229,3 +238,15 @@
 		z++
 
 	return list(x, y, z)
+
+/obj/structure/supply_truck/proc/getGroupedContentList()
+	var/list/L = list()
+	for(var/atom/A in contents)
+		L[A.name]++
+	
+	. = list()
+	for(var/A in L)
+		var/string = "[A]"
+		if(L[A] > 1)
+			string += " x[L[A]]"
+		. += string

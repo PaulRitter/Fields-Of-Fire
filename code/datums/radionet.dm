@@ -242,6 +242,7 @@
 		return
 
 	var/obj/structure/radio_cable/C = new(F, nicon_state = "[d1]-[d2]")
+	use(1)
 	C.add_fingerprint(user)
 
 // *** HUB ***

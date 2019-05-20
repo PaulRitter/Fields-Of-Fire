@@ -20,12 +20,9 @@ TODO:
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
 - truck should have chance to loose crate on route
-- print truck manifest on arrival (or let that be the first thing you pull out)
 - multiple people can't pull out of the truck at the same time
-- can only add crates to truck when they are closed/ use only the closed sprite
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
-- add some general truck fluff (examine text) (improve feedback messages)
-- cable amount not changing on placement
+- add some general truck fluff (improve feedback messages)
 */
 
 var/station_name = "TODO find where to get this var"
@@ -99,6 +96,8 @@ SUBSYSTEM_DEF(supply_truck)
 		truck.contents = truck_contents
 		truck.update_icon()
 		truck_contents.len = 0
+		for(var/obj/machinery/computer/supply/administration/R in supply_radios)
+			var/obj/item/weapon/paper/truck_manifest/M = new (R.loc, truck.getGroupedContentList())
 		allSay("Truck arrived at base.")
 		at_base = 1
 	else //at station
@@ -194,15 +193,6 @@ SUBSYSTEM_DEF(supply_truck)
 		var/atom/A = new SP.containertype()
 		A.name = "[SP.containername] [SO.comment ? "([SO.comment])":"" ]"
 
-		//supply manifest generation begin
-
-		var/obj/item/weapon/paper/manifest/slip = new /obj/item/weapon/paper/manifest(A)
-
-		slip.name = "Shipping Manifest for [SO.orderedby]'s Order"
-		slip.info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
-			Destination: [station_name]<br>
-			[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
-			CONTENTS:<br><ul>"}
 		//spawn the stuff, finish generating the manifest while you're at it
 		if(istype(A, /obj/structure/closet))
 			var/obj/structure/closet/C = A
@@ -222,14 +212,11 @@ SUBSYSTEM_DEF(supply_truck)
 			else
 				for(var/i=1, i<SP.contains[typepath], i++) //one less since we already made one (B2)
 					new typepath(A)
-			slip.info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
+
+		var/obj/item/weapon/paper/manifest/slip = makeContainerManifest(A, SO)
 
 		SP.post_creation(A)
 
-		//manifest finalisation
-
-		slip.info += {"</ul><br>
-			CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
 		if (SP.contraband)
 			slip.forceMove(null)	//we are out of blanks for Form #44-D Ordering Illicit Drugs.
 		commandMoney -= SP.cost
@@ -237,6 +224,27 @@ SUBSYSTEM_DEF(supply_truck)
 
 		contents += A
 	return contents
+
+/datum/controller/subsystem/supply_truck/proc/makeContainerManifest(var/atom/A, var/datum/supply_order/SO)
+	var/datum/supply_pack/SP = SO.object
+	var/obj/item/weapon/paper/manifest/slip = new /obj/item/weapon/paper/manifest(A)
+
+	slip.name = "Shipping Manifest for [SO.orderedby]'s Order"
+	slip.info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
+		Destination: [station_name]<br>
+		[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
+		CONTENTS:<br><ul>"}
+
+	for(var/typepath in SP.contains)
+		if(!typepath)
+			continue
+		var/atom/B2 = new typepath(A)
+		slip.info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
+
+	slip.info += {"</ul><br>
+		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
+
+	return slip
 
 /datum/controller/subsystem/supply_truck/proc/confirm_order(datum/supply_order/O,mob/user,var/position, var/wasAutoConfirmed) //position represents where it falls in the request list
 	var/datum/supply_pack/P = O.object

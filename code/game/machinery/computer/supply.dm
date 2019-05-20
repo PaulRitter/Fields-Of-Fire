@@ -24,6 +24,17 @@ For vending packs, see vending_packs.dm*/
 		STAMP BELOW TO APPROVE THIS REQUISITION:<br>"}
 	update_icon()
 
+//request form to spawn
+/obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist)
+	. = ..(loc)
+	name = "Truck Manifest"
+	info += {"<h3>Truck Manifest</h3><hr>
+		Destination: [station_name]<br>
+		CONTENTS:<br><ul>"}
+	info += "<li>"+jointext(contentlist, "</li><li>")+"</li>"
+	info += "</ul><br>CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"
+	update_icon()
+
 #define REASON_LEN 140
 
 /obj/machinery/computer/supply
