@@ -13,7 +13,7 @@ var/global/current_command_order_id=124901
 	var/list/requested=list()
 	var/list/fulfilled=list()
 
-	var/listed = 0 //if the order is to be listed on the cargo radio
+	var/listed = 1 //if the order is to be listed on the cargo radio
 
 /datum/command_order/New()
 	..()
@@ -119,6 +119,7 @@ var/global/current_command_order_id=124901
 //example manifest order
 /datum/command_order/per_unit/manifest
 	recurring = 1
+	listed = 0
 	requested = list(
 		/obj/item/weapon/paper/manifest = INFINITY
 	)

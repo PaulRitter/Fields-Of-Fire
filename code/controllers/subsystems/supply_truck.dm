@@ -20,7 +20,7 @@ TODO:
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
 - truck should have chance to loose crate on route
-- multiple people can't pull out of the truck at the same time
+- multiple people can't pull out of the truck at the same time + people can load multiple things at once
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 - add some general truck fluff (improve feedback messages)
 */
@@ -189,6 +189,13 @@ SUBSYSTEM_DEF(supply_truck)
 
 	var/list/contents = list()
 	for(var/datum/supply_order/SO in shoppinglist)
+		//paying for the order
+		commandMoney -= SP.cost
+		shoppinglist.Remove(SO)
+
+		if(prob(0.5)) //1 in 200 crates will be lost
+			continue
+
 		var/datum/supply_pack/SP = SO.object
 		var/atom/A = new SP.containertype()
 		A.name = "[SP.containername] [SO.comment ? "([SO.comment])":"" ]"
@@ -219,8 +226,6 @@ SUBSYSTEM_DEF(supply_truck)
 
 		if (SP.contraband)
 			slip.forceMove(null)	//we are out of blanks for Form #44-D Ordering Illicit Drugs.
-		commandMoney -= SP.cost
-		shoppinglist.Remove(SO)
 
 		contents += A
 	return contents

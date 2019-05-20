@@ -238,6 +238,8 @@ For vending packs, see vending_packs.dm*/
 
 	var/centcomm_list[0]
 	for(var/datum/command_order/O in SSsupply_truck.command_orders)
+		if(!O.listed)
+			continue
 		centcomm_list.Add(list(list("id" = O.id, "requested" = O.getRequestsByName(), "fulfilled" = O.getFulfilledByName(), "name" = O.name, "worth" = O.worth)))
 	data["command_orders"] = centcomm_list
 
