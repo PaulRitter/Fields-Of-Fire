@@ -8,6 +8,7 @@
 /datum/job/britsoldier
 	title = "British Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -25,6 +26,7 @@
 /datum/job/germknight
 	title = "German Knight"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -42,6 +44,7 @@
 /datum/job/frenchsoldier
 	title = "French Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -59,6 +62,7 @@
 /datum/job/britknight
 	title = "British Knight"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -86,6 +90,7 @@
 /datum/job/germsoldier
 	title = "German Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -101,6 +106,7 @@
 /datum/job/germsquire
 	title = "German Squire"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -116,6 +122,7 @@
 /datum/job/britag
 	title = "British AG"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
