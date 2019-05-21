@@ -8,7 +8,7 @@ var/global/current_command_order_id=124901
 	var/worth = 0
 
 	var/must_be_in_crate = 0
-	var/recurring = 0
+	var/permanent = 0
 
 	var/list/requested=list()
 	var/list/fulfilled=list()
@@ -85,9 +85,16 @@ var/global/current_command_order_id=124901
 /datum/command_order/proc/onFulfilled()
 	return
 
+/datum/command_order/proc/shouldRemove()
+	if(permanent)
+		return 0
+	var/sum = 0
+	for(var/typepath in requested)
+		sum += requested[typepath]
+	return !sum //if its 0, we can remove, so we return 1
+
 // These run last to not steal items from other orders
 /datum/command_order/per_unit
-	recurring=1
 	var/list/unit_prices=list()
 
 // Same as normal, but will take every last bit of what you provided.
@@ -99,7 +106,9 @@ var/global/current_command_order_id=124901
 	if(O.type in requested)
 		if(!(O.type in fulfilled))
 			fulfilled[O.type]=0
-		fulfilled[O.type]=fulfilled[O.type]+1
+		if(fulfilled[O.type]==requested[O.type])
+			return 0
+		fulfilled[O.type]++
 		qdel(O)
 		return 1
 
@@ -116,10 +125,30 @@ var/global/current_command_order_id=124901
 		onFulfilled()
 	return toPay
 
+/datum/command_order/per_unit/per_reagent/trySellObj(var/obj/O)
+	if(!O.reagents || !O.reagents.reagent_list.len)
+		return 0
+
+	for(var/datum/reagent/R in requested)
+		if(O.reagents.has_reagent(R.type))
+			if(!(R.type in fulfilled))
+				fulfilled[R.type]=0
+			if(fulfilled[R.type]==requested[R.type])
+				continue
+			var/amount = O.reagents.get_reagent_amount(R.type)
+			var/remainder = requested[R.type] - fulfilled[R.type]
+			if(amount > remainder)
+				amount = remainder
+			if(amount <= 0)
+				continue
+			fulfilled[R.type] += amount
+			O.reagents.remove_reagent(R.type, amount, 1)
+			. = 1
+
 //default order
 //contains all items which will always be bought
 /datum/command_order/per_unit/default
-	recurring = 1
+	permanent = 1
 	listed = 0
 	requested = list(
 		/obj/item/weapon/paper/manifest = INFINITY,
@@ -128,4 +157,16 @@ var/global/current_command_order_id=124901
 	unit_prices=list(
 		/obj/item/weapon/paper/manifest = 2,
 		/obj/structure/reagent_dispensers/fueltank = 150
+	)
+
+/datum/command_order/per_unit/per_reagent/default
+	permanent = 1
+	listed = 0
+	requested = list(
+		/datum/reagent/fuel = INFINITY,
+		/datum/reagent/water = INFINITY,
+	)
+	unit_prices = list(
+		/datum/reagent/fuel = 2,
+		/datum/reagent/water = 0.5
 	)

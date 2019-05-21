@@ -60,7 +60,8 @@ SUBSYSTEM_DEF(supply_truck)
 		var/datum/supply_pack/P = new typepath
 		supply_packs[P.name] = P
 
-	add_command_order(new /datum/command_order/per_unit/default(), 1) //so we pay 2 bucks for every returned manifest
+	add_command_order(new /datum/command_order/per_unit/default(), 1)
+	add_command_order(new /datum/command_order/per_unit/per_reagent/default(), 1)
 	..()
 
 //ticker for the eta
@@ -131,19 +132,27 @@ SUBSYSTEM_DEF(supply_truck)
 //tries to sell an obj to the command orders
 /datum/controller/subsystem/supply_truck/proc/SellObjToOrders(var/atom/A,var/in_crate)
 	// Per-unit orders run last so they don't steal shit.
-	var/list/deferred_order_checks=list()
-	var/order_idx=0
-	//first we loop through the not-per-unit orders
-	for(var/datum/command_order/O in command_orders)
-		order_idx++
-		if(istype(O,/datum/command_order/per_unit)) //here we memorize the per-unit orders to do later
-			deferred_order_checks += order_idx
-		if(O.trySellObj(A,in_crate))
+	var/list/priority1=list() //normal orders here
+	var/list/priority2=list() //per_unit goes here
+	//here we only want to sell to reagent orders
+	for(var/idx = 1; idx <= command_orders.len; idx++)
+		var/datum/command_order/O = command_orders[idx]
+		if(!istype(O, /datum/command_order/per_unit/per_reagent))
+			if(istype(O,/datum/command_order/per_unit))
+				priority2 += idx
+			else
+				priority1 += idx
+			continue
+		if(O.trySellObj(A))
+			return 1
+
+	//second we loop through the not-per-unit orders
+	for(var/idx in priority1)
+		if(command_orders[idx].trySellObj(A,in_crate))
 			return 1
 	//check if we can sell to per-unit orders
-	for(var/oid in deferred_order_checks)
-		var/datum/command_order/O = command_orders[oid]
-		if(O.trySellObj(A,in_crate))
+	for(var/idx in priority2)
+		if(command_orders[idx].trySellObj(A,in_crate))
 			return 1
 	return 0
 
@@ -167,7 +176,7 @@ SUBSYSTEM_DEF(supply_truck)
 		for(var/datum/command_order/O in command_orders)
 			var/pay = O.CheckFulfilled()
 			money += pay
-			if(pay && !O.recurring)
+			if(O.shouldRemove())
 				command_orders.Remove(O)
 		qdel(MA)
 	return money
