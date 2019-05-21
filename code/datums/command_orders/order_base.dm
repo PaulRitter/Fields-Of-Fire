@@ -151,11 +151,11 @@ var/global/current_command_order_id=124901
 	permanent = 1
 	listed = 0
 	requested = list(
-		/obj/item/weapon/paper/manifest = INFINITY,
+		/obj/item/weapon/paper/shipping_manifest = INFINITY,
 		/obj/structure/reagent_dispensers/fueltank = INFINITY
 	)
 	unit_prices=list(
-		/obj/item/weapon/paper/manifest = 2,
+		/obj/item/weapon/paper/shipping_manifest = 2,
 		/obj/structure/reagent_dispensers/fueltank = 150
 	)
 

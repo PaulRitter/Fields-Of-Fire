@@ -12,10 +12,6 @@ var/list/mechtoys = list(
 	/obj/item/toy/prize/phazon
 )
 
-/obj/item/weapon/paper/manifest
-	name = "supply manifest"
-	var/is_copy = 1
-
 /obj/structure/plasticflaps //HOW DO YOU CALL THOSE THINGS ANYWAY
 	name = "\improper plastic flaps"
 	desc = "Completely impassable - or are they?"

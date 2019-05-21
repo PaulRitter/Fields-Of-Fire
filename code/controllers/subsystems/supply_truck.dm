@@ -47,6 +47,10 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
 	var/commandMoney = 10000 //Money currently stored at command
 
+	//fluff stuff
+	var/price = 0 //how much we payed for the last shipment
+	var/shipments = 0 //how many shipments we already had
+
 	//truck movement
 	var/at_base = 0 //if shuttle is at base
 	var/moving = 0 // 0 = shuttle not moving; 1 = shuttle is moving
@@ -60,8 +64,8 @@ SUBSYSTEM_DEF(supply_truck)
 		var/datum/supply_pack/P = new typepath
 		supply_packs[P.name] = P
 
-	add_command_order(new /datum/command_order/per_unit/default(), 1)
-	add_command_order(new /datum/command_order/per_unit/per_reagent/default(), 1)
+	add_command_order(new /datum/command_order/per_unit/default())
+	add_command_order(new /datum/command_order/per_unit/per_reagent/default())
 	..()
 
 //ticker for the eta
@@ -86,14 +90,15 @@ SUBSYSTEM_DEF(supply_truck)
 		truck.contents = truck_contents
 		truck_contents.len = 0
 		truck.update_icon()
-		for(var/obj/machinery/computer/supply/administration/R in supply_radios)
-			new /obj/item/weapon/paper/truck_manifest(R.loc, truck.getGroupedContentList())
+		if(truck.contents.len)
+			for(var/obj/machinery/computer/supply/administration/R in supply_radios)
+				new /obj/item/weapon/paper/truck_manifest(R.loc, truck.getGroupedContentList(), price, shipment)
 		allSay("Truck arrived at base.")
 		at_base = 1
 	else //at station
-		allSay("Truck arrived at command.")
 		commandMoney += sell(truck_contents)
 		truck_contents.len = 0
+		allSay("Truck arrived at command.")
 		at_base = 0
 	moving = 0
 
@@ -109,14 +114,14 @@ SUBSYSTEM_DEF(supply_truck)
 			return 0
 		truck_contents = truck.contents
 		truck.forceMove(null)
-		allSay("Truck is sent.")
+		allSay("Truck sent to Command.")
 	else
 		//buys all of shopping list
 		truck_contents = buy()
 		if(!truck_contents)
 			allSay("Order failed.")
 			return 0
-		allSay("Order received - Truck is sent.")
+		allSay("Truck left Command and is enroute.")
 	
 	//sets the eta timer
 	eta_timeofday = world.timeofday + rand(movetimeMin, movetimeMax)
@@ -204,11 +209,16 @@ SUBSYSTEM_DEF(supply_truck)
 		toBuy = shoppinglist.Copy()
 		shoppinglist.len = 0
 
+	//fluff vars
+	price = 0
+	shipments++
+
 	for(var/datum/supply_order/SO in toBuy)
 		var/datum/supply_pack/SP = SO.object
 
 		//paying for the order
 		commandMoney -= SP.cost
+		price += SP.cost
 		shoppinglist.Remove(SO)
 
 		if(prob(0.5)) //1 in 200 crates will be lost
@@ -237,7 +247,7 @@ SUBSYSTEM_DEF(supply_truck)
 				for(var/i=1, i<SP.contains[typepath], i++) //one less since we already made one (B2)
 					new typepath(A)
 
-		var/obj/item/weapon/paper/manifest/slip = makeContainerManifest(A, SO)
+		var/obj/item/weapon/paper/shipping_manifest/slip = new(A, SO, shipments)
 
 		SP.post_creation(A)
 
@@ -246,27 +256,6 @@ SUBSYSTEM_DEF(supply_truck)
 
 		contents += A
 	return contents
-
-/datum/controller/subsystem/supply_truck/proc/makeContainerManifest(var/atom/A, var/datum/supply_order/SO)
-	var/datum/supply_pack/SP = SO.object
-	var/obj/item/weapon/paper/manifest/slip = new /obj/item/weapon/paper/manifest(A)
-
-	slip.name = "Shipping Manifest for [SO.orderedby]'s Order"
-	slip.info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
-		Destination: [station_name]<br>
-		[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
-		CONTENTS:<br><ul>"}
-
-	for(var/typepath in SP.contains)
-		if(!typepath)
-			continue
-		var/atom/B2 = new typepath(A)
-		slip.info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
-
-	slip.info += {"</ul><br>
-		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
-
-	return slip
 
 /datum/controller/subsystem/supply_truck/proc/confirm_order(datum/supply_order/O,mob/user,var/position, var/wasAutoConfirmed) //position represents where it falls in the request list
 	var/datum/supply_pack/P = O.object
@@ -280,27 +269,14 @@ SUBSYSTEM_DEF(supply_truck)
 	else
 		to_chat(user, "<span class='warning'>Command does not have enough funds for this request.</span>")
 
-/datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C, var/no_notice = 0)
+/datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C)
 	command_orders.Add(C)
 
-	if(no_notice)
+	if(!C.listed) //if its not listed we don't need to notify them
 		return
 
-	var/name = "External order form - [C.name] order number [C.id]"
-	var/info = {"<h3>Central command supply requisition form</h3><hr>
-	 			INDEX: #[C.id]<br>
-	 			REQUESTED BY: [C.name]<br>
-	 			MUST BE IN CRATE: [C.must_be_in_crate ? "YES" : "NO"]<br>
-	 			REQUESTED ITEMS:<br>
-	 			[C.getRequestsByName(1)]
-	 			WORTH: [C.worth]
-	 			"}
-
 	for(var/obj/machinery/computer/supply/administration/S in supply_radios)
-		var/obj/item/weapon/paper/reqform = new /obj/item/weapon/paper(S.loc)
-		reqform.name = name
-		reqform.info = info
-		reqform.update_icon()
+		var/obj/item/weapon/paper/command_order/slip = new (S, C)
 	
 	allSay("New buy order by [C.name] available.")
 

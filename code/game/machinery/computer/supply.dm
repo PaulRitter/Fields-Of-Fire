@@ -24,15 +24,56 @@ For vending packs, see vending_packs.dm*/
 		STAMP BELOW TO APPROVE THIS REQUISITION:<br>"}
 	update_icon()
 
-//request form to spawn
-/obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist)
+//truck mainfest
+/obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
 	. = ..(loc)
 	name = "Truck Manifest"
 	info += {"<h3>Truck Manifest</h3><hr>
 		Destination: [station_name]<br>
+		Shipment #[shipmentNum]<br>
 		CONTENTS:<br><ul>"}
 	info += "<li>"+jointext(contentlist, "</li><li>")+"</li>"
-	info += "</ul><br>CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"
+	info += {"</ul><br>
+		TOTAL COST: [price]<br>
+		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
+	update_icon()
+
+//crate manifest
+/obj/item/weapon/paper/shipping_manifest/New(var/loc, var/datum/supply_order/SO, var/shipmentNum)
+	. = ..(loc)
+	var/datum/supply_pack/SP = SO.object
+
+	name = "Shipping Manifest for [SO.orderedby]'s Order"
+	info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
+		Destination: [station_name]<br>
+		Shipment #[shipmentNum]<br>
+		[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
+		CONTENTS:<br><ul>"}
+
+	for(var/typepath in SP.contains)
+		if(!typepath)
+			continue
+		var/atom/B2 = new typepath(A)
+		info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
+
+	info += {"</ul><br>
+		COST: [SO.object.cost]<br>
+		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
+	update_icon()
+
+//command order
+/obj/item/weapon/paper/command_order/New(var/loc, var/datum/command_order/C)
+	. = ..(loc)
+
+	name = "External order form - [C.name] order number [C.id]"
+	info = {"<h3>Central command supply requisition form</h3><hr>
+			INDEX: #[C.id]<br>
+			REQUESTED BY: [C.name]<br>
+			MUST BE IN CRATE: [C.must_be_in_crate ? "YES" : "NO"]<br>
+			REQUESTED ITEMS:<br>
+			[C.getRequestsByName(1)]
+			WORTH: [C.worth]
+			"}
 	update_icon()
 
 #define REASON_LEN 140
