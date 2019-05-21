@@ -14,17 +14,6 @@ supply radio circuits
 radionet cable + hub + net datum
 */
 
-/*
-TODO:
-- qualitycontrol
--- templates could be combined eg. categoryview
--- find more copypasta and make procs or something
-- add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
-- add some general truck fluff (improve feedback messages)
-- add decals when cables get blown up
-- add a reagent command order, should be iterated over first and should only remove the reagent from the container
-*/
-
 var/station_name = "TODO find where to get this var"
 
 //set by a landmark with the name "supply_truck", cannot be multiple
