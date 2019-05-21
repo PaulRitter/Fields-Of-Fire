@@ -19,7 +19,6 @@ TODO:
 - qualitycontrol
 -- templates could be combined eg. categoryview
 -- find more copypasta and make procs or something
-- multiple people can't pull out of the truck at the same time + people can load multiple things at once
 - add some fluff for truck arriving (sound followed by truck apperearing, maybe ask bimmer for exhaust smoke)
 - add some general truck fluff (improve feedback messages)
 - add decals when cables get blown up

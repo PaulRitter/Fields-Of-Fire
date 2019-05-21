@@ -20,6 +20,7 @@
 		/obj/structure/reagent_dispensers/fueltank = 2
 	)// /type = size(0<size<2)
 	// this allows floatingpoint numbers
+	var/list/_using = list() //all the people fucking with us
 
 	//vars for the overlay rendering
 	//the starting point of the crate rendering, basically crate (0,0)
@@ -75,6 +76,11 @@
 			to_chat(user, "<span class='notice'>\the [A] needs to be closed!</span>")
 			return 0
 
+	if(user in _using)
+		to_chat(user, "<span class='notice'>You are already interacting with \the [src]!</span>")
+		return
+
+	_using += user
 	user.visible_message("<span class='notice'>[user] starts putting \the [A] into \the [src]</span>")
 	to_chat(user, "<span class='notice'>You start to put \the [A] into \the [src]")
 	if(do_after(user, 5 SECONDS, src, progress = 2))
@@ -82,7 +88,9 @@
 		user.visible_message("<span class='notice'>[user] finishes putting \the [A] into \the [src]</span>")
 		to_chat(user, "<span class='notice'>You finish putting \the [A] into \the [src]")
 		update_icon()
+		_using -= user
 		return 1
+	_using -= user
 	return 0
 
 /obj/structure/supply_truck/proc/unload(var/mob/user)
@@ -90,8 +98,14 @@
 		to_chat(user, "<span class='notice'>\the [src] is empty.</span>")
 		return 0
 
+	if(user in _using)
+		to_chat(user, "<span class='notice'>You are already interacting with \the [src]!</span>")
+		return
+
 	//take the last atom of the list and give it to our mob
 	var/atom/movable/A = contents[contents.len]
+	contents.len--
+	_using += user
 	user.visible_message("<span class='notice'>[user] starts to pull \the [A] out of \the [src]</span>")
 	to_chat(user, "<span class='notice'>You start to pull \the [A] out of \the [src]")
 	if(do_after(user, 5 SECONDS, src, progress = 2))
@@ -99,7 +113,11 @@
 		user.visible_message("<span class='notice'>[user] pulls \the [A] out of \the [src]</span>")
 		to_chat(user, "<span class='notice'>You successfully pull \the [A] out of \the [src]")
 		update_icon()
+		_using -= user
 		return 1
+	else
+		contents += A
+	_using -= user
 	return 0
 
 /obj/structure/supply_truck/proc/hasSpace(var/num)
