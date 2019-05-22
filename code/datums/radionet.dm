@@ -41,7 +41,7 @@
 /obj/structure/radio_cable/Destroy()
 	var/list/connectedThings = get_connections()
 	forceMove(null) //so we wont be propagated over
-	//add some decals TODO
+	gibs(loc, null, /obj/effect/gibspawner/robot)
 	var/list/newRNs = list()
 	for(var/A in connectedThings)
 		if(istype(A, /obj/structure/radio_cable))
@@ -148,17 +148,16 @@
 	amount = 10
 	max_amount = 10
 	color = COLOR_BROWN_ORANGE
-	desc = "A coil of power cable."
+	desc = "A coil of radio cable."
+	singular_name = "cable"
 	throwforce = 10
-	w_class = ITEM_SIZE_SMALL
+	w_class = ITEM_SIZE_HUGE
 	throw_speed = 1
 	throw_range = 1
 	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20)
 	flags = CONDUCT
 	slot_flags = SLOT_BELT
 	item_state = "coil"
-	attack_verb = list("whipped", "lashed", "disciplined", "flogged")
-	stacktype = /obj/item/stack/radio_cable
 
 // called when cable_coil is clicked on a turf/simulated/floor
 /obj/item/stack/radio_cable/proc/turf_place(turf/simulated/F, mob/user)
