@@ -813,30 +813,24 @@
 
 						healths.overlays += health_images
 
-						to_chat(world, "[health], [trauma_val], [health-trauma_val]")
-						switch(health - trauma_val)
+						var/phys_health = maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss()
+						switch(phys_health)
 							if(200 to INFINITY)
 								healthbar.icon_state = "health0"
-							if(180 to 200)
+							if(150 to 200)
 								healthbar.icon_state = "health1"
-							if(160 to 180)
+							if(100 to 150)
 								healthbar.icon_state = "health2"
-							if(140 to 160)
+							if(1 to 100)
 								healthbar.icon_state = "health3"
-							if(120 to 140)
-								healthbar.icon_state = "health4"
-							if(100 to 120)
-								healthbar.icon_state = "health5"
 							else
-								healthbar.icon_state = "health6"
-
+								healthbar.icon_state = "health4"
 		if(nutrition_icon)
 			switch(nutrition)
 				if(450 to INFINITY)				nutrition_icon.icon_state = "nutrition0"
-				if(350 to 450)					nutrition_icon.icon_state = "nutrition1"
-				if(250 to 350)					nutrition_icon.icon_state = "nutrition2"
-				if(150 to 250)					nutrition_icon.icon_state = "nutrition3"
-				else							nutrition_icon.icon_state = "nutrition4"
+				if(250 to 450)					nutrition_icon.icon_state = "nutrition1"
+				if(100 to 250)					nutrition_icon.icon_state = "nutrition2"
+				else							nutrition_icon.icon_state = "nutrition3"
 
 		if(isSynthetic())
 			var/obj/item/organ/internal/cell/C = internal_organs_by_name[BP_CELL]
