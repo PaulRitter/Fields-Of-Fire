@@ -14,7 +14,7 @@
 		return all_ui_styles[ui_style]
 	return all_ui_styles["White"]
 
-
+/*
 /client/verb/change_ui()
 	set name = "Change UI"
 	set category = "OOC"
@@ -56,3 +56,4 @@
 		prefs.UI_style_color = UI_style_color_new
 		prefs.save_preferences()
 		to_chat(usr, "UI was saved")
+*/

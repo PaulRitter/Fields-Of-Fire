@@ -140,31 +140,18 @@
 					I.add_fingerprint(src)
 					used_radios += I
 		if("headset")
-			if(l_ear && istype(l_ear,/obj/item/device/radio))
-				var/obj/item/device/radio/R = l_ear
+			if(ears && istype(ears,/obj/item/device/radio))
+				var/obj/item/device/radio/R = ears
 				R.talk_into(src,message,null,verb,speaking)
-				used_radios += l_ear
-			else if(r_ear && istype(r_ear,/obj/item/device/radio))
-				var/obj/item/device/radio/R = r_ear
-				R.talk_into(src,message,null,verb,speaking)
-				used_radios += r_ear
-		if("right ear")
+				used_radios += ears
+		if("ears")
 			var/obj/item/device/radio/R
 			var/has_radio = 0
-			if(r_ear && istype(r_ear,/obj/item/device/radio))
-				R = r_ear
+			if(ears && istype(ears,/obj/item/device/radio))
+				R = ears
 				has_radio = 1
 			if(r_hand && istype(r_hand, /obj/item/device/radio))
 				R = r_hand
-				has_radio = 1
-			if(has_radio)
-				R.talk_into(src,message,null,verb,speaking)
-				used_radios += R
-		if("left ear")
-			var/obj/item/device/radio/R
-			var/has_radio = 0
-			if(l_ear && istype(l_ear,/obj/item/device/radio))
-				R = l_ear
 				has_radio = 1
 			if(l_hand && istype(l_hand,/obj/item/device/radio))
 				R = l_hand
@@ -177,12 +164,9 @@
 			return 1
 		else
 			if(message_mode)
-				if(l_ear && istype(l_ear,/obj/item/device/radio))
-					l_ear.talk_into(src,message, message_mode, verb, speaking)
-					used_radios += l_ear
-				else if(r_ear && istype(r_ear,/obj/item/device/radio))
-					r_ear.talk_into(src,message, message_mode, verb, speaking)
-					used_radios += r_ear
+				if(ears && istype(ears,/obj/item/device/radio))
+					ears.talk_into(src,message, message_mode, verb, speaking)
+					used_radios += ears
 
 /mob/living/carbon/human/handle_speech_sound()
 	if(species.speech_sounds && prob(species.speech_chance))

@@ -122,7 +122,7 @@
 			b_loss = 60
 			f_loss = 60
 
-			if (!istype(l_ear, /obj/item/clothing/ears/earmuffs) && !istype(r_ear, /obj/item/clothing/ears/earmuffs))
+			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 30
 				ear_deaf += 120
 			if (prob(70))
@@ -130,7 +130,7 @@
 
 		if(3.0)
 			b_loss = 30
-			if (!istype(l_ear, /obj/item/clothing/ears/earmuffs) && !istype(r_ear, /obj/item/clothing/ears/earmuffs))
+			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
 			if (prob(50))
@@ -694,7 +694,7 @@
 
 /mob/living/carbon/human/abiotic(var/full_body = TRUE)
 	if(full_body)
-		if(src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.l_ear || src.r_ear || src.gloves)
+		if(src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves)
 			return FALSE
 	return ..()
 

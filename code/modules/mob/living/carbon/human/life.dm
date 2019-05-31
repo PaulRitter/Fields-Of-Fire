@@ -773,8 +773,12 @@
 				healths.icon_state = "health_numb"
 			else
 				switch(hal_screwyhud)
-					if(1)	healths.icon_state = "health6"
-					if(2)	healths.icon_state = "health7"
+					if(1)
+						healths.icon_state = "health6"
+						healthbar.icon_state = "health6"
+					if(2)
+						healths.icon_state = "health7"
+						healthbar.icon_state = "health7"
 					else
 						// Generate a by-limb health display.
 						healths.icon_state = "blank"
@@ -809,6 +813,23 @@
 
 						healths.overlays += health_images
 
+						to_chat(world, "[health], [trauma_val], [health-trauma_val]")
+						switch(health - trauma_val)
+							if(200 to INFINITY)
+								healthbar.icon_state = "health0"
+							if(180 to 200)
+								healthbar.icon_state = "health1"
+							if(160 to 180)
+								healthbar.icon_state = "health2"
+							if(140 to 160)
+								healthbar.icon_state = "health3"
+							if(120 to 140)
+								healthbar.icon_state = "health4"
+							if(100 to 120)
+								healthbar.icon_state = "health5"
+							else
+								healthbar.icon_state = "health6"
+
 		if(nutrition_icon)
 			switch(nutrition)
 				if(450 to INFINITY)				nutrition_icon.icon_state = "nutrition0"
@@ -842,15 +863,11 @@
 		if(bodytemp)
 			if (!species)
 				switch(bodytemperature) //310.055 optimal body temp
-					if(370 to INFINITY)		bodytemp.icon_state = "temp4"
-					if(350 to 370)			bodytemp.icon_state = "temp3"
-					if(335 to 350)			bodytemp.icon_state = "temp2"
-					if(320 to 335)			bodytemp.icon_state = "temp1"
-					if(300 to 320)			bodytemp.icon_state = "temp0"
-					if(295 to 300)			bodytemp.icon_state = "temp-1"
-					if(280 to 295)			bodytemp.icon_state = "temp-2"
-					if(260 to 280)			bodytemp.icon_state = "temp-3"
-					else					bodytemp.icon_state = "temp-4"
+					if(370 to INFINITY)		bodytemp.icon_state = "temp2"
+					if(350 to 370)			bodytemp.icon_state = "temp1"
+					if(350 to 226)			bodytemp.icon_state = "temp0"
+					if(260 to 280)			bodytemp.icon_state = "temp-1"
+					else					bodytemp.icon_state = "temp-2"
 			else
 				//TODO: precalculate all of this stuff when the species datum is created
 				var/base_temperature = species.body_temperature

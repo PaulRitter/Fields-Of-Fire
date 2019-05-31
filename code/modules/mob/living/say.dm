@@ -103,12 +103,10 @@ proc/get_radio_key_from_channel(var/channel)
 		return
 
 	var/mob/living/carbon/human/H = src
-	if (H.l_ear || H.r_ear)
+	if (H.ears)
 		var/obj/item/device/radio/headset/dongle
-		if(istype(H.l_ear,/obj/item/device/radio/headset))
-			dongle = H.l_ear
-		else
-			dongle = H.r_ear
+		if(istype(H.ears,/obj/item/device/radio/headset))
+			dongle = H.ears
 		if(!istype(dongle)) return
 		if(dongle.translate_binary) return 1
 

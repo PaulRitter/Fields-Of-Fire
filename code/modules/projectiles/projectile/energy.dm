@@ -136,7 +136,7 @@
 	var/mob/living/carbon/human/H = M
 	if(iscarbon(M))
 		if(ishuman(M))
-			if(istype(H.l_ear, /obj/item/clothing/ears/earmuffs) || istype(H.r_ear, /obj/item/clothing/ears/earmuffs))
+			if(istype(H.ears, /obj/item/clothing/ears/earmuffs))
 				ear_safety += 2
 			if(HULK in M.mutations)
 				ear_safety += 1

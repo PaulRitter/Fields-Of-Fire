@@ -1,15 +1,14 @@
 /mob/living/carbon/human/instantiate_hud(var/datum/hud/HUD, var/ui_style, var/ui_color, var/ui_alpha)
-	HUD.human_hud(ui_style, ui_color, ui_alpha, src)
+	HUD.human_hud(null, ui_color, ui_alpha, src)
 
-/datum/hud/proc/human_hud(var/ui_style='icons/mob/screen1_White.dmi', var/ui_color = "#ffffff", var/ui_alpha = 255, var/mob/living/carbon/human/target)
+/datum/hud/proc/human_hud(var/ui_style = 'icons/mob/screen/newhud.dmi',var/ui_color = "#ffffff", var/ui_alpha = 255, var/mob/living/carbon/human/target)
+	//'icons/mob/newhud.dmi'
 	var/datum/hud_data/hud_data
 	if(!istype(target))
 		hud_data = new()
 	else
 		hud_data = target.species.hud
 
-	if(hud_data.icon)
-		ui_style = hud_data.icon
 
 	src.adding = list()
 	src.other = list()
@@ -43,11 +42,12 @@
 		else
 			src.adding += inv_box
 
+	//toggle hidden inventory
 	if(has_hidden_gear)
 		using = new /obj/screen()
 		using.name = "toggle"
 		using.icon = ui_style
-		using.icon_state = "other"
+		using.icon_state = "other0"
 		using.screen_loc = ui_inventory
 		using.color = ui_color
 		using.alpha = ui_alpha
@@ -61,7 +61,7 @@
 		action_intent = using
 
 		hud_elements |= using
-
+	//move intent
 	if(hud_data.has_m_intent)
 		using = new /obj/screen()
 		using.name = "mov_intent"
@@ -73,6 +73,7 @@
 		src.adding += using
 		move_intent = using
 
+	//drop button
 	if(hud_data.has_drop)
 		using = new /obj/screen()
 		using.name = "drop"
@@ -83,17 +84,8 @@
 		using.alpha = ui_alpha
 		src.hotkeybuttons += using
 
+	//hand slots
 	if(hud_data.has_hands)
-
-		using = new /obj/screen()
-		using.name = "equip"
-		using.icon = ui_style
-		using.icon_state = "act_equip"
-		using.screen_loc = ui_equip
-		using.color = ui_color
-		using.alpha = ui_alpha
-		src.adding += using
-
 		inv_box = new /obj/screen/inventory()
 		inv_box.name = "r_hand"
 		inv_box.icon = ui_style
@@ -121,34 +113,18 @@
 		src.l_hand_hud_object = inv_box
 		src.adding += inv_box
 
-		using = new /obj/screen/inventory()
-		using.name = "hand"
-		using.icon = ui_style
-		using.icon_state = "hand1"
-		using.screen_loc = ui_swaphand1
-		using.color = ui_color
-		using.alpha = ui_alpha
-		src.adding += using
-
-		using = new /obj/screen/inventory()
-		using.name = "hand"
-		using.icon = ui_style
-		using.icon_state = "hand2"
-		using.screen_loc = ui_swaphand2
-		using.color = ui_color
-		using.alpha = ui_alpha
-		src.adding += using
-
+	//resist button
 	if(hud_data.has_resist)
 		using = new /obj/screen()
 		using.name = "resist"
 		using.icon = ui_style
 		using.icon_state = "act_resist"
-		using.screen_loc = ui_pull_resist
+		using.screen_loc = ui_resist
 		using.color = ui_color
 		using.alpha = ui_alpha
 		src.hotkeybuttons += using
 
+	//throw button
 	if(hud_data.has_throw)
 		mymob.throw_icon = new /obj/screen()
 		mymob.throw_icon.icon = ui_style
@@ -164,10 +140,11 @@
 		mymob.pullin.icon = ui_style
 		mymob.pullin.icon_state = "pull0"
 		mymob.pullin.name = "pull"
-		mymob.pullin.screen_loc = ui_pull_resist
+		mymob.pullin.screen_loc = ui_pull
 		src.hotkeybuttons += mymob.pullin
 		hud_elements |= mymob.pullin
 
+	//internals
 	if(hud_data.has_internals)
 		mymob.internals = new /obj/screen()
 		mymob.internals.icon = ui_style
@@ -176,7 +153,9 @@
 		mymob.internals.screen_loc = ui_internal
 		hud_elements |= mymob.internals
 
+	//warning
 	if(hud_data.has_warnings)
+		//oxygen/breath
 		mymob.oxygen = new /obj/screen()
 		mymob.oxygen.icon = ui_style
 		mymob.oxygen.icon_state = "oxy0"
@@ -184,6 +163,7 @@
 		mymob.oxygen.screen_loc = ui_oxygen
 		hud_elements |= mymob.oxygen
 
+		//toxin in air
 		mymob.toxin = new /obj/screen()
 		mymob.toxin.icon = ui_style
 		mymob.toxin.icon_state = "tox0"
@@ -191,6 +171,7 @@
 		mymob.toxin.screen_loc = ui_toxin
 		hud_elements |= mymob.toxin
 
+		//on fire
 		mymob.fire = new /obj/screen()
 		mymob.fire.icon = ui_style
 		mymob.fire.icon_state = "fire0"
@@ -198,13 +179,55 @@
 		mymob.fire.screen_loc = ui_fire
 		hud_elements |= mymob.fire
 
+		//thirst
+		mymob.thirst_HUD = new /obj/screen()
+		mymob.thirst_HUD.icon = ui_style
+		mymob.thirst_HUD.icon_state = "thirst0"
+		mymob.thirst_HUD.name = "thirst"
+		mymob.thirst_HUD.screen_loc = ui_thirst
+		hud_elements |= mymob.thirst_HUD
+
+		//Health underlay
+		mymob.health_huds = new /obj/screen()
+		mymob.health_huds.name = ""
+		mymob.health_huds.icon = 'icons/mob/screen/newhud_96.dmi'
+		mymob.health_huds.icon_state = "underlay"
+		mymob.health_huds.screen_loc = ui_healthunder
+		hud_elements |= mymob.health_huds
+
+		//mood
+		mymob.happiness_icon = new /obj/screen()
+		mymob.happiness_icon.name = "mood"
+		mymob.happiness_icon.icon = ui_style
+		mymob.happiness_icon.icon_state = "mood4"
+		mymob.happiness_icon.screen_loc = ui_happiness
+		hud_elements |= mymob.happiness_icon
+
+		//health dummy - consists of overlays. Built in human/life.dm
 		mymob.healths = new /obj/screen()
 		mymob.healths.icon = ui_style
 		mymob.healths.icon_state = "health0"
 		mymob.healths.name = "health"
-		mymob.healths.screen_loc = ui_health
+		mymob.healths.screen_loc = ui_healthdummy
 		hud_elements |= mymob.healths
 
+		//health bar
+		mymob.healthbar = new /obj/screen()
+		mymob.healthbar.icon = 'icons/mob/screen/newhud_64x32.dmi'
+		mymob.healthbar.icon_state = "health0"
+		mymob.healthbar.name = "health"
+		mymob.healthbar.screen_loc = ui_healthbar
+		hud_elements |= mymob.healthbar
+
+		//stamina
+		mymob.staminas = new /obj/screen()
+		mymob.staminas.icon = 'icons/mob/screen/newhud_64x32.dmi'
+		mymob.staminas.icon_state = "stamina10"
+		mymob.staminas.name = "stamina"
+		mymob.staminas.screen_loc = ui_stamina
+		hud_elements |= mymob.staminas
+
+	//pressure warning
 	if(hud_data.has_pressure)
 		mymob.pressure = new /obj/screen()
 		mymob.pressure.icon = ui_style
@@ -213,6 +236,7 @@
 		mymob.pressure.screen_loc = ui_pressure
 		hud_elements |= mymob.pressure
 
+	//body temperature warning
 	if(hud_data.has_bodytemp)
 		mymob.bodytemp = new /obj/screen()
 		mymob.bodytemp.icon = ui_style
@@ -221,6 +245,7 @@
 		mymob.bodytemp.screen_loc = ui_temp
 		hud_elements |= mymob.bodytemp
 
+	//cell display
 	if(target.isSynthetic())
 		target.cells = new /obj/screen()
 		target.cells.icon = 'icons/mob/screen1_robot.dmi'
@@ -240,12 +265,13 @@
 
 	mymob.pain = new /obj/screen( null )
 
+	//Zone selection
 	mymob.zone_sel = new /obj/screen/zone_sel( null )
-	mymob.zone_sel.icon = ui_style
+	mymob.zone_sel.icon = 'icons/mob/screen/newhud_32x64.dmi'
 	mymob.zone_sel.color = ui_color
 	mymob.zone_sel.alpha = ui_alpha
 	mymob.zone_sel.overlays.Cut()
-	mymob.zone_sel.overlays += image('icons/mob/zone_sel.dmi', "[mymob.zone_sel.selecting]")
+	mymob.zone_sel.overlays += image('icons/mob/screen/newhud_32x64.dmi', "[mymob.zone_sel.selecting]")
 	hud_elements |= mymob.zone_sel
 
 	//Handle the gun settings buttons
@@ -269,13 +295,6 @@
 	mymob.radio_use_icon.icon = ui_style
 	mymob.radio_use_icon.color = ui_color
 	mymob.radio_use_icon.alpha = ui_alpha
-
-	mymob.happiness_icon = new /obj/screen()
-	mymob.happiness_icon.name = "mood"
-	mymob.happiness_icon.icon = ui_style
-	mymob.happiness_icon.icon_state = "mood4"
-	mymob.happiness_icon.screen_loc = ui_happiness
-	hud_elements |= mymob.happiness_icon
 
 	mymob.client.screen = list()
 
