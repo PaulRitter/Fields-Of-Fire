@@ -342,6 +342,16 @@
 			var/mob/living/carbon/C = usr
 			C.print_happiness(C)
 
+		if("thirst")
+			if(iscarbon(usr))
+				var/mob/living/carbon/C = usr
+				C.print_thirst(C)
+
+		if("nutrition")
+			if(iscarbon(usr))
+				var/mob/living/carbon/C = usr
+				C.print_hunger(C)
+
 		if("module")
 			if(isrobot(usr))
 				var/mob/living/silicon/robot/R = usr

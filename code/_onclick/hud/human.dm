@@ -204,6 +204,7 @@
 		hud_elements |= mymob.happiness_icon
 
 		//health dummy - consists of overlays. Built in human/life.dm
+		/*
 		mymob.healths = new /obj/screen()
 		mymob.healths.icon = ui_style
 		mymob.healths.icon_state = "health0"
@@ -211,7 +212,7 @@
 		mymob.healths.screen_loc = ui_healthdummy
 		mymob.healths.underlays += image(ui_style, icon_state = "empty")
 		hud_elements |= mymob.healths
-
+		*/
 		//health bar
 		mymob.healthbar = new /obj/screen()
 		mymob.healthbar.icon = 'icons/mob/screen/newhud_64x32.dmi'

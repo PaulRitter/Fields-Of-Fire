@@ -795,23 +795,25 @@
 
 						healths.overlays += health_images
 
-						var/phys_health = maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss()
-						switch(phys_health)
-							if(200 to INFINITY)
-								healthbar.icon_state = "health0"
-							if(150 to 200)
-								healthbar.icon_state = "health1"
-							if(100 to 150)
-								healthbar.icon_state = "health2"
-							if(1 to 100)
-								healthbar.icon_state = "health3"
-							else
-								healthbar.icon_state = "health4"
+		if(healthbar)
+			var/phys_health = maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss()
+			switch(phys_health)
+				if(200 to INFINITY)
+					healthbar.icon_state = "health0"
+				if(150 to 200)
+					healthbar.icon_state = "health1"
+				if(100 to 150)
+					healthbar.icon_state = "health2"
+				if(1 to 100)
+					healthbar.icon_state = "health3"
+				else
+					healthbar.icon_state = "health4"
+
 		if(nutrition_icon)
 			switch(nutrition)
-				if(450 to INFINITY)				nutrition_icon.icon_state = "nutrition0"
-				if(250 to 450)					nutrition_icon.icon_state = "nutrition1"
-				if(100 to 250)					nutrition_icon.icon_state = "nutrition2"
+				if(HUNGER_SATED to INFINITY)				nutrition_icon.icon_state = "nutrition0"
+				if(HUNGER_HUNGRY to HUNGER_SATED)					nutrition_icon.icon_state = "nutrition1"
+				if(HUNGER_STARVING to HUNGER_HUNGRY)					nutrition_icon.icon_state = "nutrition2"
 				else							nutrition_icon.icon_state = "nutrition3"
 
 		if(isSynthetic())
