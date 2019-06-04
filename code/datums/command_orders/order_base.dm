@@ -119,20 +119,20 @@ var/global/current_command_order_id=124901
 	if(!O.reagents || !O.reagents.reagent_list.len)
 		return 0
 
-	for(var/datum/reagent/R in requested)
-		if(O.reagents.has_reagent(R.type))
-			if(!(R.type in fulfilled))
-				fulfilled[R.type]=0
-			if(fulfilled[R.type]==requested[R.type])
+	for(var/reagent_type in requested)
+		if(O.reagents.has_reagent(reagent_type))
+			if(!(reagent_type in fulfilled))
+				fulfilled[reagent_type]=0
+			if(fulfilled[reagent_type]==requested[reagent_type])
 				continue
-			var/amount = O.reagents.get_reagent_amount(R.type)
-			var/remainder = requested[R.type] - fulfilled[R.type]
+			var/amount = O.reagents.get_reagent_amount(reagent_type)
+			var/remainder = requested[reagent_type] - fulfilled[reagent_type]
 			if(amount > remainder)
 				amount = remainder
 			if(amount <= 0)
 				continue
-			fulfilled[R.type] += amount
-			O.reagents.remove_reagent(R.type, amount, 1)
+			fulfilled[reagent_type] += amount
+			O.reagents.remove_reagent(reagent_type, amount, 1)
 			. = 1
 
 //default order
@@ -145,7 +145,7 @@ var/global/current_command_order_id=124901
 	)
 	unit_prices=list(
 		/obj/item/weapon/paper/shipping_manifest = 2,
-		/obj/structure/reagent_dispensers/fueltank = 150
+		/obj/structure/reagent_dispensers/fueltank = 50
 	)
 
 /datum/command_order/per_unit/per_reagent/default
@@ -155,6 +155,6 @@ var/global/current_command_order_id=124901
 		/datum/reagent/water = INFINITY,
 	)
 	unit_prices = list(
-		/datum/reagent/fuel = 2,
-		/datum/reagent/water = 0.5
+		/datum/reagent/fuel = 0.4,
+		/datum/reagent/water = 0.01
 	)

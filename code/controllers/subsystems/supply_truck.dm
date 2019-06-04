@@ -154,8 +154,7 @@ SUBSYSTEM_DEF(supply_truck)
 			else
 				priority1 += order_id
 			continue
-		if(O.trySellObj(A))
-			return 1
+		O.trySellObj(A) //no return since we aren't actually removing the obj
 
 	//second we loop through the not-per-unit orders
 	for(var/idx in priority1)
