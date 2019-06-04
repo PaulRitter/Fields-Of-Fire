@@ -26,8 +26,8 @@
 	. = BB
 	BB = null
 	set_dir(pick(GLOB.alldirs)) //spin spent casings
-	pixel_x = rand(-40,40)
-	pixel_y = rand(-40,40)		//random pixel offset... possibility of turf overlay
+	pixel_x = rand(-16,16)
+	pixel_y = rand(-16,16)		//random pixel offset... possibility of turf overlay
 
 	// Aurora forensics port, gunpowder residue.
 	if(leaves_residue)
