@@ -14,6 +14,8 @@
 	bound_width = 6 * WORLD_ICON_SIZE
 	bound_height = 2 * WORLD_ICON_SIZE
 
+	contents = list()
+
 	var/allowedTypes = list( //place subtypes before parenttypes
 		/obj/structure/closet/crate/small = 0.5, //like this
 		/obj/structure/closet/crate = 1,

@@ -30,3 +30,31 @@ var/list/all_supply_groups = list("Supplies","Clothing","Engineering","Medical")
 //called when the order gets approved, for adminlog stuff
 /datum/supply_pack/proc/onApproved(var/mob/user)
 	return // Blank proc
+
+/datum/supply_pack/proc/create(var/datum/supply_order/SO)
+	var/atom/A = new containertype()
+	A.name = containername
+
+	//spawn the stuff, finish generating the manifest while you're at it
+	if(istype(A, /obj/structure/closet))
+		var/obj/structure/closet/C = A
+		if(req_access)
+			C.req_access = req_access
+
+		if(req_one_access)
+			C.req_one_access = req_one_access
+
+	for(var/typepath in contains)
+		if(!typepath)
+			continue
+		var/atom/B2 = new typepath(A)
+		if(istype(B2, /obj/item/stack))
+			var/obj/item/stack/ST = B2
+			ST.amount = contains[typepath]
+		else
+			for(var/i=1, i<contains[typepath], i++) //one less since we already made one (B2)
+				new typepath(A)
+
+	post_creation(A)
+	
+	return A

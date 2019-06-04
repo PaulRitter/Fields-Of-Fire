@@ -8,7 +8,6 @@ var/global/current_command_order_id=124901
 	var/worth = 0
 
 	var/must_be_in_crate = 0
-	var/permanent = 0
 
 	var/list/requested=list()
 	var/list/fulfilled=list()
@@ -49,45 +48,23 @@ var/global/current_command_order_id=124901
 
 //UI FLUFF
 //creates a requests manifest
-/datum/command_order/proc/getRequestsByName(var/html_format = 0)
-	var/manifest = ""
-	if(html_format)
-		manifest = "<ul>"
+/datum/command_order/proc/getRequestsByName()
+	var/manifest = "<ul>"
 	for(var/path in requested)
 		if(!path)
 			continue
 		var/atom/movable/AM = path
-		if(html_format)
-			manifest += "<li>[initial(AM.name)], amount: [requested[path]]</li>"
-		else
-			manifest += "[initial(AM.name)], amount: [requested[path]]"
-	if(html_format)
-		manifest += "</ul>"
-	return manifest
-
-//creates a fulfilled manifest
-/datum/command_order/proc/getFulfilledByName(var/html_format = 0)
-	var/manifest = ""
-	if(html_format)
-		manifest = "<ul>"
-	for(var/path in fulfilled)
-		if(!path)
-			continue
-		var/atom/movable/AM = path
-		if(html_format)
-			manifest += "<li>[initial(AM.name)], amount: [fulfilled[path]]</li>"
-		else
-			manifest += "[initial(AM.name)], amount: [fulfilled[path]]"
-	if(html_format)
-		manifest += "</ul>"
+		manifest += "<li>[initial(AM.name)]"
+		if(requested[path] != INFINITY)
+			manifest += "<ul><li>still required: [requested[path]]</li><li>shipped: [fulfilled[path]]</li></ul></li>"
+		manifest += "</li>"
+	manifest += "</ul>"
 	return manifest
 
 /datum/command_order/proc/onFulfilled()
 	return
 
 /datum/command_order/proc/shouldRemove()
-	if(permanent)
-		return 0
 	var/sum = 0
 	for(var/typepath in requested)
 		sum += requested[typepath]
@@ -125,6 +102,19 @@ var/global/current_command_order_id=124901
 		onFulfilled()
 	return toPay
 
+/datum/command_order/per_unit/getRequestsByName()
+	var/manifest = "<ul>"
+	for(var/path in requested)
+		if(!path)
+			continue
+		var/atom/movable/AM = path
+		manifest += "<li>[initial(AM.name)] - [unit_prices[path]] per Unit"
+		if(requested[path] != INFINITY)
+			manifest += "<ul><li>still required: [requested[path]]</li><li>shipped: [fulfilled[path]]</li></ul></li>"
+		manifest += "</li>"
+	manifest += "</ul>"
+	return manifest
+
 /datum/command_order/per_unit/per_reagent/trySellObj(var/obj/O)
 	if(!O.reagents || !O.reagents.reagent_list.len)
 		return 0
@@ -148,7 +138,6 @@ var/global/current_command_order_id=124901
 //default order
 //contains all items which will always be bought
 /datum/command_order/per_unit/default
-	permanent = 1
 	listed = 0
 	requested = list(
 		/obj/item/weapon/paper/shipping_manifest = INFINITY,
@@ -160,7 +149,6 @@ var/global/current_command_order_id=124901
 	)
 
 /datum/command_order/per_unit/per_reagent/default
-	permanent = 1
 	listed = 0
 	requested = list(
 		/datum/reagent/fuel = INFINITY,

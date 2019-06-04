@@ -39,6 +39,7 @@
 	propagateRadionet()
 
 /obj/structure/radio_cable/Destroy()
+	..()
 	var/list/connectedThings = get_connections()
 	forceMove(null) //so we wont be propagated over
 	gibs(loc, null, /obj/effect/gibspawner/robot)
@@ -106,7 +107,7 @@
 			if(SC.d1 == d1 || SC.d2 == d1 || SC.d1 == d2 || SC.d2 == d2)
 				return 1
 	
-	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/radio_hub)) && (O.loc == loc))
+	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/radio_hub) || istype(O, /obj/structure/receipt_printer)) && (O.loc == loc))
 		return 1
 
 	return 0
@@ -115,6 +116,7 @@
 	var/list/worklist = list()
 	var/list/found_radios = list()
 	var/list/found_hubs = list()
+	var/list/found_printers = list()
 	var/index = 1
 
 	worklist+= source ? source : src //start propagating from the passed object
@@ -133,11 +135,16 @@
 			if(R.radionet != RN)
 				RN.add_radio(R)
 			found_radios |= R
-		else if(P.anchored && istype(P,/obj/structure/radio_hub) && !(P in found_hubs))
+		else if(P.anchored && istype(P, /obj/structure/radio_hub) && !(P in found_hubs))
 			var/obj/structure/radio_hub/H = P
 			if(H.radionet != RN) 
 				RN.add_hub(H)
 			found_hubs |= H
+		else if(P.anchored && istype(P, /obj/structure/receipt_printer) && !(P in found_printers))
+			var/obj/structure/receipt_printer/R = P
+			if(R.radionet != RN)
+				RN.add_printer(R)
+			found_printers |= R
 
 // *** INHAND ***
 /obj/item/stack/radio_cable
@@ -278,12 +285,17 @@
 		if(C.radionet != RN)
 			C.propagateRadionet(RN)
 
+/obj/structure/radio_hub/Destroy()
+	. = ..()
+	radionet.remove_hub(src)
+
 // *** NET ***
 /datum/radionet
 	//we only save radios and hubs cause what the fuck would we even do with cables
 	var/cables = 0
 	var/list/radios = list()
 	var/list/hubs = list()
+	var/list/printers = list()
 
 //only need an add_cable cause we do a new net anyways whenever one gets removed
 /datum/radionet/proc/add_cable(var/obj/structure/radio_cable/C)
@@ -308,6 +320,14 @@
 	H.radionet = null
 	hubs -= H
 
+/datum/radionet/proc/add_printer(var/obj/structure/receipt_printer/R)
+	R.radionet = src
+	printers += R
+
+/datum/radionet/proc/remove_printer(var/obj/structure/receipt_printer/R)
+	R.radionet = null
+	printers -= R
+
 /datum/radionet/proc/notifyRadios(var/message)
 	for(var/obj/machinery/computer/supply/R in radios)
 		R.visible_message("[message]")
@@ -317,3 +337,4 @@
 	to_chat(user, "Cables: [cables]")
 	to_chat(user, "Radio: [radios.len]")
 	to_chat(user, "HUBs: [hubs.len]")
+	to_chat(user, "Printers: [printers.len]")

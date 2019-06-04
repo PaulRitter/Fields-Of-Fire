@@ -189,10 +189,10 @@
 "dG" = (/obj/effect/landmark{name = "supply_truck"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dH" = (/obj/item/device/flashlight/lantern/mining,/obj/structure/sandbag{tag = "icon-sandbag (NORTH)"; icon_state = "sandbag"; dir = 1},/mob,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dI" = (/obj/structure/radio_cable{icon_state = "2-4"},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dJ" = (/obj/structure/radio_cable{icon_state = "4-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dJ" = (/obj/structure/radio_cable{icon_state = "4-8"},/obj/structure/receipt_printer,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dK" = (/obj/structure/closet/crate,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dL" = (/obj/structure/reagent_dispensers/fueltank,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dM" = (/obj/machinery/computer/supply/administration,/obj/structure/radio_cable{icon_state = "4-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dM" = (/obj/structure/radio_cable{icon_state = "4-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dN" = (/obj/machinery/computer/supply,/obj/structure/radio_cable{icon_state = "0-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dO" = (/obj/structure/radio_cable{icon_state = "1-2"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dP" = (/obj/structure/closet/crate/small,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -201,6 +201,7 @@
 "dS" = (/obj/item/device/multitool,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dT" = (/obj/structure/radio_cable{icon_state = "1-2"},/obj/effect/spawner/newbomb/timer,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dU" = (/obj/item/stack/radio_cable,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"dV" = (/obj/item/weapon/card/id/all_access,/turf/simulated/floor/planet/dirt,/area/the_shit)
 
 (1,1,1) = {"
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -295,10 +296,10 @@ aaaaababababahbXbYbZcacbcccdcecfcgchcicjagabababahababababababagabababckdHclcmcm
 aaaaababababahcocpcqcrcsabctcucvcwcxcyczagcAababahdGabababababagabababcBabababababcCabababababcDababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahcEcFcGcHcIcJcKcLcMcNcOcPcQagcRabababaiaiaiaiaiaiababababababababababcCabababababcSababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahcTcUcVcWafcXcYcZcMdadbdcddagababababdSabababababababababcBabababababcCabababababdeababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahdfdgdhdidjdkdldmdndodpdqdragabdIdJdMdJdNabdKdKdKdLdLdLabdsdtdtdudududvababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahdfdgdhdidjdkdldmdndodpdqdragabdIdMdJdMdNabdKdKdKdLdLdLabdsdtdtdudududvababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahabdwdxdydzdAdBdCdDdEdFababagabdOabababababdKdKdKdLdLdLababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaabababababaiaiaiaiaiaiaiaiaiaiaiaiaiababdTabababababdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababababababababababababababababababdOabababababdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaabababababaiaiaiaiaiaiaiaiaiaiaiaiaiababdTababdVdVabdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababababababababababababababababababdOababdVdVabdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababababababababababababababababababdQdRabaiabaiabaiababaiabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

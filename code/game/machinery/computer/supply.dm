@@ -5,31 +5,13 @@ For the shuttle controller, see supplyshuttle.dm
 For cargo crates, see supplypacks.dm
 For vending packs, see vending_packs.dm*/
 
-//request form to spawn
-/obj/item/weapon/paper/request_form/New(var/loc, var/datum/supply_pack/pack, var/number_of_crates, var/mob/requestor, var/reason = "No reason provided.")
-	. = ..(loc)
-	var/obj/item/weapon/card/id/card = requestor.get_id_card()
-	var/name = (card && card.registered_name) ? card.registered_name : requestor.name
-	name = "[pack.name] Requisition Form"
-	info += {"<h3>[station_name] Supply Requisition Form</h3><hr>
-		REQUESTED BY: [name]<br>"}
-
-	info+= {"REASON: [reason]<br>
-		SUPPLY CRATE: [pack.name]<br>
-		NUMBER OF CRATES: [number_of_crates]<br>
-		ACCESS RESTRICTION: [get_access_desc(pack.req_access)]<br>
-		CONTENTS:<br>"}
-	info += pack.manifest
-	info += {"<hr>
-		STAMP BELOW TO APPROVE THIS REQUISITION:<br>"}
-	update_icon()
 
 //truck mainfest
 /obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
 	. = ..(loc)
 	name = "Truck Manifest"
 	info += {"<h3>Truck Manifest</h3><hr>
-		Destination: [station_name]<br>
+		Destination: [GLOB.using_map.station_name]<br>
 		Shipment #[shipmentNum]<br>
 		CONTENTS:<br><ul>"}
 	info += "<li>"+jointext(contentlist, "</li><li>")+"</li>"
@@ -39,26 +21,88 @@ For vending packs, see vending_packs.dm*/
 	update_icon()
 
 //crate manifest
-/obj/item/weapon/paper/shipping_manifest/New(var/loc, var/datum/supply_order/SO, var/shipmentNum)
+/obj/item/weapon/paper/shipping_manifest/New(var/loc, var/datum/supply_pack/SP, var/shipmentNum, var/datum/supply_order/SO)
 	. = ..(loc)
-	var/datum/supply_pack/SP = SO.object
-
-	name = "Shipping Manifest for [SO.orderedby]'s Order"
-	info = {"<h3>[command_name()] Shipping Manifest for [SO.orderedby]'s Order</h3><hr><br>
-		Destination: [station_name]<br>
+	name = "Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order"
+	info = {"<h3>Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order</h3><hr><br>
+		Destination: [GLOB.using_map.station_name]<br>
 		Shipment #[shipmentNum]<br>
-		[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>
 		CONTENTS:<br><ul>"}
 
 	for(var/typepath in SP.contains)
 		if(!typepath)
 			continue
-		var/atom/B2 = new typepath(A)
+		var/atom/B2 = new typepath(null)
 		info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
 
 	info += {"</ul><br>
-		COST: [SO.object.cost]<br>
+		COST: [(SO && SO.getCost()) ? SO.getCost() : "unknown cost"]<br>
 		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
+	update_icon()
+
+
+//supply pack info
+/obj/item/weapon/paper/supply_pack_info/New(var/loc, var/pack_id)
+	var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+	name = "Pack #[pack_id] Info Sheet"
+	info = {"<h3>Pack #[pack_id] Info Sheet</h3><hr><br>
+		CONTENTS:<br><ul>"}
+	for(var/typepath in SP.contains)
+		if(!typepath)
+			continue
+		var/atom/B2 = new typepath(null)
+		info += "<li>[B2.name] ([SP.contains[typepath]])</li>" //add the item to the manifest
+
+	info += {"</ul><hr><br>
+		COST: [SP.cost]"}
+
+//all supply packs
+/obj/item/weapon/paper/inventory_manifest/New(var/loc)
+	. = ..(loc)
+
+	name = "Command Inventory Manifest"
+	info += "<h3>Command inventory manifest</h3>"
+	var/list/categories = list()
+	for(var/pack_id in SSsupply_truck.supply_packs)
+		var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+		if(!(SP.group in categories))
+			categories["[SP.group]"] = list()
+		categories["[SP.group]"] += pack_id
+	
+	for(var/group in categories)
+		info += "<hr><h5>[group]</h5>"
+		for(var/pack_id in categories["[group]"])
+			info += "#[pack_id]: [SSsupply_truck.supply_packs["[pack_id]"].name]<br>"
+
+	update_icon()
+
+//order info
+/obj/item/weapon/paper/order_form/New(var/loc, var/datum/supply_order/SO)
+	. = ..(loc)
+	var/obj/item/weapon/card/id/card = SO.orderedby.get_id_card()
+	var/pname = (card && card.registered_name) ? card.registered_name : SO.orderedby.name
+	name = "#[SO.id] Order Form"
+	info += {"<h3>[GLOB.using_map.station_name] Supply Order Form</h3><br>
+		REQUESTED BY: [pname]<hr>"}
+
+	info+= "CONTENTS:<br>"
+	for(var/pack_id in SO.packs)
+		var/datum/supply_pack/SP = SSsupply_truck.supply_packs[pack_id]
+		info += "#[pack_id] [SP.name] (x[SO.packs[pack_id]])<br>"
+	update_icon()
+
+//all orders
+/obj/item/weapon/paper/order_list/New(var/loc)
+	. = ..(loc)
+
+	name = "Active Order List"
+	info += {"<h3>Active Order List</h3><hr>
+			Current active orders:<br>"}
+	for(var/order_id in SSsupply_truck.shoppinglist)
+		if(!SSsupply_truck.shoppinglist["[order_id]"])
+			continue
+		info += "#[order_id] - requested by [SSsupply_truck.shoppinglist["[order_id]"].orderedby.name]<br>"
+
 	update_icon()
 
 //command order
@@ -66,26 +110,94 @@ For vending packs, see vending_packs.dm*/
 	. = ..(loc)
 
 	name = "External order form - [C.name] order number [C.id]"
-	info = {"<h3>Central command supply requisition form</h3><hr>
-			INDEX: #[C.id]<br>
-			REQUESTED BY: [C.name]<br>
-			MUST BE IN CRATE: [C.must_be_in_crate ? "YES" : "NO"]<br>
-			REQUESTED ITEMS:<br>
-			[C.getRequestsByName(1)]
-			WORTH: [C.worth]
-			"}
+	info = {"<h3>Command supply requisition form</h3><hr>
+				INDEX: #[C.id]<br>
+				REQUESTED BY: [C.name]<br>
+				MUST BE IN CRATE: [C.must_be_in_crate ? "YES" : "NO"]<br>"}
+	if(istype(C, /datum/command_order/per_unit/per_reagent))
+		info += {"REQUESTED REAGENTS:
+				[C.getRequestsByName()]"}
+	else if(istype(C, /datum/command_order/per_unit))
+		info += {"REQUESTED ITEMS:
+				[C.getRequestsByName()]"}
+	else
+		info +=	{"REQUESTED ITEMS:
+				[C.getRequestsByName()]
+				PAYOUT: [C.worth]"}
 	update_icon()
 
-#define REASON_LEN 140
+//all command orders
+/obj/item/weapon/paper/request_list/New(var/loc)
+	. = ..(loc)
+
+	name = "Active Command Order List"
+	info += {"<h3>Active Command Order List</h3><hr>
+			Current active command orders:<br>"}
+	for(var/order_id in SSsupply_truck.command_orders)
+		info += "#[order_id] - requested by [SSsupply_truck.command_orders["[order_id]"].name]<br>"
+
+	update_icon()
+
+//comm help
+/obj/item/weapon/paper/communication_guidelines/New(var/loc)
+	. = ..(loc)
+
+	name = "Supply radio communication guidelines"
+	info += {"<h3>Supply radio communication guidelines</h3><hr>
+			Valid Commands:<br><ul>
+			<li>order (supplypack_id)\[x(amount)\] ...<ul>
+				<li>to order supply packs</li>
+				<li>you can specify multiple supplypack_ids</li>
+				<li>amount is optional, if you specify no amount it just orders one</li>
+			</ul></li>
+			<li>cancel (order_id)<ul>
+				<li>to cancel an order</li>
+			</ul></li>
+			<li>total<ul>
+				<li>returns the cost of all active orders combined</li>
+			</ul></li>
+			<li>funds<ul>
+				<li>returns current command funds</li>
+			</ul></li>
+			<li>withdraw (amount)<ul>
+				<li>places a withdraw order which will get sent with the next order</li>
+			</ul></li>
+			<li>help<ul>
+				<li>prints out this document</li>
+			</ul></li>
+			<li>packinfo (supplypack_id)<ul>
+				<li>prints an infosheet about a supplypack</li>
+			</ul></li>
+			<li>packlist<ul>
+				<li>prints a list of all supplypacks</li>
+			</ul></li>
+			<li>orderinfo (order_id)<ul>
+				<li>prints an infosheet about an order</li>
+			</ul></li>
+			<li>orderlist<ul>
+				<li>prints a list of all placed orders</li>
+			</ul></li>
+			<li>requestinfo<ul>
+				<li>prints an infosheet about a command order</li>
+			</ul></li>
+			<li>requestlist<ul>
+				<li>prints a list of all active command orders</li>
+			</ul></li>
+			<li>sendtruck<ul>
+				<li>sends the truck</li>
+			</ul></li>
+			<li>truckstatus<ul>
+				<li>returns the current status of the truck</li>
+			</ul></li>"}
+	update_icon()
+
 
 /obj/machinery/computer/supply
 	name = "Supply requests radio"
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "request"
+	req_access = list(access_cargo)
 	circuit = "/obj/item/weapon/circuitboard/orderradio"
-	var/reqtime = 0 //Cooldown for requisitions - Quarxink
-	var/last_viewed_group = "Supplies"
-
 	var/datum/radionet/radionet
 
 /obj/machinery/computer/supply/New()
@@ -94,6 +206,12 @@ For vending packs, see vending_packs.dm*/
 	for(var/obj/structure/radio_cable/C in loc)
 		if(C.radionet != RN)
 			C.propagateRadionet(RN)
+	SSsupply_truck.supply_radios += src
+
+/obj/machinery/computer/supply/Destroy()
+	. = ..()
+	SSsupply_truck.supply_radios -= src
+	radionet.remove_radio(src)
 
 /obj/machinery/computer/supply/attack_ai(var/mob/user as mob)
 	add_hiddenprint(user)
@@ -104,268 +222,211 @@ For vending packs, see vending_packs.dm*/
 		return
 
 	user.set_machine(src)
-	ui_interact(user)
+	interact(user)
 	return
 
-/obj/machinery/computer/supply/proc/makeBaseNanoData(var/mob/user, var/ignore_ownership = 0)
-	// ui data
-	var/data[0]
-	// make assoc list for supply groups because either I'm retarded or nanoui is retarded
-	var/supply_group_data[0]
-	for(var/i = 1; i <= all_supply_groups.len; i++)
-		supply_group_data.Add(list(list("category" = all_supply_groups[i])))
-	data["all_supply_groups"] = supply_group_data
-	data["last_viewed_group"] = last_viewed_group
+/obj/machinery/computer/supply/interact(var/mob/user)
+	if(!checkConnection())
+		return 0
 
-	// current supply group packs being displayed
-	var/packs_list[0]
-	for(var/set_name in SSsupply_truck.supply_packs)
-		var/datum/supply_pack/pack = SSsupply_truck.supply_packs[set_name]
-		if(!pack.contraband && !pack.hidden)
-			if(last_viewed_group == pack.group)
-				packs_list.Add(list(list("name" = pack.name, "cost" = pack.cost, "command1" = list("doorder" = "[set_name]0"), "command2" = list("doorder" = "[set_name]1"))))
-				// command1 is for a single crate order, command2 is for multi crate order
-	data["supply_packs"] = packs_list
+	commandResponse("Please state your Authorization.")
+	//authorization fluff
+	var/obj/item/weapon/card/id/card = user.get_id_card()	
+	var/id = copytext(replacetext(replacetext(splittext("\ref[card]", "x")[2], "]",""), "", "-"), 2) //this just takes the last bit of the ref and puts - between them
+	user.say("This is [card.registered_name]. Authorization [id]")
+	
+	if(!check_access(card))
+		commandResponse("Authorization denied. Who is this?")
+		return 0
 
-	// current usr's cargo requests
-	var/requests_list[0]
-	for(var/i = 1; i <= SSsupply_truck.requestlist.len; i++)
-		var/datum/supply_order/SO = SSsupply_truck.requestlist[i]
-		if(SO)
-			if((SO.orderedby != usr) && !ignore_ownership) //check if user owns this
-				continue
-			if(!SO.comment)
-				SO.comment = "No reason provided."
-			requests_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = getName(SO.orderedby), "authorized_name" = getName(SO.authorizedby), "comment" = SO.comment, "command1" = list("rreq" = i), "command2" = list("confirmorder" = i))))
-	data["requests"] = requests_list
+	doCommand(user)
 
-	var/orders_list[0]
-	for(var/set_name in SSsupply_truck.shoppinglist)
-		var/datum/supply_order/SO = set_name
-		if(SO)
-			if((SO.orderedby != usr) && !ignore_ownership) //check if user owns this
-				continue
-			if(!SO.comment)
-				SO.comment = "No reason provided."
-			orders_list.Add(list(list("supply_type" = SO.object.name, "orderedby" = getName(SO.orderedby), "authorized_name" = getName(SO.authorizedby), "comment" = SO.comment)))
-	data["orders"] = orders_list
-	data["money"] = SSsupply_truck.commandMoney
-	return data
-
-/obj/machinery/computer/supply/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null)
-	var/data = makeBaseNanoData(user)
-
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data)
-	if(!ui)
-		ui = new(user, src, ui_key, "order_console.tmpl", name, 600, 660)
-		ui.set_initial_data(data)
-		ui.open()
-
-/obj/machinery/computer/supply/proc/getName(var/mob/user)
-	if(!user)
-		return ""
-	var/obj/item/weapon/card/id/card = user.get_id_card()
-	return ((card && card.registered_name) ? card.registered_name : user.name)
-
-/obj/machinery/computer/supply/proc/check_restriction(mob/user)
-	if(!user)
-		return FALSE
-	var/result = FALSE
-	switch(SSsupply_truck.restriction)
-		if(0)
-			result = TRUE
-		if(1)
-			result = allowed(user)
-		if(2)
-			result = allowed(user) && iscarbon(user)
-	if(!result) //This saves a lot of pasted to_chat everywhere else
-		to_chat(user, "<span class='warning'>Your credentials were rejected by the current permissions protocol.</span>")
-	return result
-
-/obj/machinery/computer/supply/Topic(href, href_list)
-	if(..())
-		return 1
-	add_fingerprint(usr)
-
-	if (href_list["doorder"])
-		if(world.time < reqtime)
-			for(var/mob/V in hearers(src))
-				V.show_message("<b>[src]</b>'s monitor flashes, \"[world.time - reqtime] seconds remaining until another requisition form may be printed.\"")
-			return 1
-
-		if(!checkRadioconnection())
-			return
-
-		var/pack_name = copytext(href_list["doorder"], 1, lentext(href_list["doorder"]))
-		var/multi = text2num(copytext(href_list["doorder"], -1))
-		if(!isnum(multi))
-			return 1
-		//Find the correct supply_pack datum
-		var/datum/supply_pack/P = SSsupply_truck.supply_packs[pack_name]
-		if(!istype(P))
-			return 1
-
-		var/crates = 1
-		if(multi)
-			var/tempcount = input(usr, "Amount:", "How many crates?", "") as num
-			crates = Clamp(round(text2num(tempcount)), 1, 20)
-
-		var/timeout = world.time + 600
-		var/reason = input(usr,"Reason:","Why do you require this item?","") as null|text
-		if(length(reason) > REASON_LEN)
-			return 1
-		if(world.time > timeout)
-			return 1
-		if(!reason)
-			return 1
-
-		new /obj/item/weapon/paper/request_form(loc, P, crates, usr, reason)
-		reqtime = (world.time + 5) % 1e5
-		//make our supply_order datum
-		for(var/i = 1; i <= crates; i++)
-			var/datum/supply_order/O = new /datum/supply_order()
-			O.object = P
-			O.orderedby = usr
-			O.comment = reason
-
-			SSsupply_truck.requestlist += O
-
-			if(!SSsupply_truck.restriction) //If set to 0 restriction, auto-approve
-				SSsupply_truck.confirm_order(O,usr,SSsupply_truck.requestlist.len, 1)
-		return 1
-	else if (href_list["last_viewed_group"])
-		last_viewed_group = href_list["last_viewed_group"]
-		return 1
-	else if (href_list["rreq"])
-		if(!check_restriction(usr))
-			return 1
-		if(!checkRadioconnection())
-			return
-		var/ordernum = text2num(href_list["rreq"])
-		if(!ordernum)
-			return 1
-		SSsupply_truck.requestlist.Cut(ordernum,ordernum+1)
-		return 1
-	else if (href_list["close"])
-		if(usr.machine == src)
-			usr.unset_machine()
-		return 1
-
-/obj/machinery/computer/supply/proc/checkRadioconnection()
+/obj/machinery/computer/supply/proc/checkConnection()
 	if(!radionet || !radionet.hubs.len)
-		to_chat(usr, "<span class='warning'>Command didn't respond.</span>")
+		commandResponse("NO CONNECTION.")
 		return 0
 	return 1
 
-#define SCR_MAIN 1
-#define SCR_CENTCOM 2
+/*UI PROCS*/
+/obj/machinery/computer/supply/proc/doCommand(var/mob/user)
+	if(!checkConnection())
+		return 0
 
-/obj/machinery/computer/supply/administration
-	name = "Supply administration radio"
-	icon_state = "supply"
-	req_access = list(access_cargo)
-	circuit = "/obj/item/weapon/circuitboard/supplyradio"
-	var/hacked = 0 //is this needed?
-	var/can_order_contraband = 0 //is this needed?
-	var/permissions_screen = FALSE // permissions setting screen toggle
-	var/screen = SCR_MAIN
+	var/command = input(user, "What do you need?", "Say Command") as text|null
+	if(!command)
+		user.say("Nevermind.")
+		commandResponse(pick("Got it. Signing off.", "Stop wasting my time."))
+		return 0
 
-/obj/machinery/computer/supply/administration/New()
-	..()
-	SSsupply_truck.supply_radios.Add(src)
+	user.say("[command].")
 
-/obj/machinery/computer/supply/administration/Destroy()
-	SSsupply_truck.supply_radios.Remove(src)
-	..()
+	var/list/params = splittext(lowertext(command), " ")
 
-/obj/machinery/computer/supply/administration/attackby(var/obj/item/I, var/mob/user)
-	if(istype(I,/obj/item/weapon/card/emag) && !hacked)
-		to_chat(user, "<span class='notice'>Special supplies unlocked.</span>")
-		hacked = 1
-		return
-	return ..()
+	switch(trim(params[1]))
+		if("order") //creates an order
+			//syntax is [pack_id]x[amount]
+			var/list/orders = params.Copy(2)
+			var/list/packs = list()
+			var/list/inv_packids = list()
+			for(var/order in orders)
+				var/list/sp_param = splittext(order, "x")
+				if(!SSsupply_truck.supply_packs["[sp_param[1]]"])
+					inv_packids += sp_param[1]
+					continue
 
-/obj/machinery/computer/supply/administration/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null)
-	var/data = makeBaseNanoData(user, 1)
+				var/amount = 1
+				if(sp_param.len == 2)
+					if(!isnum(sp_param[2]))
+						sp_param[2] = text2num(sp_param[2])
+					if(isnum(sp_param[2]))
+						amount = sp_param[2]
+				packs["[sp_param[1]]"] = amount
 
-	var/centcomm_list[0]
-	for(var/datum/command_order/O in SSsupply_truck.command_orders)
-		if(!O.listed)
-			continue
-		centcomm_list.Add(list(list("id" = O.id, "requested" = O.getRequestsByName(), "fulfilled" = O.getFulfilledByName(), "name" = O.name, "worth" = O.worth)))
-	data["command_orders"] = centcomm_list
+			if(inv_packids.len)
+				commandResponse("Order failed. You stated following invalid request numbers: [inv_packids.Join(",")]")
+				return doCommand(user)
+			
+			if(!packs.len)
+				commandResponse("You gotta give me something to order.")
+				return doCommand(user)
 
-	data["send"] = list("send" = 1)
-	data["moving"] = SSsupply_truck.moving
-	data["at_station"] = SSsupply_truck.at_base
-	data["show_permissions"] = permissions_screen
-	data["restriction"] = SSsupply_truck.restriction
+			return doOrder(packs)
+		if("cancel") //cancels an order
+			return cancelOrder(trim(params[2]))	
+		if("total") //returns the total order price
+			commandResponse("Current order total is at [SSsupply_truck.getOrderPrice()].")
+			return 1
+		if("funds") //return the total money at command
+			commandResponse("Our current budget is at [SSsupply_truck.commandMoney].")
+			return 1
+		if("withdraw") //places a withdraw order
+			if(!params[2])
+				commandResponse("You didn't specify an amount.")
+			var/amount = trim(params[2])
+			if(!isnum(amount))
+				amount = text2num(amount)
+			if(!isnum(amount))
+				commandResponse(pick("At least give me a number to withdraw.","Thats not a number.","I don't understand."))
+				return 0
 
-	data["screen"] = screen
+			commandResponse("Withdrawals are currently not allowed.") //TODO
+			//TODO add money order
+		if("help") //prints a help sheet for the commands
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
+			return 1
+		if("packinfo") //prints an infopaper about a supply pack
+			if(!params[2])
+				commandResponse("I'm gonna need an id with that.")
+			var/pack_id = trim(params[2])
+			if(!SSsupply_truck.supply_packs["[pack_id]"])
+				commandResponse("There are no supply packs with that id.")
+				return 0
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data)
-	if (!ui)
-		ui = new(user, src, ui_key, "supply_console.tmpl", name, 600, 660)
-		ui.set_initial_data(data)
-		ui.open()
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id)
+			return 1
+		if("packlist") //prints a new inventory paper
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/inventory_manifest(RP.loc)
+			return 1
+		if("orderinfo") //prints an infopaper about an order
+			if(!params[2])
+				commandResponse("I'm gonna need an id with that.")
+			var/order_id = trim(params[2])
+			if(!SSsupply_truck.shoppinglist["[order_id]"])
+				commandResponse("There are no orders with that id.")
+				return 0
 
-/obj/machinery/computer/supply/administration/Topic(href, href_list)
-	if(..())
-		return 1
-	add_fingerprint(usr)
-	
-	//Handle access and requisitions
-	if(href_list["permissions"])
-		if(!permissions_screen)
-			permissions_screen = TRUE
-		else
-			permissions_screen = FALSE
-	//Calling the shuttle
-	else if(href_list["send"])
-		if(!checkRadioconnection())
-			return
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/order_form(RP.loc, SSsupply_truck.shoppinglist["[order_id]"])
+			return 1
+		if("orderlist") //prints a list of all active orders
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/order_list(RP.loc)
+			return 1
+		if("requestinfo") //prints an info sheet about a specific command order
+			if(!params[2])
+				commandResponse("I'm gonna need an id with that.")
+			var/request_id = trim(params[2])
+			if(!SSsupply_truck.command_orders["[request_id]"])
+				commandResponse("There are no command orders with that id.")
+				return 0
 
-		if(!check_restriction(usr))
-			to_chat(usr, "<span class='warning'>Your credentials were rejected by the current permissions protocol.</span>")
-		else
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/command_order(RP.loc, SSsupply_truck.command_orders["[request_id]"])
+			return 1
+		if("requestlist") //prints a list of all active command orders
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				new /obj/item/weapon/paper/request_list(RP.loc)
+			return 1
+		if("sendtruck") //sends a truck
 			SSsupply_truck.depart()
-	else if(href_list["confirmorder"])
-		//Find the correct supply_order datum
-		if(!check_restriction(usr))
+		if("truckstatus") //returns a rough idea of how long the truck will take
+			if(!SSsupply_truck.moving)
+				if(SSsupply_truck.at_base)
+					commandResponse("Truck should be your location.")
+				else
+					commandResponse("We got the truck over here.")
+			else
+				commandResponse("Truck is on the road.")
 			return 1
-		var/ordernum = text2num(href_list["confirmorder"])
-		if(!ordernum)
-			return 1
+		else
+			commandResponse("I didn't understand that.")
+			return doCommand(user)
 
-		if(!checkRadioconnection())
-			return
+/obj/machinery/computer/supply/proc/commandResponse(var/message)
+	for(var/mob/V in hearers(src))
+		V.show_message("<b>[src]</b> says, \"[message]\"")
 
-		var/datum/supply_order/O = SSsupply_truck.requestlist[ordernum]
+/obj/machinery/computer/supply/proc/doOrder(var/list/packs)
+	var/size = 0
+	for(var/pack_id in packs)
+		for(var/i = 0; i < packs["[pack_id]"]; i++)
+			var/atom/A = SSsupply_truck.supply_packs["[pack_id]"].create(null)
+			var/obj/structure/supply_truck/T = new ()
+			size += T.getSize(A)
+			T.forceMove(null)
+			qdel(A)
 
-		// Calculate money tied up in shoppinglist
-		var/total_cost = 0
-		for(var/datum/supply_order/R in SSsupply_truck.shoppinglist)
-			var/datum/supply_pack/R_pack = R.object
-			total_cost += R_pack.cost
-		// check they can afford the order
-		if((O.object.cost + total_cost) > SSsupply_truck.commandMoney)
-			to_chat(usr, "<span class='warning'>You can't affort to approve this order.</span>")
-			return 1
+	//make our supply_order datum
+	var/datum/supply_order/O = new ()
+	O.packs = packs
+	O.orderedby = usr
+	O.id = ++SSsupply_truck.orderid
 
-		SSsupply_truck.confirm_order(O,usr,ordernum)
-	else if (href_list["access_restriction"])
-		if(!check_restriction(usr))
-			return 1
-		SSsupply_truck.restriction = text2num(href_list["access_restriction"])
-	else if (href_list["screen"])
-		if(!check_restriction(usr))
-			return 1
-		var/result = text2num(href_list["screen"])
-		if(result == SCR_MAIN || result == SCR_CENTCOM)
-			screen = result
-		return 1
+	SSsupply_truck.shoppinglist["[O.id]"] += O
+	for(var/obj/structure/receipt_printer/RP in radionet.printers)
+		new /obj/item/weapon/paper/order_form(RP.loc, O)
+
+	commandResponse("Order [O.id] approved.")
 	return 1
 
-#undef SCR_MAIN
-#undef SCR_CENTCOM
-#undef REASON_LEN
+/obj/machinery/computer/supply/proc/cancelOrder(var/id)
+	if(!SSsupply_truck.shoppinglist["[id]"])
+		commandResponse("We don't have an order under that registration.")
+		return 0
+
+	SSsupply_truck.shoppinglist["[id]"] = null
+	commandResponse("Removed order [id].")
+	return 1
+
+/obj/structure/receipt_printer
+	name = "Supply Receipt Printer"
+	desc = "Receives and prints papers command sends"
+	icon = 'icons/obj/library.dmi'
+	icon_state = "fax"
+	anchored = 1
+	density = 1
+	var/datum/radionet/radionet
+
+/obj/structure/receipt_printer/New()
+	..()
+	var/datum/radionet/RN = new()
+	for(var/obj/structure/radio_cable/C in loc)
+		if(C.radionet != RN)
+			C.propagateRadionet(RN)
+
+/obj/structure/receipt_printer/Destroy()
+	..()
+	radionet.remove_printer(src)

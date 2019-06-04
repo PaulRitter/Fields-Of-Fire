@@ -14,8 +14,6 @@ supply radio circuits
 radionet cable + hub + net datum
 */
 
-var/station_name = "TODO find where to get this var"
-
 //set by a landmark with the name "supply_truck", cannot be multiple
 var/supply_truck_pos
 
@@ -41,7 +39,6 @@ SUBSYSTEM_DEF(supply_truck)
 	//control
 	var/list/command_orders = list() //orders by command that can be fulfilled
 	var/list/shoppinglist = list() //approved orders that will be bought with the next shipment
-	var/list/requestlist = list() //requested orders that haven't been approved yet
 	var/list/supply_packs = list() //all packs that can be ordered
 	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
@@ -50,6 +47,7 @@ SUBSYSTEM_DEF(supply_truck)
 	//fluff stuff
 	var/price = 0 //how much we payed for the last shipment
 	var/shipments = 0 //how many shipments we already had
+	var/orderid = 0 //fluff for creating new orders
 
 	//truck movement
 	var/at_base = 0 //if shuttle is at base
@@ -60,10 +58,10 @@ SUBSYSTEM_DEF(supply_truck)
 	
 //gets supply packs for uis
 /datum/controller/subsystem/supply_truck/Initialize(timeofday)
+	var/pack_id = 1
 	for(var/typepath in subtypesof(/datum/supply_pack))
-		var/datum/supply_pack/P = new typepath
-		supply_packs[P.name] = P
-
+		supply_packs["[pack_id++]"] = new typepath()
+	
 	add_command_order(new /datum/command_order/per_unit/default())
 	add_command_order(new /datum/command_order/per_unit/per_reagent/default())
 	..()
@@ -91,8 +89,13 @@ SUBSYSTEM_DEF(supply_truck)
 		truck_contents.len = 0
 		truck.update_icon()
 		if(truck.contents.len)
-			for(var/obj/machinery/computer/supply/administration/R in supply_radios)
-				new /obj/item/weapon/paper/truck_manifest(R.loc, truck.getGroupedContentList(), price, shipment)
+			var/list/alreadyPrinted = list()
+			for(var/obj/machinery/computer/supply/R in supply_radios)
+				for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
+					if(RP in alreadyPrinted)
+						continue
+					new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
+					alreadyPrinted += RP
 		allSay("Truck arrived at base.")
 		at_base = 1
 	else //at station
@@ -105,6 +108,10 @@ SUBSYSTEM_DEF(supply_truck)
 //the truck departing either from base or command
 //basically sets truck_contents and handles buying from command
 /datum/controller/subsystem/supply_truck/proc/depart()
+	if(moving)
+		allSay("Truck already in Transit.")
+		return 0
+
 	if(at_base)//at station
 		if(!truck)
 			//this could also trigger on truck destruction, but having this feedback only when using the radio adds a bit of immersion
@@ -118,9 +125,6 @@ SUBSYSTEM_DEF(supply_truck)
 	else
 		//buys all of shopping list
 		truck_contents = buy()
-		if(!truck_contents)
-			allSay("Order failed.")
-			return 0
 		allSay("Truck left Command and is enroute.")
 	
 	//sets the eta timer
@@ -131,8 +135,10 @@ SUBSYSTEM_DEF(supply_truck)
 
 /datum/controller/subsystem/supply_truck/proc/getOrderPrice()
 	. = 0
-	for(var/datum/supply_order/SO in shoppinglist)
-		. += SO.object.cost
+	for(var/orderid in shoppinglist)
+		var/datum/supply_order/SO = SSsupply_truck.shoppinglist["[orderid]"]
+		for(var/pack_id in SO.packs)
+			. += SSsupply_truck.supply_packs["[pack_id]"].cost * SO.packs["[pack_id]"]
 
 //tries to sell an obj to the command orders
 /datum/controller/subsystem/supply_truck/proc/SellObjToOrders(var/atom/A,var/in_crate)
@@ -140,24 +146,24 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/priority1=list() //normal orders here
 	var/list/priority2=list() //per_unit goes here
 	//here we only want to sell to reagent orders
-	for(var/idx = 1; idx <= command_orders.len; idx++)
-		var/datum/command_order/O = command_orders[idx]
+	for(var/order_id in command_orders)
+		var/datum/command_order/O = command_orders["[order_id]"]
 		if(!istype(O, /datum/command_order/per_unit/per_reagent))
 			if(istype(O,/datum/command_order/per_unit))
-				priority2 += idx
+				priority2 += order_id
 			else
-				priority1 += idx
+				priority1 += order_id
 			continue
 		if(O.trySellObj(A))
 			return 1
 
 	//second we loop through the not-per-unit orders
 	for(var/idx in priority1)
-		if(command_orders[idx].trySellObj(A,in_crate))
+		if(command_orders["[idx]"].trySellObj(A,in_crate))
 			return 1
 	//check if we can sell to per-unit orders
 	for(var/idx in priority2)
-		if(command_orders[idx].trySellObj(A,in_crate))
+		if(command_orders["[idx]"].trySellObj(A,in_crate))
 			return 1
 	return 0
 
@@ -178,121 +184,106 @@ SUBSYSTEM_DEF(supply_truck)
 			SellObjToOrders(MA,0)
 
 		// PAY UP BITCHES
-		for(var/datum/command_order/O in command_orders)
+		for(var/order_id in command_orders)
+			var/datum/command_order/O = command_orders["[order_id]"]
 			var/pay = O.CheckFulfilled()
 			money += pay
 			if(O.shouldRemove())
-				command_orders.Remove(O)
+				command_orders["[order_id]"] = null
 		qdel(MA)
 	return money
 
 //buys items and returns all crates in a list
 /datum/controller/subsystem/supply_truck/proc/buy()
 	if(!shoppinglist.len) //no things to buy, no need to go any further
-		return 0
+		return list()
 
 	if(getOrderPrice() > commandMoney) //not enough money to buy
-		return 0
+		return list()
 
 	var/list/contents = list()
-	
+
 	//how much space will a truck have
 	var/obj/structure/supply_truck/T = new ()
-	var/space = T.getSpace()
-	T.forceMove(null)
-
-	var/list/toBuy = list()
-	if(shoppinglist.len > space)
-		toBuy = shoppinglist.Copy(1,space+1)
-		shoppinglist.Cut(1,space+1)
-	else
-		toBuy = shoppinglist.Copy()
-		shoppinglist.len = 0
 
 	//fluff vars
 	price = 0
 	shipments++
+	var/size = 0
 
-	for(var/datum/supply_order/SO in toBuy)
-		var/datum/supply_pack/SP = SO.object
+	for(var/order in shoppinglist)
+		var/datum/supply_order/SO = shoppinglist["[order]"]
 
-		//paying for the order
-		commandMoney -= SP.cost
-		price += SP.cost
-		shoppinglist.Remove(SO)
-
-		if(prob(0.5)) //1 in 200 crates will be lost
+		var/order_size = SO.getSize()
+		if(!T.hasSpace((size + order_size)))
 			continue
 
-		var/atom/A = new SP.containertype()
-		A.name = "[SP.containername] [SO.comment ? "([SO.comment])":"" ]"
+		for(var/pack_id in SO.packs)
+			var/datum/supply_pack/SP = supply_packs["[pack_id]"]
+			for(var/idx = 0; idx < SO.packs["[pack_id]"]; idx++)
+				//paying for the order
+				commandMoney -= SP.cost
+				price += SP.cost
 
-		//spawn the stuff, finish generating the manifest while you're at it
-		if(istype(A, /obj/structure/closet))
-			var/obj/structure/closet/C = A
-			if(SP.req_access)
-				C.req_access = SP.req_access
+				if(prob(0.5)) //1 in 200 crates will be lost
+					continue
 
-			if(SP.req_one_access)
-				C.req_one_access = SP.req_one_access
+				var/atom/A = SP.create(SO)
+				if(!SP.contraband)
+					new /obj/item/weapon/paper/shipping_manifest(A, SP, shipments, SO)
+				contents += A
 
-		for(var/typepath in SP.contains)
-			if(!typepath)
-				continue
-			var/atom/B2 = new typepath(A)
-			if(istype(B2, /obj/item/stack))
-				var/obj/item/stack/ST = B2
-				ST.amount = SP.contains[typepath]
-			else
-				for(var/i=1, i<SP.contains[typepath], i++) //one less since we already made one (B2)
-					new typepath(A)
+		size += order_size
+		shoppinglist.Remove(SO)
+	
+	T.forceMove(null)
 
-		var/obj/item/weapon/paper/shipping_manifest/slip = new(A, SO, shipments)
-
-		SP.post_creation(A)
-
-		if (SP.contraband)
-			slip.forceMove(null)	//we are out of blanks for Form #44-D Ordering Illicit Drugs.
-
-		contents += A
 	return contents
 
-/datum/controller/subsystem/supply_truck/proc/confirm_order(datum/supply_order/O,mob/user,var/position, var/wasAutoConfirmed) //position represents where it falls in the request list
-	var/datum/supply_pack/P = O.object
-
-	if((commandMoney - getOrderPrice()) >= P.cost)
-		requestlist.Cut(position,position+1)
-		O.authorizedby = user
-		shoppinglist += O
-		if(!wasAutoConfirmed)
-			O.OnConfirmed(user)
-	else
-		to_chat(user, "<span class='warning'>Command does not have enough funds for this request.</span>")
-
 /datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C)
-	command_orders.Add(C)
+	command_orders["[C.id]"] = C
 
 	if(!C.listed) //if its not listed we don't need to notify them
 		return
 
-	for(var/obj/machinery/computer/supply/administration/S in supply_radios)
-		var/obj/item/weapon/paper/command_order/slip = new (S, C)
+	var/list/alreadyPrinted = list()
+	for(var/obj/machinery/computer/supply/R in supply_radios)
+		for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
+			if(RP in alreadyPrinted)
+				continue
+			new /obj/item/weapon/paper/command_order(RP, C)
+			alreadyPrinted += RP
 	
 	allSay("New buy order by [C.name] available.")
 
 /datum/controller/subsystem/supply_truck/proc/allSay(var/message)
-	for(var/obj/machinery/computer/supply/administration/S in supply_radios)
-		S.visible_message("<span class='notice'>[message]</span>")
+	for(var/obj/machinery/computer/supply/S in supply_radios)
+		S.commandResponse("[message]")
 
 
 /*
 SUPPLY ORDER
 */
 /datum/supply_order
-	var/datum/supply_pack/object = null
+	var/list/packs = null // pack_id -> amount
 	var/mob/orderedby = null // who ordered it
-	var/mob/authorizedby = null // who approved it
-	var/comment = null
+	var/id = 0
+
+/datum/supply_order/proc/getSize()
+	. = 0
+	var/obj/structure/supply_truck/T = new ()
+	for(var/pack_id in packs)
+		var/atom/movable/A = SSsupply_truck.supply_packs["[pack_id]"].create(null)
+		. += T.getSize(A)
+		A.forceMove(null)
+	T.forceMove(null)
+
+/datum/supply_order/proc/getCost()
+	. = 0
+	for(var/pack_id in packs)
+		var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+		. += SP.cost
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)
-	object.onApproved(user)
+	for(var/datum/supply_pack/SP in packs)
+		SP.onApproved(user)
