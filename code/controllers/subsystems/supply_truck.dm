@@ -98,7 +98,7 @@ SUBSYSTEM_DEF(supply_truck)
 				for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
 					if(RP in alreadyPrinted)
 						continue
-					new /obj/item/weapon/paper/shipping_manifest/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
+					new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
 					alreadyPrinted += RP
 		allSay("Truck arrived at Base.")
 		at_base = 1
@@ -220,7 +220,7 @@ SUBSYSTEM_DEF(supply_truck)
 		var/obj/structure/closet/crate/crate = new ()
 		crate.name = "Withdrawal Order"
 		spawn_money(nextWithdrawal, crate)
-		new /obj/item/weapon/paper/shipping_manifest/withdrawal_order(crate, nextWithdrawal, shipments)
+		new /obj/item/weapon/paper/withdrawal_order(crate, nextWithdrawal, shipments)
 		commandMoney -= nextWithdrawal
 		nextWithdrawal = 0
 		contents += crate

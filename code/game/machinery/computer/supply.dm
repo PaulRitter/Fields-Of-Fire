@@ -7,7 +7,7 @@ For vending packs, see vending_packs.dm*/
 
 
 //truck mainfest
-/obj/item/weapon/paper/shipping_manifest/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
+/obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
 	. = ..(loc)
 	name = "Truck Manifest"
 	info += {"<h3>Truck Manifest</h3><hr>
@@ -41,7 +41,7 @@ For vending packs, see vending_packs.dm*/
 	update_icon()
 
 //crate manifest
-/obj/item/weapon/paper/shipping_manifest/withdrawal_order/New(var/loc, var/amount, var/shipmentNum)
+/obj/item/weapon/paper/withdrawal_order/New(var/loc, var/amount, var/shipmentNum)
 	. = ..(loc)
 	name = "Withdrawal Manifest"
 	info = {"<h3>Withdrawal Manifest</h3><hr><br>
