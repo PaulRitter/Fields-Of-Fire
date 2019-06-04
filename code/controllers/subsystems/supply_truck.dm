@@ -43,6 +43,8 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
 	var/commandMoney = 10000 //Money currently stored at command
+	var/nextWithdrawal = 0
+	var/transitCost = 0
 
 	//fluff stuff
 	var/price = 0 //how much we payed for the last shipment
@@ -61,6 +63,8 @@ SUBSYSTEM_DEF(supply_truck)
 	var/pack_id = 1
 	for(var/typepath in subtypesof(/datum/supply_pack))
 		supply_packs["[pack_id++]"] = new typepath()
+
+	transitCost = rand(20,30)
 	
 	add_command_order(new /datum/command_order/per_unit/default())
 	add_command_order(new /datum/command_order/per_unit/per_reagent/default())
@@ -94,14 +98,14 @@ SUBSYSTEM_DEF(supply_truck)
 				for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
 					if(RP in alreadyPrinted)
 						continue
-					new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
+					new /obj/item/weapon/paper/shipping_manifest/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
 					alreadyPrinted += RP
-		allSay("Truck arrived at base.")
+		allSay("Truck arrived at Base.")
 		at_base = 1
 	else //at station
 		commandMoney += sell(truck_contents)
 		truck_contents.len = 0
-		allSay("Truck arrived at command.")
+		allSay("Truck arrived at Command.")
 		at_base = 0
 	moving = 0
 
@@ -109,14 +113,14 @@ SUBSYSTEM_DEF(supply_truck)
 //basically sets truck_contents and handles buying from command
 /datum/controller/subsystem/supply_truck/proc/depart()
 	if(moving)
-		allSay("Truck already in Transit.")
+		allSay("Truck already in transit.")
 		return 0
 
 	if(at_base)//at station
 		if(!truck)
 			//this could also trigger on truck destruction, but having this feedback only when using the radio adds a bit of immersion
 			//~also its easier this way~
-			allSay("We received message your truck was destroyed. We have a new one standing by at command, watch your assets!")
+			allSay("We received message that your truck was destroyed. We have a new one standing by at command, watch your assets!")
 			at_base = 0
 			return 0
 		truck_contents = truck.contents
@@ -124,7 +128,11 @@ SUBSYSTEM_DEF(supply_truck)
 		allSay("Truck sent to Command.")
 	else
 		//buys all of shopping list
-		truck_contents = buy()
+		var/list/L = buy()
+		if(!L) //if buy failed we need to abort and not send the truck
+			return 0
+		truck_contents = L
+		commandMoney -= transitCost
 		allSay("Truck left Command and is enroute.")
 	
 	//sets the eta timer
@@ -134,7 +142,7 @@ SUBSYSTEM_DEF(supply_truck)
 	return 1
 
 /datum/controller/subsystem/supply_truck/proc/getOrderPrice()
-	. = 0
+	. = nextWithdrawal + transitCost
 	for(var/orderid in shoppinglist)
 		var/datum/supply_order/SO = SSsupply_truck.shoppinglist["[orderid]"]
 		for(var/pack_id in SO.packs)
@@ -198,7 +206,8 @@ SUBSYSTEM_DEF(supply_truck)
 		return list()
 
 	if(getOrderPrice() > commandMoney) //not enough money to buy
-		return list()
+		allSay("Couldn't afford to send the truck. You are [getOrderPrice() - commandMoney]$ over budget.")
+		return 0
 
 	var/list/contents = list()
 
@@ -209,6 +218,15 @@ SUBSYSTEM_DEF(supply_truck)
 	price = 0
 	shipments++
 	var/size = 0
+
+	if(nextWithdrawal)
+		var/obj/structure/closet/crate = new ()
+		crate.name = "Withdrawal Order"
+		spawn_money(nextWithdrawal, crate)
+		new /obj/item/weapon/paper/shipping_manifest/withdrawal_order(crate, amount, shipments)
+		commandMoney -= nextWithdrawal
+		nextWithdrawal = 0
+		contents += crate
 
 	for(var/order in shoppinglist)
 		var/datum/supply_order/SO = shoppinglist["[order]"]
@@ -253,7 +271,7 @@ SUBSYSTEM_DEF(supply_truck)
 			new /obj/item/weapon/paper/command_order(RP, C)
 			alreadyPrinted += RP
 	
-	allSay("New buy order by [C.name] available.")
+	allSay("Hey, we got a new buy order up. Id is [C.id]")
 
 /datum/controller/subsystem/supply_truck/proc/allSay(var/message)
 	for(var/obj/machinery/computer/supply/S in supply_radios)

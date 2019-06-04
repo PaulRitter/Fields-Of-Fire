@@ -7,12 +7,12 @@ For vending packs, see vending_packs.dm*/
 
 
 //truck mainfest
-/obj/item/weapon/paper/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
+/obj/item/weapon/paper/shipping_manifest/truck_manifest/New(var/loc, var/list/contentlist, var/price, var/shipmentNum)
 	. = ..(loc)
 	name = "Truck Manifest"
 	info += {"<h3>Truck Manifest</h3><hr>
-		Destination: [GLOB.using_map.station_name]<br>
-		Shipment #[shipmentNum]<br>
+		DESTINATION: [GLOB.using_map.station_name]<br>
+		SHIPMENT #[shipmentNum]<br>
 		CONTENTS:<br><ul>"}
 	info += "<li>"+jointext(contentlist, "</li><li>")+"</li>"
 	info += {"</ul><br>
@@ -25,8 +25,8 @@ For vending packs, see vending_packs.dm*/
 	. = ..(loc)
 	name = "Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order"
 	info = {"<h3>Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order</h3><hr><br>
-		Destination: [GLOB.using_map.station_name]<br>
-		Shipment #[shipmentNum]<br>
+		DESTINATION: [GLOB.using_map.station_name]<br>
+		SHIPMENT #[shipmentNum]<br>
 		CONTENTS:<br><ul>"}
 
 	for(var/typepath in SP.contains)
@@ -40,6 +40,16 @@ For vending packs, see vending_packs.dm*/
 		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
 	update_icon()
 
+//crate manifest
+/obj/item/weapon/paper/shipping_manifest/withdrawal_order/New(var/loc, var/amount, var/shipmentNum)
+	. = ..(loc)
+	name = "Withdrawal Manifest"
+	info = {"<h3>Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order</h3><hr><br>
+		DESTINATION: [GLOB.using_map.station_name]<br>
+		SHIPMENT #[shipmentNum]<br>
+		AMOUNT: [amount]$<br>
+		CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"}
+	update_icon()
 
 //supply pack info
 /obj/item/weapon/paper/supply_pack_info/New(var/loc, var/pack_id)
@@ -97,11 +107,13 @@ For vending packs, see vending_packs.dm*/
 
 	name = "Active Order List"
 	info += {"<h3>Active Order List</h3><hr>
-			Current active orders:<br>"}
+			Current active orders:<ul>"}
+	if(SSsupply_truck.nextWithdrawal)
+		info += "<li>Withdrawal - Amount: [nextWithdrawal]</li>"
 	for(var/order_id in SSsupply_truck.shoppinglist)
 		if(!SSsupply_truck.shoppinglist["[order_id]"])
 			continue
-		info += "#[order_id] - requested by [SSsupply_truck.shoppinglist["[order_id]"].orderedby.name]<br>"
+		info += "<li>#[order_id] - requested by [SSsupply_truck.shoppinglist["[order_id]"].orderedby.name]</li>"
 
 	update_icon()
 
@@ -229,7 +241,7 @@ For vending packs, see vending_packs.dm*/
 	if(!checkConnection())
 		return 0
 
-	commandResponse("Please state your Authorization.")
+	commandResponse("Please state your authorization.")
 	//authorization fluff
 	var/obj/item/weapon/card/id/card = user.get_id_card()	
 	var/id = copytext(replacetext(replacetext(splittext("\ref[card]", "x")[2], "]",""), "", "-"), 2) //this just takes the last bit of the ref and puts - between them
@@ -243,19 +255,23 @@ For vending packs, see vending_packs.dm*/
 
 /obj/machinery/computer/supply/proc/checkConnection()
 	if(!radionet || !radionet.hubs.len)
-		commandResponse("NO CONNECTION.")
+		commandResponse("** BEEP ** BEEP **")
 		return 0
 	return 1
 
 /*UI PROCS*/
-/obj/machinery/computer/supply/proc/doCommand(var/mob/user)
+/obj/machinery/computer/supply/proc/doCommand(var/mob/user, var/continuing)
 	if(!checkConnection())
 		return 0
 
-	var/command = input(user, "What do you need?", "Say Command") as text|null
+	var/command = input(user, pick("What do you need?","Go ahead.","Listening."), "Say Command") as text|null
 	if(!command)
-		user.say("Nevermind.")
-		commandResponse(pick("Got it. Signing off.", "Stop wasting my time."))
+		if(continuing)
+			user.say(pick("Thats all.", "Signing off.", "Ending Transmission.", "That should be all."))
+			commandResponse(pick("Got it. Signing off.", "Affirmative.", "Goodbye"))
+		else
+			user.say(pick("Nevermind.","Sorry, called on accident.", "Errrr, you're breaking up.", "Erm, I gotta go."))
+			commandResponse(pick("Stop wasting my time.", "Keep the line clear.", "Stop fucking around."))
 		return 0
 
 	user.say("[command].")
@@ -295,10 +311,8 @@ For vending packs, see vending_packs.dm*/
 			return cancelOrder(trim(params[2]))	
 		if("total") //returns the total order price
 			commandResponse("Current order total is at [SSsupply_truck.getOrderPrice()].")
-			return 1
 		if("funds") //return the total money at command
 			commandResponse("Our current budget is at [SSsupply_truck.commandMoney].")
-			return 1
 		if("withdraw") //places a withdraw order
 			if(!params[2])
 				commandResponse("You didn't specify an amount.")
@@ -307,59 +321,52 @@ For vending packs, see vending_packs.dm*/
 				amount = text2num(amount)
 			if(!isnum(amount))
 				commandResponse(pick("At least give me a number to withdraw.","Thats not a number.","I don't understand."))
-				return 0
+				return doCommand(user)
 
 			commandResponse("Withdrawals are currently not allowed.") //TODO
-			//TODO add money order
+			SSsupply_truck.nextWithdrawal += amount
 		if("help") //prints a help sheet for the commands
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
-			return 1
 		if("packinfo") //prints an infopaper about a supply pack
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/pack_id = trim(params[2])
 			if(!SSsupply_truck.supply_packs["[pack_id]"])
 				commandResponse("There are no supply packs with that id.")
-				return 0
+				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id)
-			return 1
 		if("packlist") //prints a new inventory paper
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/inventory_manifest(RP.loc)
-			return 1
 		if("orderinfo") //prints an infopaper about an order
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/order_id = trim(params[2])
 			if(!SSsupply_truck.shoppinglist["[order_id]"])
 				commandResponse("There are no orders with that id.")
-				return 0
+				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/order_form(RP.loc, SSsupply_truck.shoppinglist["[order_id]"])
-			return 1
 		if("orderlist") //prints a list of all active orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/order_list(RP.loc)
-			return 1
 		if("requestinfo") //prints an info sheet about a specific command order
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/request_id = trim(params[2])
 			if(!SSsupply_truck.command_orders["[request_id]"])
 				commandResponse("There are no command orders with that id.")
-				return 0
+				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/command_order(RP.loc, SSsupply_truck.command_orders["[request_id]"])
-			return 1
 		if("requestlist") //prints a list of all active command orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/request_list(RP.loc)
-			return 1
 		if("sendtruck") //sends a truck
 			SSsupply_truck.depart()
 		if("truckstatus") //returns a rough idea of how long the truck will take
@@ -370,10 +377,10 @@ For vending packs, see vending_packs.dm*/
 					commandResponse("We got the truck over here.")
 			else
 				commandResponse("Truck is on the road.")
-			return 1
 		else
 			commandResponse("I didn't understand that.")
-			return doCommand(user)
+	
+	return doCommand(user, 1)
 
 /obj/machinery/computer/supply/proc/commandResponse(var/message)
 	for(var/mob/V in hearers(src))
