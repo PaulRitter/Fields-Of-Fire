@@ -341,8 +341,8 @@
 	icon = 'icons/FoF/misc.dmi'
 	icon_state = "matches"
 	item_state = "matches"
-	storage_slots_w = 15
-	storage_slots_h = 3
+	storage_slots_w = 10
+	storage_slots_h = 2
 	can_hold = list(/obj/item/weapon/flame/match/trench)
 	startswith = list(/obj/item/weapon/flame/match/trench = 5)
 	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
