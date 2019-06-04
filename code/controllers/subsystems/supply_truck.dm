@@ -202,9 +202,6 @@ SUBSYSTEM_DEF(supply_truck)
 
 //buys items and returns all crates in a list
 /datum/controller/subsystem/supply_truck/proc/buy()
-	if(!shoppinglist.len) //no things to buy, no need to go any further
-		return list()
-
 	if(getOrderPrice() > commandMoney) //not enough money to buy
 		allSay("Couldn't afford to send the truck. You are [getOrderPrice() - commandMoney]$ over budget.")
 		return 0
@@ -220,10 +217,10 @@ SUBSYSTEM_DEF(supply_truck)
 	var/size = 0
 
 	if(nextWithdrawal)
-		var/obj/structure/closet/crate = new ()
+		var/obj/structure/closet/crate/crate = new ()
 		crate.name = "Withdrawal Order"
 		spawn_money(nextWithdrawal, crate)
-		new /obj/item/weapon/paper/shipping_manifest/withdrawal_order(crate, amount, shipments)
+		new /obj/item/weapon/paper/shipping_manifest/withdrawal_order(crate, nextWithdrawal, shipments)
 		commandMoney -= nextWithdrawal
 		nextWithdrawal = 0
 		contents += crate

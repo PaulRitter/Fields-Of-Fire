@@ -44,7 +44,7 @@ For vending packs, see vending_packs.dm*/
 /obj/item/weapon/paper/shipping_manifest/withdrawal_order/New(var/loc, var/amount, var/shipmentNum)
 	. = ..(loc)
 	name = "Withdrawal Manifest"
-	info = {"<h3>Shipping Manifest for [(SO && SO.orderedby) ? SO.orderedby : "unknown"]'s Order</h3><hr><br>
+	info = {"<h3>Withdrawal Manifest</h3><hr><br>
 		DESTINATION: [GLOB.using_map.station_name]<br>
 		SHIPMENT #[shipmentNum]<br>
 		AMOUNT: [amount]$<br>
@@ -109,7 +109,7 @@ For vending packs, see vending_packs.dm*/
 	info += {"<h3>Active Order List</h3><hr>
 			Current active orders:<ul>"}
 	if(SSsupply_truck.nextWithdrawal)
-		info += "<li>Withdrawal - Amount: [nextWithdrawal]</li>"
+		info += "<li>Withdrawal - Amount: [SSsupply_truck.nextWithdrawal]</li>"
 	for(var/order_id in SSsupply_truck.shoppinglist)
 		if(!SSsupply_truck.shoppinglist["[order_id]"])
 			continue
@@ -323,8 +323,8 @@ For vending packs, see vending_packs.dm*/
 				commandResponse(pick("At least give me a number to withdraw.","Thats not a number.","I don't understand."))
 				return doCommand(user)
 
-			commandResponse("Withdrawals are currently not allowed.") //TODO
 			SSsupply_truck.nextWithdrawal += amount
+			commandResponse("Withdraw order updated. Now withdrawing [SSsupply_truck.nextWithdrawal] with next shipment.")
 		if("help") //prints a help sheet for the commands
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
