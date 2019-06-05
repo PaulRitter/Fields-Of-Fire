@@ -27,10 +27,7 @@
 	. = BB
 	BB = null
 	throw_at(get_step(src, dir_throw), 3, 3)
-	set_dir(pick(GLOB.alldirs)) //spin spent casings
-	pixel_x = rand(-16,16)
-	pixel_y = rand(-16,16)		//random pixel offset... possibility of turf overlay
-
+	animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = 0.5 SECONDS)
 	// Aurora forensics port, gunpowder residue.
 	if(leaves_residue)
 		leave_residue()
