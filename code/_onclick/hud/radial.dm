@@ -330,16 +330,3 @@
 		qdel(menu)
 		current_user.radial_menus -= anchor
 		return answer
-
-
-mob/proc/radial_test(var/num)
-	var/list/choices = list(
-		list("Test1", "test1_command", "This is test1."),
-		list("Test2", "test2_command", "This is test2."),
-		list("Test3", "test3_command", "This is test3."),
-		list("Test4", "test4_command", "This is test4."),
-		list("Test5", "test5_command", "This is test5."),
-		list("Test6", "test6_command", "This is test6.")
-	)
-	choices.len = num
-	return show_radial_menu(src, src, choices)
