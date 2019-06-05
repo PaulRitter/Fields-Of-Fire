@@ -2,9 +2,9 @@
 	name = "Iron pill"
 	desc = "Used to increase the speed of blood replenishment."
 	icon_state = "pill18"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/iron, 20)
+
+/obj/item/weapon/reagent_containers/pill/iron/New()
+	reagents.add_reagent(/datum/reagent/iron, 20)
 
 /obj/item/weapon/storage/pill_bottle/iron
 	name = "bottle of Iron pills"
