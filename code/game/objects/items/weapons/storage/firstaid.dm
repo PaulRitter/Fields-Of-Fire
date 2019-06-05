@@ -151,8 +151,8 @@
 /obj/item/weapon/storage/pill_bottle
 	name = "pill bottle"
 	desc = "It's an airtight container for storing medication."
-	icon_state = "pill_canister"
-	icon = 'icons/obj/chemical.dmi'
+	icon_state = "med-bottle"
+	icon = 'icons/FoF/objects.dmi'
 	item_state = "contsolid"
 	x_class = 1
 	y_class = 2
