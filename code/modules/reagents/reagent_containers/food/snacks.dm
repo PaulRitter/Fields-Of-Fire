@@ -3285,6 +3285,7 @@
 	flags = OPENCONTAINER
 
 /obj/item/weapon/reagent_containers/food/snacks/can/soup/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 2)
 	reagents.add_reagent(/datum/reagent/dylovene, 5)
 	reagents.add_reagent(/datum/reagent/nutriment, 4)
@@ -3303,6 +3304,7 @@
 	throw_range = 5
 
 /obj/item/weapon/reagent_containers/food/snacks/can/beans/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 5)
 	reagents.add_reagent(/datum/reagent/nutriment, 3)
 	reagents.add_reagent(/datum/reagent/nutriment/protein, 10)
@@ -3321,6 +3323,7 @@
 	throw_range = 7
 
 /obj/item/weapon/reagent_containers/food/snacks/can/fish/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 4)
 	reagents.add_reagent(/datum/reagent/inaprovaline, 4)
 	reagents.add_reagent(/datum/reagent/nutriment, 5)
@@ -3340,6 +3343,7 @@
 	throw_range = 5
 
 /obj/item/weapon/reagent_containers/food/snacks/can/ham/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 8)
 	reagents.add_reagent(/datum/reagent/bicaridine, 5)
 	reagents.add_reagent(/datum/reagent/nutriment, 5)
@@ -3360,6 +3364,7 @@
 	nutriment_amt = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/oats/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 2)
 	reagents.add_reagent(/datum/reagent/inaprovaline, 2)
 	reagents.add_reagent(/datum/reagent/nutriment, 2)
@@ -3376,6 +3381,7 @@
 	nutriment_amt = 10
 
 /obj/item/weapon/reagent_containers/food/snacks/ham/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 8)
 	reagents.add_reagent(/datum/reagent/inaprovaline, 5)
 	reagents.add_reagent(/datum/reagent/tricordrazine)
@@ -3396,6 +3402,7 @@
 	throw_range = 7
 
 /obj/item/weapon/reagent_containers/food/snacks/beans/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 3)
 	reagents.add_reagent(/datum/reagent/nutriment, 3)
 	reagents.add_reagent(/datum/reagent/bicaridine, 3)
@@ -3414,6 +3421,7 @@
 	nutriment_amt = 10
 
 /obj/item/weapon/reagent_containers/food/snacks/fish/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 8)
 	reagents.add_reagent(/datum/reagent/inaprovaline, 5)
 	reagents.add_reagent(/datum/reagent/bicaridine, 5)
@@ -3436,6 +3444,7 @@
 	nutriment_amt = 15
 
 /obj/item/weapon/reagent_containers/food/snacks/bowl/oats/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 5)
 	reagents.add_reagent(/datum/reagent/bicaridine, 5)
 	reagents.add_reagent(/datum/reagent/inaprovaline, 5)
@@ -3452,6 +3461,7 @@
 	nutriment_amt = 15
 
 /obj/item/weapon/reagent_containers/food/snacks/bowl/ham/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 8)
 	reagents.add_reagent(/datum/reagent/bicaridine, 5)
 	reagents.add_reagent(/datum/reagent/nutriment, 5)
@@ -3470,6 +3480,7 @@
 	trash = /obj/item/trash/bowl
 
 /obj/item/weapon/reagent_containers/food/snacks/bowl/beans/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 3)
 	reagents.add_reagent(/datum/reagent/nutriment, 3)
 	reagents.add_reagent(/datum/reagent/bicaridine, 3)
