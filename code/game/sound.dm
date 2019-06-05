@@ -50,6 +50,8 @@ var/list/lighter_sound = list('sound/items/lighter1.ogg','sound/items/lighter2.o
 var/list/keyboard_sound = list('sound/machines/keypress1.ogg','sound/machines/keypress2.ogg','sound/machines/keypress3.ogg','sound/machines/keypress4.ogg')
 var/list/switch_sound = list('sound/machines/switch1.ogg','sound/machines/switch2.ogg','sound/machines/switch3.ogg','sound/machines/switch4.ogg')
 var/list/button_sound = list('sound/machines/button1.ogg','sound/machines/button2.ogg','sound/machines/button3.ogg','sound/machines/button4.ogg')
+var/list/casing_sound = list('icons/FoF/sound/weapons/casing1.ogg','icons/FoF/sound/weapons/casing2.ogg','icons/FoF/sound/weapons/casing3.ogg')
+var/list/shell_sound = list('icons/FoF/sound/weapons/shotcasing1.ogg','icons/FoF/sound/weapons/shotcasing2.ogg','icons/FoF/sound/weapons/shotcasing3.ogg')
 
 /proc/playsound(var/atom/source, soundin, vol as num, vary, extrarange as num, falloff, var/is_global, var/frequency)
 
@@ -181,5 +183,7 @@ var/const/FALLOFF_SOUNDS = 0.5
 			if ("keyboard") soundin = pick(keyboard_sound)
 			if ("switch") soundin = pick(switch_sound)
 			if ("button") soundin = pick(button_sound)
+			if ("casing") soundin = pick(casing_sound)
+			if ("shotgun_casing") soundin = pick(shell_sound)
 			//if ("gunshot") soundin = pick(gun_sound)
 	return soundin

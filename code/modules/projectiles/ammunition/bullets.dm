@@ -75,6 +75,7 @@
 	icon_state = "slshell"
 	spent_icon = "slshell-spent"
 	caliber = "shotgun"
+	sound = "shotgun_casing"
 	projectile_type = /obj/item/projectile/bullet/shotgun
 	matter = list(DEFAULT_WALL_MATERIAL = 360)
 
