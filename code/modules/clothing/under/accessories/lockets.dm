@@ -50,6 +50,7 @@
 /obj/item/clothing/accessory/locket/watch
 	icon = 'icons/FoF/misc.dmi'
 	w_class = ITEM_SIZE_TINY
+	slot_flags = SLOT_TIE
 	name = "pocket watch"
 	desc = "A small pocket watch. It looks like a picture might fit in here."
 
