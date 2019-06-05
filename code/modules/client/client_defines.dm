@@ -16,6 +16,8 @@
 	var/move_delay		= 1
 	var/moving			= null
 	var/adminobs		= null
+	var/datum/tooltip/tooltips //datum that controls the displaying and hiding of tooltips
+	var/list/radial_menus = list() //keeping track of open menus so we're not gonna have several on top of each other.
 
 	var/adminhelped = 0
 
