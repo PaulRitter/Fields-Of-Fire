@@ -383,3 +383,16 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/a45/empty
 	initial_ammo = 0
+
+/obj/item/ammo_magazine/springfield_strip
+	name = ".30-06 stripper clip"
+	icon = 'icons/FoF/munitionsx32.dmi'
+	icon_state = "springfield_clip"
+	caliber = "a3006"
+	ammo_type = /obj/item/ammo_casing/a3006
+	matter = list(DEFAULT_WALL_MATERIAL = 1250)
+	max_ammo = 5
+	multiple_sprites = 1
+
+/obj/item/ammo_magazine/springfield_strip/empty
+	initial_ammo = 0

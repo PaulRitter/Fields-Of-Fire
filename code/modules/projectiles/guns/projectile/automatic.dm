@@ -284,7 +284,7 @@
 	..()
 
 /obj/item/weapon/gun/projectile/wwi
-	icon = 'icons/FoF/weaponsnew.dmi'
+	icon = 'icons/FoF/munitionsx32.dmi'
 	force = 10
 	jam_chance = 5
 	attack_verb = list("beaten","clubbed","muzzle fucked","freedom rocked","stock bumped","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed","stabbed")
@@ -476,7 +476,7 @@
 		bolt(user)
 		recentbolt = world.time
 
-obj/item/weapon/gun/projectile/wwi/bolt/proc/bolt(mob/M as mob)
+/obj/item/weapon/gun/projectile/wwi/bolt/proc/bolt(mob/M as mob)
 	playsound(M, 'icons/FoF/sound/weapons/g98_reload1.ogg', 100, 1)
 	if(chambered)//We have a shell in the chamber
 		chambered.loc = get_turf(src)//Eject casing
@@ -485,6 +485,7 @@ obj/item/weapon/gun/projectile/wwi/bolt/proc/bolt(mob/M as mob)
 		var/obj/item/ammo_casing/AC = loaded[1] //load next casing.
 		loaded -= AC //Remove casing from loaded list.
 		chambered = AC
+	flick("[icon_state]-bolt",src)
 	update_icon()
 
 /obj/item/weapon/gun/projectile/wwi/bolt/load_from_box(var/obj/item/ammo_box/box,var/mob/user)
@@ -580,6 +581,18 @@ obj/item/weapon/gun/projectile/wwi/bolt/proc/bolt(mob/M as mob)
 	set popup_menu = 1
 
 	toggle_scope(usr, 1.5)
+
+/obj/item/weapon/gun/projectile/wwi/bolt/springfield
+	name = "\improper M1903 Springfield"
+	desc = "The M1903 Springfield is an American five-round magazine fed, bolt-action service repeating rifle chambered in .30-06."
+	icon_state = "springfield"
+	slot_flags = SLOT_BACK
+	fire_sound = 'sound/weapons/smle.ogg'
+	w_class = ITEM_SIZE_HUGE
+	max_shells = 5
+	caliber = "a3006"
+	ammo_type = /obj/item/ammo_casing/a3006 || /obj/item/ammo_casing/a3006hp
+	recentbolt = 0
 
 /obj/item/weapon/gun/projectile/wwi/lever
 	var/leveruse = 0

@@ -365,11 +365,31 @@
 	randpixel = 8
 
 /obj/item/ammo_casing/a45hp
-	desc = "A .45 ACP casing."
+	desc = "A .45 ACP casing. This one looks altered."
 	caliber = "45"
 	projectile_type = /obj/item/projectile/bullet/pistol/a45/hp
 	icon = 'icons/FoF/munitions.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 75)
+	randpixel = 8
+
+/obj/item/ammo_casing/a3006
+	desc = "A .30-06 casing."
+	caliber = "a3006"
+	projectile_type = /obj/item/projectile/bullet/rifle/a3006
+	icon = 'icons/FoF/munitionsx32.dmi'
+	icon_state = "riflecasing"
+	spent_icon = "spent-casing_rifle"
+	matter = list(DEFAULT_WALL_MATERIAL = 350)
+	randpixel = 8
+
+/obj/item/ammo_casing/a3006hp
+	desc = "A .30-06 casing. This one looks altered."
+	caliber = "a3006"
+	projectile_type = /obj/item/projectile/bullet/rifle/a3006/hp
+	icon = 'icons/FoF/munitionsx32.dmi'
+	icon_state = "riflecasing"
+	spent_icon = "spent-casing_rifle"
+	matter = list(DEFAULT_WALL_MATERIAL = 350)
 	randpixel = 8
