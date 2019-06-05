@@ -1102,7 +1102,7 @@
 	contraband = list(/obj/item/weapon/reagent_containers/spray/waterflower = 2, /obj/item/weapon/storage/box/snappops = 3)
 
 /obj/machinery/vending/wwi
-	icon = 'icons/FoF/tree.dmi'
+	icon = 'icons/FoF/x64structures.dmi'
 	name = "Requisitions Vendor"
 	desc = "Insert your Requisition Receipt into the punch card slot to recieve your gear."
 	vend_delay = 21
