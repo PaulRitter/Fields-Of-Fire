@@ -88,9 +88,9 @@
 
 /obj/item/weapon/gun/projectile/handle_post_fire()
 	..()
-	if(chambered)
+	if(chambered && handle_casings == EJECT_CASINGS)
 		chambered.expend(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))
-		process_chambered()
+	process_chambered()
 
 /obj/item/weapon/gun/projectile/handle_click_empty()
 	..()

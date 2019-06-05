@@ -27,7 +27,7 @@
 	. = BB
 	BB = null
 	throw_at(get_step(src, dir_throw), 3, 3)
-	animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = 0.5 SECONDS)
+	animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = rand(3,8))
 	// Aurora forensics port, gunpowder residue.
 	if(leaves_residue)
 		leave_residue()
