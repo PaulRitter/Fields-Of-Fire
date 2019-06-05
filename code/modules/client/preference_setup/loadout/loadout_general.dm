@@ -6,7 +6,7 @@
 
 /datum/gear/weapons/winchester
 	display_name = "Winchester Model 1894"
-	path = /obj/item/weapon/gun/projectile/wwi/lever/winchester
+	path = /obj/item/weapon/gun/projectile/wwi/bolt/winchester
 	cost = 8
 
 /datum/gear/weapons/colt

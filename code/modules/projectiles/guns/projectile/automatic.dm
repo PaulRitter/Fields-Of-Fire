@@ -477,9 +477,12 @@
 		recentbolt = world.time
 
 /obj/item/weapon/gun/projectile/wwi/bolt/proc/bolt(mob/M as mob)
-	playsound(M, 'icons/FoF/sound/weapons/g98_reload1.ogg', 100, 1)
+	var/obj/item/weapon/gun/projectile/wwi/bolt/winchester/WI
+	if(istype(WI))
+		playsound(M, 'icons/FoF/sound/weapons/g98_reload2.ogg', 90, 1)
+	else(playsound(M, 'icons/FoF/sound/weapons/g98_reload1.ogg', 100, 1))
 	if(chambered)//We have a shell in the chamber
-		chambered.loc = get_turf(src)//Eject casing
+		chambered.expend(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))//Eject casing
 		chambered = null
 	if(loaded.len)
 		var/obj/item/ammo_casing/AC = loaded[1] //load next casing.
@@ -594,52 +597,7 @@
 	ammo_type = /obj/item/ammo_casing/a3006 || /obj/item/ammo_casing/a3006hp
 	recentbolt = 0
 
-/obj/item/weapon/gun/projectile/wwi/lever
-	var/leveruse = 0
-	handle_casings = HOLD_CASINGS
-	one_hand_penalty = 6
-
-/obj/item/weapon/gun/projectile/wwi/lever/consume_next_projectile()
-	if(chambered)
-		return chambered.BB
-	return null
-
-/obj/item/weapon/gun/projectile/wwi/lever/attack_self(mob/living/user as mob)
-	if(world.time >= leveruse + 10)
-		lever(user)
-		leveruse = world.time
-
-obj/item/weapon/gun/projectile/wwi/lever/proc/lever(mob/M as mob)
-	playsound(M, 'icons/FoF/sound/weapons/g98_reload2.ogg', 90, 1)
-
-	if(chambered)//We have a shell in the chamber
-		chambered.loc = get_turf(src)//Eject casing
-		chambered = null
-
-	if(loaded.len)
-		var/obj/item/ammo_casing/AC = loaded[1] //load next casing.
-		loaded -= AC //Remove casing from loaded list.
-		chambered = AC
-
-	update_icon()
-
-/obj/item/weapon/gun/projectile/wwi/lever/load_from_box(var/obj/item/ammo_box/box,var/mob/user)
-	if(box.contents.len == 0 || isnull(box.contents.len))
-		to_chat(user,"<span class ='notice'>The [box.name] is empty!</span>")
-		return
-	if(!(loaded.len <= max_shells))
-		to_chat(user,"<span class = 'notice'>The [name] is full!</span>")
-		return
-	to_chat(user,"<span class ='notice'>You start loading the [name] from the [box.name]</span>")
-	for(var/ammo in box.contents)
-		if(do_after(user,box.load_time SECONDS,box, same_direction = 1))
-			load_ammo(ammo,user)
-			continue
-		break
-
-	box.update_icon()
-
-/obj/item/weapon/gun/projectile/wwi/lever/winchester
+/obj/item/weapon/gun/projectile/wwi/bolt/winchester
 	name = "\improper Winchester Model 1894"
 	desc = "An imported American repeating rifle built to be used with smokeless powder. Uses .30-30 Winchester casings."
 	icon_state = "winch"
@@ -653,7 +611,7 @@ obj/item/weapon/gun/projectile/wwi/lever/proc/lever(mob/M as mob)
 	w_class = ITEM_SIZE_HUGE
 	ammo_type = /obj/item/ammo_casing/a3030 || /obj/item/ammo_casing/a3030hp
 
-/obj/item/weapon/gun/projectile/wwi/lever/winchester/attackby(var/obj/item/A as obj, mob/user as mob)
+/obj/item/weapon/gun/projectile/wwi/bolt/winchester/attackby(var/obj/item/A as obj, mob/user as mob)
 	if(w_class > 3 && (istype(A, /obj/item/weapon/circular_saw)))
 		to_chat(user, "<span class='notice'>You begin to shorten \the [src].</span>")
 		if(do_after(user, 30, src))
@@ -673,7 +631,7 @@ obj/item/weapon/gun/projectile/wwi/lever/proc/lever(mob/M as mob)
 	else
 		..()
 
-/obj/item/weapon/gun/projectile/wwi/lever/winchester/sawn
+/obj/item/weapon/gun/projectile/wwi/bolt/winchester/sawn
 	name = "shortened Winchester Model 1894"
 	desc = "Someone cut this rifle down for an easier time carrying it."
 	icon_state = "winch_sawed"
