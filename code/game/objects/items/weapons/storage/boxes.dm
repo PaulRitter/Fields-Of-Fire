@@ -341,8 +341,8 @@
 	icon = 'icons/FoF/misc.dmi'
 	icon_state = "matches"
 	item_state = "matches"
-	storage_slots_w = 15
-	storage_slots_h = 3
+	storage_slots_w = 10
+	storage_slots_h = 2
 	can_hold = list(/obj/item/weapon/flame/match/trench)
 	startswith = list(/obj/item/weapon/flame/match/trench = 5)
 	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
@@ -493,20 +493,21 @@
 /obj/item/weapon/storage/box/letter/german
 	startswith = list(/obj/item/weapon/coin/req = 1,/obj/item/wwi/transit/german = 1)
 
-/obj/item/weapon/storage/box/wwi
+/obj/structure/closet/crate/wwi
 	icon = 'icons/FoF/misc.dmi'
-	can_hold = list(/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/clothing,/obj/item/weapon/melee/combat_knife,/obj/item/clothing/mask/gas,/obj/item/ammo_box,/obj/item/clothing/head/helmet)
+	icon_state = "wcrate"
+	icon_opened = "wcrate_o"
 	w_class = ITEM_SIZE_HUGE
 
-/obj/item/weapon/storage/box/wwi/germ
-	icon_state = "flatcrate"
+/obj/structure/closet/crate/wwi/germ
 
-/obj/item/weapon/storage/box/wwi/brit
-	icon_state = "lightflatcrate"
+/obj/structure/closet/crate/wwi/brit
 
-/obj/item/weapon/storage/box/wwi/brit/lebel
+/obj/structure/closet/crate/wwi/brit/lebel
 	name = "Lebel box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
+
+/obj/structure/closet/crate/wwi/brit/lebel/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
 					/obj/item/clothing/accessory/storage/wwi/french,
 					/obj/item/clothing/suit/storage/wwi/frenchcoat,
 					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
@@ -514,9 +515,11 @@
 					/obj/item/weapon/melee/combat_knife/french,
 					/obj/item/clothing/head/helmet/frenchsoft)
 
-/obj/item/weapon/storage/box/wwi/brit/smle
+/obj/structure/closet/crate/wwi/brit/smle
 	name = "Lee-Enfield box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
+
+/obj/structure/closet/crate/wwi/brit/smle/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
 					/obj/item/clothing/accessory/storage/wwi/brit,
 					/obj/item/clothing/suit/storage/wwi/britishcoat,
 					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
@@ -524,9 +527,11 @@
 					/obj/item/weapon/melee/combat_knife/british,
 					/obj/item/clothing/head/helmet/britsoft)
 
-/obj/item/weapon/storage/box/wwi/germ/g98
+/obj/structure/closet/crate/wwi/germ/g98
 	name = "G98 box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
+
+/obj/structure/closet/crate/wwi/germ/g98/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
 					/obj/item/clothing/accessory/storage/wwi/germ,
 					/obj/item/clothing/suit/storage/wwi/germancoat,
 					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
@@ -534,9 +539,11 @@
 					/obj/item/weapon/melee/combat_knife/german,
 					/obj/item/clothing/head/helmet/germansoft)
 
-/obj/item/weapon/storage/box/wwi/brit/britmed
+/obj/structure/closet/crate/wwi/brit/britmed
 	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
+
+/obj/structure/closet/crate/wwi/brit/britmed/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
 					/obj/item/weapon/storage/belt/trenchmed,
 					/obj/item/clothing/suit/storage/wwi/britmedcoat,
 					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
@@ -544,9 +551,11 @@
 					/obj/item/weapon/melee/combat_knife/british,
 					/obj/item/clothing/head/helmet/britsoft)
 
-/obj/item/weapon/storage/box/wwi/brit/frenchmed
+/obj/structure/closet/crate/wwi/brit/frenchmed
 	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
+
+/obj/structure/closet/crate/wwi/brit/frenchmed/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
 					/obj/item/weapon/storage/belt/trenchmed,
 					/obj/item/clothing/suit/storage/wwi/frenchmedcoat,
 					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
@@ -554,9 +563,11 @@
 					/obj/item/weapon/melee/combat_knife/french,
 					/obj/item/clothing/head/helmet/frenchsoft)
 
-/obj/item/weapon/storage/box/wwi/germ/med
+/obj/structure/closet/crate/wwi/germ/med
 	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
+
+/obj/structure/closet/crate/wwi/germ/med/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
 					/obj/item/weapon/storage/belt/trenchmed,
 					/obj/item/clothing/suit/storage/wwi/germanmedcoat,
 					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
@@ -564,16 +575,20 @@
 					/obj/item/weapon/melee/combat_knife/german,
 					/obj/item/clothing/head/helmet/germansoft)
 
-/obj/item/weapon/storage/box/wwi/germ/knight
+/obj/structure/closet/crate/wwi/germ/knight
 	name = "Knight box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/mg08,
+
+/obj/structure/closet/crate/wwi/germ/knight/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/mg08,
 					/obj/item/clothing/mask/gas/wwi/german,
 					/obj/item/ammo_magazine/box/a792,/obj/item/ammo_magazine/box/a792,
 					/obj/item/weapon/melee/combat_knife/german)
 
-/obj/item/weapon/storage/box/wwi/germ/squire
+/obj/structure/closet/crate/wwi/germ/squire
 	name = "AMG box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
+
+/obj/structure/closet/crate/wwi/germ/squire/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
 					/obj/item/clothing/accessory/storage/wwi/germ,
 					/obj/item/clothing/suit/storage/wwi/germancoat,
 					/obj/item/ammo_magazine/g792,
@@ -582,16 +597,20 @@
 					/obj/item/weapon/melee/combat_knife/german,
 					/obj/item/clothing/head/helmet/germansoft)
 
-/obj/item/weapon/storage/box/wwi/brit/knight
+/obj/structure/closet/crate/wwi/brit/knight
 	name = "Knight box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/lewis,
+
+/obj/structure/closet/crate/wwi/brit/knight/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/lewis,
 					/obj/item/clothing/mask/gas/wwi/british,
 					/obj/item/ammo_magazine/box/mp303,/obj/item/ammo_magazine/box/mp303,
 					/obj/item/weapon/melee/combat_knife/british)
 
-/obj/item/weapon/storage/box/wwi/brit/squire
+/obj/structure/closet/crate/wwi/brit/squire
 	name = "AMG box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
+
+/obj/structure/closet/crate/wwi/brit/squire/WillContain()
+	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
 					/obj/item/clothing/accessory/storage/wwi/brit,
 					/obj/item/clothing/suit/storage/wwi/britishcoat,
 					/obj/item/ammo_magazine/smle_strip,

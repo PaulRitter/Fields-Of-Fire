@@ -2690,6 +2690,8 @@
 #include "code\unit_tests\~helpers.dm"
 #include "code\unit_tests\~unit_test_types.dm"
 #include "icons\FoF\code\ammo_boxes.dm"
+#include "icons\FoF\code\guns_ammo.dm"
+#include "icons\FoF\code\items_objects.dm"
 #include "icons\FoF\code\melee.dm"
 #include "icons\FoF\code\misc_structures.dm"
 #include "icons\FoF\code\tanktrap.dm"

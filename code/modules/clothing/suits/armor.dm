@@ -454,7 +454,7 @@
 
 /obj/item/clothing/suit/storage/wwi
 	icon = 'icons/FoF/clothes.dmi'
-	allowed = list(/obj/item/ammo_box, /obj/item/ammo_magazine, /obj/item/weapon/gun/projectile/wwi/colt1911, /obj/item/weapon/gun/projectile/wwi/lever/winchester/sawn, /obj/item/weapon/gun/projectile/wwi/p08, /obj/item/weapon/gun/projectile/wwi/mauser, /obj/item/weapon/gun/projectile/wwi/ruby)
+	allowed = list(/obj/item/ammo_box, /obj/item/ammo_magazine, /obj/item/weapon/gun/projectile/wwi/colt1911, /obj/item/weapon/gun/projectile/wwi/bolt/winchester/sawn, /obj/item/weapon/gun/projectile/wwi/p08, /obj/item/weapon/gun/projectile/wwi/mauser, /obj/item/weapon/gun/projectile/wwi/ruby)
 
 /obj/item/clothing/suit/storage/wwi/germancoat
 	icon_override = MOB_OVERRIDE

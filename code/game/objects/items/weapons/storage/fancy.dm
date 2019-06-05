@@ -123,12 +123,12 @@
 	item_state = "cigpacket"
 	w_class = ITEM_SIZE_SMALL
 	storage_slots_w = 10
-	storage_slots_h = 1
+	storage_slots_h = 2
 	throwforce = 2
 	slot_flags = SLOT_BELT
 
 	key_type = /obj/item/clothing/mask/smokable/cigarette
-	startswith = list(/obj/item/clothing/mask/smokable/cigarette = 6)
+	startswith = list(/obj/item/clothing/mask/smokable/cigarette = 20)
 
 /obj/item/weapon/storage/fancy/cigarettes/New()
 	..()
@@ -221,7 +221,8 @@
 	icon_state = "papcase"
 	item_state = "papcase"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/fundamentals = 8)
-	storage_slots_w = 8
+	storage_slots_w = 4
+	storage_slots_h = 2
 
 /obj/item/weapon/storage/fancy/cigarettes/menthols
 	name = "pack of Temperamento Menthols"
