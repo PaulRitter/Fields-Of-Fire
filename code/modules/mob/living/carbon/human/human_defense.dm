@@ -100,10 +100,10 @@ cloak disrupt override
 	if(!def_zone)
 		return 0
 	var/protection = 0
-	var/list/protective_gear = list(head, wear_mask, wear_suit, w_uniform, gloves, shoes)
+	var/list/protective_gear = list(head, wear_mask, wear_suit, back, w_uniform, gloves, shoes)
 	for(var/gear in protective_gear)
-		if(gear && istype(gear ,/obj/item/clothing))
-			var/obj/item/clothing/C = gear
+		if(gear && istype(gear ,/obj/item))
+			var/obj/item/C = gear
 			if(istype(C) && C.body_parts_covered & def_zone.body_part)
 				var/effective_armor_thickness = 1
 				if(!isnull(initial(C.armor_thickness)))
