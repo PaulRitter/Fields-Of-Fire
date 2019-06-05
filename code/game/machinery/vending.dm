@@ -1109,25 +1109,25 @@
 	icon_state = "vendor"
 
 /obj/machinery/vending/wwi/frenchstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/lebel = 80)
+	premium = list(/obj/structure/closet/crate/wwi/brit/lebel = 80)
 
 /obj/machinery/vending/wwi/britstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/smle = 80, /obj/item/weapon/storage/box/wwi/brit/squire = 80)
+	premium = list(/obj/structure/closet/crate/wwi/brit/smle = 80, /obj/structure/closet/crate/wwi/brit/squire = 80)
 
 /obj/machinery/vending/wwi/germstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/g98 = 80, /obj/item/weapon/storage/box/wwi/germ/squire = 80)
+	premium = list(/obj/structure/closet/crate/wwi/germ/g98 = 80, /obj/structure/closet/crate/wwi/germ/squire = 80)
 
 /obj/machinery/vending/wwi/frenchmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/frenchmed = 80)
+	premium = list(/obj/structure/closet/crate/wwi/brit/frenchmed = 80)
 
 /obj/machinery/vending/wwi/britmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/britmed = 80)
+	premium = list(/obj/structure/closet/crate/wwi/brit/britmed = 80)
 
 /obj/machinery/vending/wwi/germmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/med = 80)
+	premium = list(/obj/structure/closet/crate/wwi/germ/med = 80)
 
 /obj/machinery/vending/wwi/germknight
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/knight = 40)
+	premium = list(/obj/structure/closet/crate/wwi/germ/knight = 40)
 
 /obj/machinery/vending/wwi/britknight
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/knight = 40)
+	premium = list(/obj/structure/closet/crate/wwi/brit/knight = 40)
