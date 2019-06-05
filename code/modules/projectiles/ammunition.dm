@@ -22,9 +22,11 @@
 		BB = new projectile_type(src)
 
 //removes the projectile from the ammo casing
-/obj/item/ammo_casing/proc/expend()
+/obj/item/ammo_casing/proc/expend(var/turf/landing, var/dir_throw)
+	forceMove(landing)
 	. = BB
 	BB = null
+	throw_at(get_step(src, dir_throw), 3, 3)
 	set_dir(pick(GLOB.alldirs)) //spin spent casings
 	pixel_x = rand(-16,16)
 	pixel_y = rand(-16,16)		//random pixel offset... possibility of turf overlay
