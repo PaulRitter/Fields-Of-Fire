@@ -1,5 +1,5 @@
 language: generic
-sudo: true
+sudo: false
 dist: trusty
 
 env:
@@ -26,6 +26,9 @@ addons:
       - libgcc1:i386
       - libstdc++6:i386
       - oracle-java9-set-default
+
+before_install:
+  - chmod +x test/run-test.sh
 
 script:
   - test/run-test.sh
