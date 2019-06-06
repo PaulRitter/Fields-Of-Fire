@@ -61,7 +61,7 @@
 #define ui_resist "EAST-1,SOUTH"
 #define ui_pull "EAST-2,SOUTH"
 #define ui_acti "EAST-1,SOUTH-1"
-#define ui_movi "EAST-3,SOUTH-1"
+#define ui_movi "EAST-3,SOUTH-1:1"
 #define ui_zonesel "EAST,SOUTH-1"
 #define ui_acti_alt "EAST-1,SOUTH-1" //alternative intent switcher for when the interface is hidden (F12)
 
