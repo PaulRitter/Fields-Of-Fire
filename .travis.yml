@@ -4,21 +4,15 @@ dist: trusty
 
 env:
   global:
-    BYOND_MAJOR="511"
-    BYOND_MINOR="1385"
+    BYOND_MAJOR="512"
+    BYOND_MINOR="1470"
 
 # ALL MAPS MUST BE PRESENT HERE
 # IF THEY ARE NOT, YOUR BUILD WILL FAIL
   matrix:
     - TEST=CODE
     - TEST=WEB
-    - TEST=MAP MAP_PATH=example
-    - TEST=MAP MAP_PATH=overmap_example
-    - TEST=MAP MAP_PATH=insurrection
-    - TEST=MAP MAP_PATH=slayer
-    - TEST=MAP MAP_PATH=unsc_frigate
-    - TEST=MAP MAP_PATH=desert_outpost
-    - TEST=MAP MAP_PATH=geminus_city
+    - TEST=MAP MAP_PATH=western_europe
 
 cache:
   directories:
