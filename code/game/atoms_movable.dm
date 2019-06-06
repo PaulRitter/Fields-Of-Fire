@@ -19,8 +19,6 @@
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
 
 /atom/movable/Destroy()
-	gcDestroyed = "Bye, world!"
-
 	for(var/atom/movable/AM in src)
 		qdel(AM)
 

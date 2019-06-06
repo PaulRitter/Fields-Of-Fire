@@ -287,7 +287,7 @@
 		current_user.images -= menu_holder
 
 /datum/radial_menu/proc/wait()
-	while (!gcDestroyed && current_user && !finished && !selected_choice)
+	while (!gc_destroyed && current_user && !finished && !selected_choice)
 		if(istype(custom_check) && next_check < world.time)
 			if(!INVOKE_EVENT(custom_check, list()))
 				return
