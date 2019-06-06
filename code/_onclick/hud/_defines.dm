@@ -30,14 +30,14 @@
 #define ui_iclothing "WEST+1,SOUTH-1"
 
 //Pop-up inventory
-#define ui_shoes "WEST+1,SOUTH:1"
-#define ui_oclothing "WEST+3,SOUTH:1"
-#define ui_gloves "WEST+2,SOUTH:1"
-#define ui_glasses "CENTER-1,SOUTH:1"
-#define ui_id "WEST+4,SOUTH:1"
-#define ui_mask "CENTER-2,SOUTH:1"
-#define ui_ears "CENTER+1,SOUTH:1"
-#define ui_head "CENTER,SOUTH:1"
+#define ui_shoes "WEST+1,SOUTH"
+#define ui_oclothing "WEST+3,SOUTH"
+#define ui_gloves "WEST+2,SOUTH"
+#define ui_glasses "CENTER-1,SOUTH"
+#define ui_id "WEST+4,SOUTH"
+#define ui_mask "CENTER-2,SOUTH"
+#define ui_ears "CENTER+1,SOUTH"
+#define ui_head "CENTER,SOUTH"
 
 #define ui_alien_head "CENTER-3:12,SOUTH:5"		//aliens
 #define ui_alien_oclothing "CENTER-2:14,SOUTH:5"//aliens
@@ -79,7 +79,7 @@
 //Upper-middle right (damage indicators)
 #define ui_toxin "EAST-1:28,NORTH-2:27"
 #define ui_fire "EAST-1:28,NORTH-3:25"
-#define ui_oxygen "WEST+1:14,NORTH-1:8"
+#define ui_oxygen "WEST+1:14,NORTH-1:9"
 #define ui_pressure "EAST-1:28,NORTH-5:21"
 
 #define ui_alien_toxin "EAST-1:28,NORTH-2:25"
@@ -87,9 +87,9 @@
 #define ui_alien_oxygen "EAST-1:28,NORTH-4:25"
 
 //Middle right (status indicators)
-#define ui_nutrition "WEST,NORTH-1:8"
-#define ui_thirst "WEST+1:-8,NORTH-1:8"
-#define ui_temp "WEST+2:4,NORTH-1:8"
+#define ui_nutrition "WEST,NORTH-1:9"
+#define ui_thirst "WEST+1:-8,NORTH-1:9"
+#define ui_temp "WEST+2:4,NORTH-1:9"
 #define ui_healthdummy "CENTER+2:16, SOUTH-1"
 #define ui_healthbar "WEST+1,NORTH"
 #define ui_stamina "WEST+1,NORTH"
