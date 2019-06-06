@@ -325,7 +325,7 @@
 	menu.set_choices(choices)
 	menu.show_to(user)
 	menu.wait()
-	if(!menu.gcDestroyed)
+	if(!menu.gc_destroyed)
 		var/answer = menu.selected_choice
 		qdel(menu)
 		current_user.radial_menus -= anchor
