@@ -1,5 +1,4 @@
 # Fields of Fire
----
 [![Build Status](https://travis-ci.com/Fields-Of-Fire/Fields-Of-Fire.svg?branch=master)](https://travis-ci.com/Fields-Of-Fire/Fields-Of-Fire)
 
 ### LICENSE
