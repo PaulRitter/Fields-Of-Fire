@@ -213,12 +213,39 @@
 
 /*
 	Middle click
-	Only used for swapping hands
+	Used for radial menu stuff
 */
 /mob/proc/MiddleClickOn(var/atom/A)
-	swap_hand()
-	return
+	var/turf/T = get_turf(A)
+	if(!T)
+		return 0
 
+	var/list/all_choices = list()
+	var/list/choice_references = list()
+	for(var/obj/item/thing in T)
+		if(istype(thing))
+			all_choices += new /datum/radial_menu_choice(thing.name, image(thing.icon, thing.icon_state, thing.dir), thing.desc)
+			choice_references["[thing.name]"] = thing
+
+	var/list/choice = show_radial_menu(src, T, all_choices)
+	if(!choice.len)
+		return 0
+	
+	if(!(choice[1] in choice_references))
+		return 0
+
+	if(!choice_references["[choice[1]]"])
+		return 0
+
+	if(!Adjacent(choice_references["[choice[1]]"]))
+		return 0
+
+	if(choice["shift"]) //it was shiftclicked
+		var/atom/selA = choice_references["[choice[1]]"]
+		selA.examine(src)
+	else
+		src.put_in_active_hand(choice_references["[choice[1]]"])
+	return 1
 // In case of use break glass
 /*
 /atom/proc/MiddleClick(var/mob/M as mob)

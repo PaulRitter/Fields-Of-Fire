@@ -104,11 +104,6 @@
 		return
 	..()
 
-/mob/living/silicon/ai/MiddleClickOn(var/atom/A)
-	if(!control_disabled && A.AIMiddleClick(src))
-		return
-	..()
-
 /*
 	The following criminally helpful code is just the previous code cleaned up;
 	I have no idea why it was in atoms.dm instead of respective files.
@@ -163,20 +158,6 @@
 
 /obj/machinery/teleport/station/AIAltClick()
 	testfire()
-
-/atom/proc/AIMiddleClick(var/mob/living/silicon/user)
-	return 0
-
-/obj/machinery/door/airlock/AIMiddleClick() // Toggles door bolt lights.
-
-	if(..())
-		return
-
-	if(!src.lights)
-		Topic(src, list("command"="lights", "activate" = "1"))
-	else
-		Topic(src, list("command"="lights", "activate" = "0"))
-	return 1
 
 //
 // Override AdjacentQuick for AltClicking
