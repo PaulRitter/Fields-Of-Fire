@@ -232,6 +232,7 @@ var/list/supply_truck_pos = list()
 	var/doBreak = 0
 	for(var/order in shoppinglist)
 		var/datum/supply_order/SO = shoppinglist["[order]"]
+		var/order_size = 0
 
 		for(var/pack_id in SO.packs)
 			var/datum/supply_pack/SP = supply_packs["[pack_id]"]
@@ -239,7 +240,7 @@ var/list/supply_truck_pos = list()
 			var/idx
 			for(idx = 0; idx < SO.packs["[pack_id]"]; idx++)
 				var/atom/A = SP.create(SO)
-				if(!T.hasSpace(size + T.getSize(A))) //can it fit in the truck?
+				if(!T.hasSpace(size + order_size + T.getSize(A))) //can it fit in the truck?
 					doBreak = 1
 					break
 
@@ -253,6 +254,7 @@ var/list/supply_truck_pos = list()
 				if(!SP.contraband)
 					new /obj/item/weapon/paper/shipping_manifest(A, SP, shipments, SO)
 				contents += A
+				order_size++
 			
 			SO.packs["[pack_id]"] -= idx
 
