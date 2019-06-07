@@ -10,8 +10,6 @@ env:
 # ALL MAPS MUST BE PRESENT HERE
 # IF THEY ARE NOT, YOUR BUILD WILL FAIL
   matrix:
-    - TEST=CODE
-    - TEST=WEB
     - TEST=MAP MAP_PATH=western_europe
 
 cache:
