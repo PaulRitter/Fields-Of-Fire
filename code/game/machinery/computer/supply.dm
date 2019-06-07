@@ -52,8 +52,7 @@ For vending packs, see vending_packs.dm*/
 	update_icon()
 
 //supply pack info
-/obj/item/weapon/paper/supply_pack_info/New(var/loc, var/pack_id)
-	var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+/obj/item/weapon/paper/supply_pack_info/New(var/loc, var/pack_id, var/datum/supply_pack/SP)
 	name = "Pack #[pack_id] Info Sheet"
 	info = {"<h3>Pack #[pack_id] Info Sheet</h3><hr><br>
 		CONTENTS:<br><ul>"}
@@ -67,14 +66,15 @@ For vending packs, see vending_packs.dm*/
 		COST: [SP.cost]"}
 
 //all supply packs
-/obj/item/weapon/paper/inventory_manifest/New(var/loc)
+/obj/item/weapon/paper/inventory_manifest/New(var/loc, var/obj/structure/radio_hub/hub)
 	. = ..(loc)
 
 	name = "Command Inventory Manifest"
 	info += "<h3>Command inventory manifest</h3>"
+
 	var/list/categories = list()
-	for(var/pack_id in SSsupply_truck.supply_packs)
-		var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+	for(var/pack_id in hub.supply_packs)
+		var/datum/supply_pack/SP = hub.supply_packs["[pack_id]"]
 		if(!(SP.group in categories))
 			categories["[SP.group]"] = list()
 		categories["[SP.group]"] += pack_id
@@ -82,12 +82,12 @@ For vending packs, see vending_packs.dm*/
 	for(var/group in categories)
 		info += "<hr><h5>[group]</h5>"
 		for(var/pack_id in categories["[group]"])
-			info += "#[pack_id]: [SSsupply_truck.supply_packs["[pack_id]"].name]<br>"
+			info += "#[pack_id]: [hub.supply_packs["[pack_id]"].name]<br>"
 
 	update_icon()
 
 //order info
-/obj/item/weapon/paper/order_form/New(var/loc, var/datum/supply_order/SO)
+/obj/item/weapon/paper/order_form/New(var/loc, var/datum/supply_order/SO, var/obj/structure/radio_hub/hub)
 	. = ..(loc)
 	var/obj/item/weapon/card/id/card = SO.orderedby.get_id_card()
 	var/pname = (card && card.registered_name) ? card.registered_name : SO.orderedby.name
@@ -97,23 +97,23 @@ For vending packs, see vending_packs.dm*/
 
 	info+= "CONTENTS:<br>"
 	for(var/pack_id in SO.packs)
-		var/datum/supply_pack/SP = SSsupply_truck.supply_packs[pack_id]
+		var/datum/supply_pack/SP = hub.supply_packs[pack_id]
 		info += "#[pack_id] [SP.name] (x[SO.packs[pack_id]])<br>"
 	update_icon()
 
 //all orders
-/obj/item/weapon/paper/order_list/New(var/loc)
+/obj/item/weapon/paper/order_list/New(var/loc, var/obj/structure/radio_hub/hub)
 	. = ..(loc)
 
 	name = "Active Order List"
 	info += {"<h3>Active Order List</h3><hr>
 			Current active orders:<ul>"}
-	if(SSsupply_truck.nextWithdrawal)
-		info += "<li>Withdrawal - Amount: [SSsupply_truck.nextWithdrawal]</li>"
-	for(var/order_id in SSsupply_truck.shoppinglist)
-		if(!SSsupply_truck.shoppinglist["[order_id]"])
+	if(hub.nextWithdrawal)
+		info += "<li>Withdrawal - Amount: [hub.nextWithdrawal]</li>"
+	for(var/order_id in hub.shoppinglist)
+		if(!hub.shoppinglist["[order_id]"])
 			continue
-		info += "<li>#[order_id] - requested by [SSsupply_truck.shoppinglist["[order_id]"].orderedby.name]</li>"
+		info += "<li>#[order_id] - requested by [hub.shoppinglist["[order_id]"].orderedby.name]</li>"
 
 	update_icon()
 
@@ -139,14 +139,14 @@ For vending packs, see vending_packs.dm*/
 	update_icon()
 
 //all command orders
-/obj/item/weapon/paper/request_list/New(var/loc)
+/obj/item/weapon/paper/request_list/New(var/loc, var/obj/structure/radio_hub/hub)
 	. = ..(loc)
 
 	name = "Active Command Order List"
 	info += {"<h3>Active Command Order List</h3><hr>
 			Current active command orders:<br>"}
-	for(var/order_id in SSsupply_truck.command_orders)
-		info += "#[order_id] - requested by [SSsupply_truck.command_orders["[order_id]"].name]<br>"
+	for(var/order_id in hub.command_orders)
+		info += "#[order_id] - requested by [hub.command_orders["[order_id]"].name]<br>"
 
 	update_icon()
 
@@ -218,11 +218,9 @@ For vending packs, see vending_packs.dm*/
 	for(var/obj/structure/radio_cable/C in loc)
 		if(C.radionet != RN)
 			C.propagateRadionet(RN)
-	SSsupply_truck.supply_radios += src
 
 /obj/machinery/computer/supply/Destroy()
 	. = ..()
-	SSsupply_truck.supply_radios -= src
 	radionet.remove_radio(src)
 
 /obj/machinery/computer/supply/attack_ai(var/mob/user as mob)
@@ -254,7 +252,7 @@ For vending packs, see vending_packs.dm*/
 	doCommand(user)
 
 /obj/machinery/computer/supply/proc/checkConnection()
-	if(!radionet || !radionet.hubs.len)
+	if(!radionet || !radionet.hub || radionet.hub.broken)
 		commandResponse("** BEEP ** BEEP **")
 		return 0
 	return 1
@@ -286,7 +284,7 @@ For vending packs, see vending_packs.dm*/
 			var/list/inv_packids = list()
 			for(var/order in orders)
 				var/list/sp_param = splittext(order, "x")
-				if(!SSsupply_truck.supply_packs["[sp_param[1]]"])
+				if(!radionet.hub.supply_packs["[sp_param[1]]"])
 					inv_packids += sp_param[1]
 					continue
 
@@ -310,9 +308,9 @@ For vending packs, see vending_packs.dm*/
 		if("cancel") //cancels an order
 			return cancelOrder(trim(params[2]))	
 		if("total") //returns the total order price
-			commandResponse("Current order total is at [SSsupply_truck.getOrderPrice()].")
+			commandResponse("Current order total is at [radionet.hub.getOrderPrice()].")
 		if("funds") //return the total money at command
-			commandResponse("Our current budget is at [SSsupply_truck.commandMoney].")
+			commandResponse("Our current budget is at [radionet.hub.commandMoney].")
 		if("withdraw") //places a withdraw order
 			if(!params[2])
 				commandResponse("You didn't specify an amount.")
@@ -323,8 +321,8 @@ For vending packs, see vending_packs.dm*/
 				commandResponse(pick("At least give me a number to withdraw.","Thats not a number.","I don't understand."))
 				return doCommand(user)
 
-			SSsupply_truck.nextWithdrawal += amount
-			commandResponse("Withdraw order updated. Now withdrawing [SSsupply_truck.nextWithdrawal] with next shipment.")
+			radionet.hub.nextWithdrawal += amount
+			commandResponse("Withdraw order updated. Now withdrawing [radionet.hub.nextWithdrawal] with next shipment.")
 		if("help") //prints a help sheet for the commands
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
@@ -332,46 +330,46 @@ For vending packs, see vending_packs.dm*/
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/pack_id = trim(params[2])
-			if(!SSsupply_truck.supply_packs["[pack_id]"])
+			if(!radionet.hub.supply_packs["[pack_id]"])
 				commandResponse("There are no supply packs with that id.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id)
+				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id, radionet.hub.supply_packs["[pack_id]"])
 		if("packlist") //prints a new inventory paper
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/inventory_manifest(RP.loc)
+				new /obj/item/weapon/paper/inventory_manifest(RP.loc, radionet.hub)
 		if("orderinfo") //prints an infopaper about an order
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/order_id = trim(params[2])
-			if(!SSsupply_truck.shoppinglist["[order_id]"])
+			if(!radionet.hub.shoppinglist["[order_id]"])
 				commandResponse("There are no orders with that id.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/order_form(RP.loc, SSsupply_truck.shoppinglist["[order_id]"])
+				new /obj/item/weapon/paper/order_form(RP.loc, radionet.hub.shoppinglist["[order_id]"], radionet.hub)
 		if("orderlist") //prints a list of all active orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/order_list(RP.loc)
+				new /obj/item/weapon/paper/order_list(RP.loc, radionet.hub)
 		if("requestinfo") //prints an info sheet about a specific command order
 			if(!params[2])
 				commandResponse("I'm gonna need an id with that.")
 			var/request_id = trim(params[2])
-			if(!SSsupply_truck.command_orders["[request_id]"])
+			if(!radionet.hub.command_orders["[request_id]"])
 				commandResponse("There are no command orders with that id.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/command_order(RP.loc, SSsupply_truck.command_orders["[request_id]"])
+				new /obj/item/weapon/paper/command_order(RP.loc, radionet.hub.command_orders["[request_id]"])
 		if("requestlist") //prints a list of all active command orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				new /obj/item/weapon/paper/request_list(RP.loc)
+				new /obj/item/weapon/paper/request_list(RP.loc, radionet.hub)
 		if("sendtruck") //sends a truck
-			SSsupply_truck.depart()
+			radionet.hub.truck_depart()
 		if("truckstatus") //returns a rough idea of how long the truck will take
-			if(!SSsupply_truck.moving)
-				if(SSsupply_truck.at_base)
+			if(!radionet.hub.moving)
+				if(radionet.hub.at_base)
 					commandResponse("Truck should be your location.")
 				else
 					commandResponse("We got the truck over here.")
@@ -387,34 +385,41 @@ For vending packs, see vending_packs.dm*/
 		V.show_message("<b>[src]</b> says, \"[message]\"")
 
 /obj/machinery/computer/supply/proc/doOrder(var/list/packs)
+	var/obj/structure/supply_truck/T = new ()
 	var/size = 0
 	for(var/pack_id in packs)
 		for(var/i = 0; i < packs["[pack_id]"]; i++)
-			var/atom/A = SSsupply_truck.supply_packs["[pack_id]"].create(null)
-			var/obj/structure/supply_truck/T = new ()
+			var/atom/A = radionet.hub.supply_packs["[pack_id]"].create(null)
 			size += T.getSize(A)
-			T.forceMove(null)
 			qdel(A)
 
 	//make our supply_order datum
 	var/datum/supply_order/O = new ()
 	O.packs = packs
 	O.orderedby = usr
-	O.id = ++SSsupply_truck.orderid
+	O.id = ++radionet.hub.orderid
+	O.hub = radionet.hub
 
-	SSsupply_truck.shoppinglist["[O.id]"] += O
+	var/fits = T.hasSpace(O.getSize())
+	T.forceMove(null)
+	if(!fits)
+		commandResponse("That order wouldn't fit the truck.")
+		return 0
+	
+
+	radionet.hub.shoppinglist["[O.id]"] += O
 	for(var/obj/structure/receipt_printer/RP in radionet.printers)
-		new /obj/item/weapon/paper/order_form(RP.loc, O)
+		new /obj/item/weapon/paper/order_form(RP.loc, O, radionet.hub)
 
 	commandResponse("Order [O.id] approved.")
 	return 1
 
 /obj/machinery/computer/supply/proc/cancelOrder(var/id)
-	if(!SSsupply_truck.shoppinglist["[id]"])
+	if(!radionet.hub.shoppinglist["[id]"])
 		commandResponse("We don't have an order under that registration.")
 		return 0
 
-	SSsupply_truck.shoppinglist["[id]"] = null
+	radionet.hub.shoppinglist["[id]"] = null
 	commandResponse("Removed order [id].")
 	return 1
 

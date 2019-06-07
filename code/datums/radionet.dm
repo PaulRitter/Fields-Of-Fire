@@ -266,35 +266,12 @@
 	use(1)
 	C.add_fingerprint(user)
 
-// *** HUB ***
-/obj/structure/radio_hub
-	name = "Radio HUB"
-	desc = "This HUB relays all received signals to command. Do not tamper."
-	icon = 'icons/placeholders/comm_tower.dmi'
-	icon_state = "comm_tower"
-	anchored = 1
-	density = 1
-	plane = ABOVE_HUMAN_PLANE
-	layer = ABOVE_HUMAN_LAYER
-	var/datum/radionet/radionet
-
-/obj/structure/radio_hub/New()
-	..()
-	var/datum/radionet/RN = new()
-	for(var/obj/structure/radio_cable/C in loc)
-		if(C.radionet != RN)
-			C.propagateRadionet(RN)
-
-/obj/structure/radio_hub/Destroy()
-	. = ..()
-	radionet.remove_hub(src)
-
 // *** NET ***
 /datum/radionet
 	//we only save radios and hubs cause what the fuck would we even do with cables
 	var/cables = 0
 	var/list/radios = list()
-	var/list/hubs = list()
+	var/obj/structure/radio_hub/hub
 	var/list/printers = list()
 
 //only need an add_cable cause we do a new net anyways whenever one gets removed
@@ -314,11 +291,11 @@
 
 /datum/radionet/proc/add_hub(var/obj/structure/radio_hub/H)
 	H.radionet = src
-	hubs += H
+	hub = H
 
 /datum/radionet/proc/remove_hub(var/obj/structure/radio_hub/H)
 	H.radionet = null
-	hubs -= H
+	hub = null
 
 /datum/radionet/proc/add_printer(var/obj/structure/receipt_printer/R)
 	R.radionet = src
@@ -336,5 +313,5 @@
 	to_chat(user, "=== Radionet readout ===")
 	to_chat(user, "Cables: [cables]")
 	to_chat(user, "Radio: [radios.len]")
-	to_chat(user, "HUBs: [hubs.len]")
 	to_chat(user, "Printers: [printers.len]")
+	to_chat(user, "HUB: [hub ? "YES" : "NO"]")

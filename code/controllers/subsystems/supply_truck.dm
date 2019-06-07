@@ -14,17 +14,21 @@ supply radio circuits
 radionet cable + hub + net datum
 */
 
-//set by a landmark with the name "supply_truck", cannot be multiple
-var/supply_truck_pos
+//set by /obj/effect/landmark/supply_truck, their faction_id will be the key
+var/list/supply_truck_pos = list()
 
-/*
-SUPPLY TRUCK SUBSYSTEM
-*/
-SUBSYSTEM_DEF(supply_truck)
-	name		= "Supply Truck"
-	init_order	= INIT_ORDER_SUPPLY_TRUCK
-	flags		= SS_NO_TICK_CHECK
-	wait		= 1 SECONDS
+// *** HUB ***
+/obj/structure/radio_hub
+	name = "Radio HUB"
+	desc = "This HUB relays all received signals to command. Do not tamper."
+	icon = 'icons/placeholders/comm_tower.dmi'
+	icon_state = "comm_tower"
+	anchored = 1
+	density = 1
+	plane = ABOVE_HUMAN_PLANE
+	layer = ABOVE_HUMAN_LAYER
+	var/datum/radionet/radionet
+	var/faction_id //used to link to truck spawner ~and maybe other things later on~
 
 	//CONFIG VARS
 	var/money_per_crate = 5 //how much command pays per crate
@@ -40,7 +44,6 @@ SUBSYSTEM_DEF(supply_truck)
 	var/list/command_orders = list() //orders by command that can be fulfilled
 	var/list/shoppinglist = list() //approved orders that will be bought with the next shipment
 	var/list/supply_packs = list() //all packs that can be ordered
-	var/list/supply_radios = list() //for feedback eg. "the supply radio beeps "cargo truck arrived""
 	var/list/truck_contents = list() //truck contents go here as soon as it departs
 	var/commandMoney = 10000 //Money currently stored at command
 	var/nextWithdrawal = 0
@@ -57,9 +60,17 @@ SUBSYSTEM_DEF(supply_truck)
 	var/eta_timeofday //eta used by the ticker
 	var/eta //eta to used in uis
 	var/obj/structure/supply_truck/truck //to keep track of our spawned truck
-	
-//gets supply packs for uis
-/datum/controller/subsystem/supply_truck/Initialize(timeofday)
+
+	var/broken = FALSE //is it broken?
+
+/obj/structure/radio_hub/New()
+	..()
+	if(!faction_id)
+		message_admins("there is a radio hub which holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z], someone spawned some fucky stuff or some smoothbrain mapper fucked up.")
+		qdel(src)
+		return 0
+
+	//setting up our cargo system
 	var/pack_id = 1
 	for(var/typepath in subtypesof(/datum/supply_pack))
 		supply_packs["[pack_id++]"] = new typepath()
@@ -68,38 +79,31 @@ SUBSYSTEM_DEF(supply_truck)
 	
 	add_command_order(new /datum/command_order/per_unit/default())
 	add_command_order(new /datum/command_order/per_unit/per_reagent/default())
-	..()
 
-//ticker for the eta
-/datum/controller/subsystem/supply_truck/fire(resumed = FALSE)
-	if(moving == 1)
-		var/ticksleft = eta_timeofday - world.timeofday
-
-		if(ticksleft > 0)
-			eta = round(ticksleft / 600, 1)
-		else
-			eta = 0
-			arrive()
+	//finding a connected radionet
+	var/datum/radionet/RN = new()
+	for(var/obj/structure/radio_cable/C in loc)
+		if(C.radionet != RN)
+			C.propagateRadionet(RN)
 
 //the truck arriving either at base or at command
 //receives truck_contents and handles selling to command
-/datum/controller/subsystem/supply_truck/proc/arrive()
+/obj/structure/radio_hub/proc/truck_arrive()
 	if(!at_base) //not at station
-		if(!supply_truck_pos)
+		if(!supply_truck_pos[faction_id])
 			message_admins("No Truck pos set, some smoothbrain mapper fucked up")
 			return
-		truck = new (supply_truck_pos)
+		truck = new (supply_truck_pos[faction_id])
 		truck.contents = truck_contents
 		truck_contents.len = 0
 		truck.update_icon()
 		if(truck.contents.len)
 			var/list/alreadyPrinted = list()
-			for(var/obj/machinery/computer/supply/R in supply_radios)
-				for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
-					if(RP in alreadyPrinted)
-						continue
-					new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
-					alreadyPrinted += RP
+			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				if(RP in alreadyPrinted)
+					continue
+				new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
+				alreadyPrinted += RP
 		allSay("Truck arrived at Base.")
 		at_base = 1
 	else //at station
@@ -111,7 +115,7 @@ SUBSYSTEM_DEF(supply_truck)
 
 //the truck departing either from base or command
 //basically sets truck_contents and handles buying from command
-/datum/controller/subsystem/supply_truck/proc/depart()
+/obj/structure/radio_hub/proc/truck_depart()
 	if(moving)
 		allSay("Truck already in transit.")
 		return 0
@@ -135,21 +139,21 @@ SUBSYSTEM_DEF(supply_truck)
 		commandMoney -= transitCost
 		allSay("Truck left Command and is enroute.")
 	
-	//sets the eta timer
-	eta_timeofday = world.timeofday + rand(movetimeMin, movetimeMax)
-
 	moving = 1
+	spawn(rand(movetimeMin, movetimeMax))
+		if(moving)
+			truck_arrive()
 	return 1
 
-/datum/controller/subsystem/supply_truck/proc/getOrderPrice()
+/obj/structure/radio_hub/proc/getOrderPrice()
 	. = nextWithdrawal + transitCost
 	for(var/orderid in shoppinglist)
-		var/datum/supply_order/SO = SSsupply_truck.shoppinglist["[orderid]"]
+		var/datum/supply_order/SO = shoppinglist["[orderid]"]
 		for(var/pack_id in SO.packs)
-			. += SSsupply_truck.supply_packs["[pack_id]"].cost * SO.packs["[pack_id]"]
+			. += supply_packs["[pack_id]"].cost * SO.packs["[pack_id]"]
 
 //tries to sell an obj to the command orders
-/datum/controller/subsystem/supply_truck/proc/SellObjToOrders(var/atom/A,var/in_crate)
+/obj/structure/radio_hub/proc/SellObjToOrders(var/atom/A,var/in_crate)
 	// Per-unit orders run last so they don't steal shit.
 	var/list/priority1=list() //normal orders here
 	var/list/priority2=list() //per_unit goes here
@@ -175,7 +179,7 @@ SUBSYSTEM_DEF(supply_truck)
 	return 0
 
 //sells items and returns total money gained
-/datum/controller/subsystem/supply_truck/proc/sell(var/list/stuff)
+/obj/structure/radio_hub/proc/sell(var/list/stuff)
 	var/money = 0
 	for(var/atom/movable/MA in stuff)
 		if(istype(MA,/obj/structure/closet/crate)) //is crate
@@ -201,7 +205,7 @@ SUBSYSTEM_DEF(supply_truck)
 	return money
 
 //buys items and returns all crates in a list
-/datum/controller/subsystem/supply_truck/proc/buy()
+/obj/structure/radio_hub/proc/buy()
 	if(getOrderPrice() > commandMoney) //not enough money to buy
 		allSay("Couldn't afford to send the truck. You are [getOrderPrice() - commandMoney]$ over budget.")
 		return 0
@@ -229,8 +233,12 @@ SUBSYSTEM_DEF(supply_truck)
 		var/datum/supply_order/SO = shoppinglist["[order]"]
 
 		var/order_size = SO.getSize()
-		if(!T.hasSpace((size + order_size)))
+		message_admins("order size: [order_size]")
+		if(!T.hasSpace(size + order_size))
+			message_admins("no more space: [size + order_size]")
 			continue
+
+		message_admins("has space: [size + order_size]")
 
 		for(var/pack_id in SO.packs)
 			var/datum/supply_pack/SP = supply_packs["[pack_id]"]
@@ -254,26 +262,33 @@ SUBSYSTEM_DEF(supply_truck)
 
 	return contents
 
-/datum/controller/subsystem/supply_truck/proc/add_command_order(var/datum/command_order/C)
+/obj/structure/radio_hub/proc/add_command_order(var/datum/command_order/C)
 	command_orders["[C.id]"] = C
 
 	if(!C.listed) //if its not listed we don't need to notify them
 		return
 
 	var/list/alreadyPrinted = list()
-	for(var/obj/machinery/computer/supply/R in supply_radios)
-		for(var/obj/structure/receipt_printer/RP in R.radionet.printers)
-			if(RP in alreadyPrinted)
-				continue
-			new /obj/item/weapon/paper/command_order(RP, C)
-			alreadyPrinted += RP
-	
+	for(var/obj/structure/receipt_printer/RP in radionet.printers)
+		if(RP in alreadyPrinted)
+			continue
+		new /obj/item/weapon/paper/command_order(RP, C)
+		alreadyPrinted += RP
+
 	allSay("Hey, we got a new buy order up. Id is [C.id]")
 
-/datum/controller/subsystem/supply_truck/proc/allSay(var/message)
-	for(var/obj/machinery/computer/supply/S in supply_radios)
+/obj/structure/radio_hub/proc/allSay(var/message)
+	for(var/obj/machinery/computer/supply/S in radionet.radios)
 		S.commandResponse("[message]")
 
+/obj/structure/radio_hub/Destroy()
+	broken = TRUE
+
+/obj/structure/radio_hub/faction_1
+	faction_id = "faction_1"
+
+/obj/structure/radio_hub/faction_2
+	faction_id = "faction_2"
 
 /*
 SUPPLY ORDER
@@ -282,20 +297,21 @@ SUPPLY ORDER
 	var/list/packs = null // pack_id -> amount
 	var/mob/orderedby = null // who ordered it
 	var/id = 0
+	var/obj/structure/radio_hub/hub //what hub it got ordered over
 
 /datum/supply_order/proc/getSize()
 	. = 0
 	var/obj/structure/supply_truck/T = new ()
 	for(var/pack_id in packs)
-		var/atom/movable/A = SSsupply_truck.supply_packs["[pack_id]"].create(null)
-		. += T.getSize(A)
+		var/atom/movable/A = hub.supply_packs["[pack_id]"].create(null)
+		. += T.getSize(A) * packs["[pack_id]"]
 		A.forceMove(null)
 	T.forceMove(null)
 
 /datum/supply_order/proc/getCost()
 	. = 0
 	for(var/pack_id in packs)
-		var/datum/supply_pack/SP = SSsupply_truck.supply_packs["[pack_id]"]
+		var/datum/supply_pack/SP = hub.supply_packs["[pack_id]"]
 		. += SP.cost
 
 /datum/supply_order/proc/OnConfirmed(var/mob/user)

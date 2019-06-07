@@ -178,14 +178,6 @@ var/list/status_icons_to_colour = list(
 		return ""
 	return "[add_zero(num2text((timeleft / 60) % 60),2)]:[add_zero(num2text(timeleft % 60), 2)]"
 
-/obj/machinery/status_display/proc/get_supply_shuttle_timer()
-	if(SSsupply_truck.moving)
-		var/timeleft = SSsupply_truck.eta
-		if(timeleft < 0)
-			return "Late"
-		return "[add_zero(num2text((timeleft / 60) % 60),2)]:[add_zero(num2text(timeleft % 60), 2)]"
-	return ""
-
 /obj/machinery/status_display/proc/remove_display()
 	set_light(0)
 	if(overlays.len)

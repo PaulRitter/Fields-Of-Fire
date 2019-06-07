@@ -112,10 +112,10 @@
 "ch" = (/obj/item/weapon/wwi/can/beans,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "ci" = (/obj/item/weapon/wwi/can/fish,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cj" = (/obj/item/weapon/wwi/can/ham,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"ck" = (/obj/structure/sandbag{tag = "icon-sandbag (NORTHWEST)"; icon_state = "sandbag"; dir = 9},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cl" = (/obj/item/device/flashlight/lantern/mining,/obj/structure/sandbag{tag = "icon-sandbag (NORTH)"; icon_state = "sandbag"; dir = 1},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cm" = (/obj/structure/sandbag{tag = "icon-sandbag (NORTH)"; icon_state = "sandbag"; dir = 1},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cn" = (/obj/structure/sandbag{tag = "icon-sandbag (NORTHEAST)"; icon_state = "sandbag"; dir = 5},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"ck" = (/obj/effect/landmark/supply_truck/faction_1,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cl" = (/obj/effect/landmark/supply_truck/faction_2,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cm" = (/obj/structure/radio_cable{icon_state = "0-8"},/obj/machinery/computer/supply,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cn" = (/obj/structure/radio_cable{icon_state = "0-8"},/obj/structure/radio_hub/faction_1,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "co" = (/obj/item/weapon/reagent_containers/glass/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cp" = (/obj/item/weapon/reagent_containers/food/drinks/coffee/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cq" = (/obj/item/weapon/reagent_containers/food/drinks/bottle/trench/schnapps,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -129,9 +129,8 @@
 "cy" = (/obj/item/stack/medical/bruise_pack/trench/ten,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cz" = (/obj/item/stack/medical/splint/ghetto,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cA" = (/obj/item/clothing/accessory/storage/wwi/brit,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cB" = (/obj/structure/sandbag{tag = "icon-sandbag (WEST)"; icon_state = "sandbag"; dir = 8},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cC" = (/obj/structure/sandbag{tag = "icon-sandbag (EAST)"; icon_state = "sandbag"; dir = 4},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cD" = (/obj/structure/target_stake,/obj/item/target/syndicate,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cB" = (/obj/machinery/light/spot,/obj/structure/radio_cable{icon_state = "1-4"},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cC" = (/obj/structure/radio_hub/faction_2,/obj/structure/radio_cable{icon_state = "0-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cE" = (/obj/item/metalscraps,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cF" = (/obj/item/weapon/wrench/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cG" = (/obj/item/weapon/screwdriver/opener,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -146,7 +145,6 @@
 "cP" = (/obj/item/device/flashlight/lantern/mining,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cQ" = (/obj/item/device/flashlight/lantern/wolf,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cR" = (/obj/structure/reagent_dispensers/fueltank/wwi,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cS" = (/obj/structure/target_stake,/obj/item/target,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cT" = (/obj/structure/tanktrap,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cU" = (/obj/item/weapon/wirecutters/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cV" = (/obj/item/weapon/crowbar/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -158,7 +156,6 @@
 "db" = (/obj/item/clothing/shoes/french,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dc" = (/obj/item/weapon/paper/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dd" = (/obj/item/weapon/pen,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"de" = (/obj/structure/target_stake,/obj/item/target/alien,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "df" = (/obj/structure/bardbedwire,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dg" = (/obj/item/weapon/weldingtool/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dh" = (/obj/item/weapon/screwdriver/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -172,10 +169,6 @@
 "dp" = (/obj/item/clothing/shoes/german,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dq" = (/obj/item/missile/dynamite,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dr" = (/obj/item/missile/dynamite/cluster,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"ds" = (/obj/structure/sandbag{tag = "icon-sandbag (SOUTHWEST)"; icon_state = "sandbag"; dir = 10},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dt" = (/obj/item/device/flashlight/lantern/mining,/obj/structure/sandbag,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"du" = (/obj/structure/sandbag,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dv" = (/obj/structure/sandbag{tag = "icon-sandbag (SOUTHEAST)"; icon_state = "sandbag"; dir = 6},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dw" = (/obj/item/clothing/head/helmet/britsoft,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dx" = (/obj/item/clothing/head/helmet/britofficer,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dy" = (/obj/item/clothing/mask/gas/wwi/german,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -186,8 +179,6 @@
 "dD" = (/obj/item/clothing/suit/storage/wwi/britishcoat,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dE" = (/obj/item/clothing/head/helmet/germansoft,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dF" = (/obj/item/weapon/flame/candle/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dG" = (/obj/effect/landmark{name = "supply_truck"},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dH" = (/obj/item/device/flashlight/lantern/mining,/obj/structure/sandbag{tag = "icon-sandbag (NORTH)"; icon_state = "sandbag"; dir = 1},/mob,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dI" = (/obj/structure/radio_cable{icon_state = "2-4"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dJ" = (/obj/structure/radio_cable{icon_state = "4-8"},/obj/structure/receipt_printer,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dK" = (/obj/structure/closet/crate,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -197,7 +188,6 @@
 "dO" = (/obj/structure/radio_cable{icon_state = "1-2"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dP" = (/obj/structure/closet/crate/small,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dQ" = (/obj/structure/radio_cable{icon_state = "1-4"},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"dR" = (/obj/structure/radio_hub,/obj/structure/radio_cable{icon_state = "0-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dS" = (/obj/item/device/multitool,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dT" = (/obj/structure/radio_cable{icon_state = "1-2"},/obj/effect/spawner/newbomb/timer,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "dU" = (/obj/item/stack/radio_cable,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -291,16 +281,16 @@ aaaaabababababadadadadadadadadadadadadababaMaNaOabababababababababababababababab
 aaaaababababahaPaQaRaSaTaUaVaWaXaYaZbabbbcbdbebfababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahbgbhbibjbkblbmbnbobpbqbrbsbtbubvbwababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahbxbybzbAbBbCbDbEbFbGbHbIbJbKabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahbLbMbNbObPbQbRbSbTbUbVabbWagababababadadadadadadabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahbXbYbZcacbcccdcecfcgchcicjagabababahababababababagabababckdHclcmcmcmcnababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahcocpcqcrcsabctcucvcwcxcyczagcAababahdGabababababagabababcBabababababcCabababababcDababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahcEcFcGcHcIcJcKcLcMcNcOcPcQagcRabababaiaiaiaiaiaiababababababababababcCabababababcSababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahcTcUcVcWafcXcYcZcMdadbdcddagababababdSabababababababababcBabababababcCabababababdeababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahdfdgdhdidjdkdldmdndodpdqdragabdIdMdJdMdNabdKdKdKdLdLdLabdsdtdtdudududvababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahabdwdxdydzdAdBdCdDdEdFababagabdOabababababdKdKdKdLdLdLababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaabababababaiaiaiaiaiaiaiaiaiaiaiaiaiababdTababdVdVabdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababababababababababababababababababdOababdVdVabdPdPdPdUdUdUababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababababababababababababababababababdQdRabaiabaiabaiababaiabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahbLbMbNbObPbQbRbSbTbUbVabbWagababababadadadadadadababababababadadadadadadabababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahbXbYbZcacbcccdcecfcgchcicjagabababahababababababagababababahababababababagababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahcocpcqcrcsabctcucvcwcxcyczagcAababahckabababababagababababahclabababababagababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahcEcFcGcHcIcJcKcLcMcNcOcPcQagcRabababaiaiaiaiaiaiababababababaiaiaiaiaiaiabababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahcTcUcVcWafcXcYcZcMdadbdcddagababababdSababababababababababababdSabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahdfdgdhdidjdkdldmdndodpdqdragabdIdMdJdMdNabdKdKdKdLdLdLabdIdMdJdMcmabdKdKdKdLdLdLabababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahabdwdxdydzdAdBdCdDdEdFababagabdOabababababdKdKdKdLdLdLabdOabababababdKdKdKdLdLdLabababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaabababababaiaiaiaiaiaiaiaiaiaiaiaiaiababdTababdVdVabdPdPdPdUdUdUabdOababdVdVabdPdPdPdUdUdUabababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababababababababababababababababababdOababdVdVabdPdPdPdUdUdUabdOababdVdVabdPdPdPdUdUdUabababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababababababababababababababababababdQcnabaiabaiabaiabaiabaiabcBcCaiabaiabaiabaiabaiababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

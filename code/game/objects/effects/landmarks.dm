@@ -62,10 +62,6 @@
 			endgame_exits += loc
 			delete_me = 1
 			return
-		if("supply_truck")
-			supply_truck_pos = loc
-			delete_me = 1
-			return
 
 	landmarks_list += src
 	return 1
@@ -236,3 +232,23 @@
 	new /obj/item/clothing/mask/gas/sexymime(src.loc)
 	new /obj/item/clothing/under/sexymime(src.loc)
 	delete_me = 1
+
+/obj/effect/landmark/supply_truck
+	name = "supply_truck"
+	var/faction_id
+
+/obj/effect/landmark/supply_truck/New()
+	..()
+	if(!faction_id)
+		message_admins("there is a supply_truck landmark which holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z], someone spawned some fucky stuff or some smoothbrain mapper fucked up.")
+		return 0
+	
+	supply_truck_pos["[faction_id]"] = loc
+	delete_me = 1
+	return 1
+
+/obj/effect/landmark/supply_truck/faction_1
+	faction_id = "faction_1"
+
+/obj/effect/landmark/supply_truck/faction_2
+	faction_id = "faction_2"
