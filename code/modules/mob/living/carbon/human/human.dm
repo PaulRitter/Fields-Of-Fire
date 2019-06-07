@@ -659,7 +659,7 @@
 		return FLASH_PROTECTION_MAJOR
 	return total_protection
 
-/mob/living/carbon/human/proc/ear_protection()
+/mob/living/carbon/human/earcheck()
 	var/ear_safety = 0
 	if(istype(ears, /obj/item/clothing/ears/earmuffs))
 		ear_safety += 2
