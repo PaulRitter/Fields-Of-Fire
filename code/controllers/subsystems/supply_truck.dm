@@ -292,6 +292,29 @@ var/list/supply_truck_pos = list()
 
 /obj/structure/radio_hub/Destroy()
 	broken = TRUE
+	return QDEL_HINT_LETMELIVE
+
+#define RADIO_HUB_REPAIR_CABLE_AMOUNT 10
+/obj/structure/radio_hub/attackby(obj/item/O, mob/user)
+	if(istype(O, /obj/item/stack/radio_cable))
+		var/obj/item/stack/radio_cable/S = O
+		if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
+			to_chat(user, "<span class='notice'>You don't have enough [S.singular_name] to repair \the [src]</span>")
+			return 0
+
+		to_chat(user, "<span class='notice'>You start repairing \the [src]</span>")
+		user.visible_message("<span class='notice'>[user] starts repairing \the [src]</span>")
+		if(do_after(user, 10 SECONDS, src))
+			if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
+				to_chat(user, "<span class='notice'>You finish repairing \the [src]</span>")
+				user.visible_message("<span class='notice'>[user] finishes repairing \the [src]</span>")
+				return 0
+
+			broken = FALSE
+			S.use(RADIO_HUB_REPAIR_CABLE_AMOUNT)
+			return 1
+	return 0
+#undef RADIO_HUB_REPAIR_CABLE_AMOUNT
 
 /obj/structure/radio_hub/faction_1
 	faction_id = "faction_1"

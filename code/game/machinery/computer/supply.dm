@@ -243,7 +243,7 @@ For vending packs, see vending_packs.dm*/
 	//authorization fluff
 	var/obj/item/weapon/card/id/card = user.get_id_card()	
 	var/id = copytext(replacetext(replacetext(splittext("\ref[card]", "x")[2], "]",""), "", "-"), 2) //this just takes the last bit of the ref and puts - between them
-	user.say("This is [card.registered_name]. Authorization [id]")
+	user.say("This is [(card && card.registered_name) ? card.registered_name : SO.orderedby.name]. Authorization [id]")
 	
 	if(!check_access(card))
 		commandResponse("Authorization denied. Who is this?")
