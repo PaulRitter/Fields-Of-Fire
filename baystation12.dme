@@ -2705,6 +2705,7 @@
 #include "maps\odst_prowler\odst_ship_overmap.dm"
 #include "maps\overmap_ships\om_ship_areas.dm"
 #include "maps\western_europe\objects.dm"
+#include "maps\western_europe\western_europe.dm"
 #include "maps\western_europe\western_europe_jobs.dm"
 #include "maps\western_europe\western_europe_map.dm"
 #include "maps\western_europe\western_europe_outfits.dm"
