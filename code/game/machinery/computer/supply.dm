@@ -392,6 +392,7 @@ For vending packs, see vending_packs.dm*/
 			var/atom/A = radionet.hub.supply_packs["[pack_id]"].create(null)
 			size += T.getSize(A)
 			qdel(A)
+	T.forceMove(null)
 
 	//make our supply_order datum
 	var/datum/supply_order/O = new ()
@@ -399,13 +400,6 @@ For vending packs, see vending_packs.dm*/
 	O.orderedby = usr
 	O.id = ++radionet.hub.orderid
 	O.hub = radionet.hub
-
-	var/fits = T.hasSpace(O.getSize())
-	T.forceMove(null)
-	if(!fits)
-		commandResponse("That order wouldn't fit the truck.")
-		return 0
-	
 
 	radionet.hub.shoppinglist["[O.id]"] += O
 	for(var/obj/structure/receipt_printer/RP in radionet.printers)
