@@ -547,4 +547,4 @@ its easier to just keep the beam vertical.
 	elevation += amount
 
 /atom/proc/get_impact_type(var/turf/location)
-	new /obj/effect/projectile/generic_impact(location)
+	return new /obj/effect/projectile/generic_impact(location)

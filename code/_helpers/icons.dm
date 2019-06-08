@@ -915,3 +915,38 @@ proc/generate_image(var/tx as num, var/ty as num, var/tz as num, var/range as nu
 
 	return cap
 
+GLOBAL_LIST_EMPTY(icon_state_lengths) //icon file = list(icon_state = length in frames)
+
+proc/get_animation_length(var/icon_file, var/icon_state)
+	if(icon_file in GLOB.icon_state_lengths)
+		var/list/L = GLOB.icon_state_lengths[icon_file]
+		if(L["[icon_state]"])
+			return L["[icon_state]"]
+
+	var/icon/icon_to_check = icon(icon_file, icon_state)
+	var/frames = 0
+	var/null_frame_count = 0
+	for(var/i = 1 to 99)
+		if(null_frame_count > 3) //3 null frames in a row
+			break
+		var/frame_found = FALSE
+		for(var/x = 1 to 32)
+			for(var/y = 1 to 32)
+				if(icon_to_check.GetPixel(x,y, frame = i))
+					frame_found = TRUE
+					break
+			if(frame_found) //We've found a frame, break
+				break
+		if(!frame_found)
+			null_frame_count++
+			continue
+		frames++
+	qdel(icon_to_check)
+
+	if(!islist(GLOB.icon_state_lengths[icon_file]))
+		GLOB.icon_state_lengths[icon_file] = list()
+
+	var/list/L = GLOB.icon_state_lengths[icon_file]
+	L["[icon_state]"] = frames
+
+	return frames
