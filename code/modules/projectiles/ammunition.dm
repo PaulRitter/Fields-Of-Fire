@@ -23,18 +23,20 @@
 		BB = new projectile_type(src)
 
 //removes the projectile from the ammo casing
-/obj/item/ammo_casing/proc/expend(var/turf/landing, var/dir_throw)
-	forceMove(landing)
+/obj/item/ammo_casing/proc/expend()
 	. = BB
 	BB = null
-	throw_at(get_step(src, dir_throw), 3, 3)
+	update_icon()
+
+/obj/item/ammo_casing/proc/eject(var/turf/landing, var/dir_throw)
+	forceMove(landing)
+	throw_at(get_edge_target_turf(landing, dir_throw), rand(1,3), 1)
 	animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = rand(3,8))
 	playsound(src, sound, 50, 1)
+
 	// Aurora forensics port, gunpowder residue.
 	if(leaves_residue)
 		leave_residue()
-
-	update_icon()
 
 /obj/item/ammo_casing/proc/leave_residue()
 	var/mob/living/carbon/human/H

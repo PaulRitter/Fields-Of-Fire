@@ -197,7 +197,7 @@
 		playsound(M, 'icons/FoF/sound/weapons/g98_reload2.ogg', 90, 1)
 	else(playsound(M, 'icons/FoF/sound/weapons/g98_reload1.ogg', 100, 1))
 	if(chambered)//We have a shell in the chamber
-		chambered.expend(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))//Eject casing
+		chambered.eject(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))//Eject casing
 		chambered = null
 	if(loaded.len)
 		var/obj/item/ammo_casing/AC = loaded[1] //load next casing.
