@@ -4,6 +4,7 @@
 	icon_state = "pill18"
 
 /obj/item/weapon/reagent_containers/pill/iron/New()
+	..()
 	reagents.add_reagent(/datum/reagent/iron, 20)
 
 /obj/item/weapon/storage/pill_bottle/iron
