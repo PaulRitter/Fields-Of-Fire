@@ -26,6 +26,7 @@
 #define SLOT_TWOEARS    0x2000
 #define SLOT_TIE        0x4000
 #define SLOT_HOLSTER	0x8000 //16th bit - higher than this will overflow
+#define SLOT_SLING		0x10000
 
 #define ACCESSORY_SLOT_UTILITY  "Utility"
 #define ACCESSORY_SLOT_ARMBAND  "Armband"
@@ -84,7 +85,7 @@
 #define slot_r_hand      5
 #define slot_belt        6
 #define slot_wear_id     7
-#define slot_l_ear       8
+#define slot_ears        8
 #define slot_glasses     9
 #define slot_gloves      10
 #define slot_head        11
@@ -96,10 +97,10 @@
 #define slot_s_store     17
 #define slot_in_backpack 18
 #define slot_legcuffed   19
-#define slot_r_ear       20
 #define slot_legs        21
 #define slot_tie         22
-#define slot_last        22
+#define slot_sling       23
+#define slot_last        23
 
 // Inventory slot strings.
 // since numbers cannot be used as associative list keys.
@@ -110,8 +111,7 @@
 #define slot_w_uniform_str	"slot_w_uniform"
 #define slot_head_str		"slot_head"
 #define slot_wear_suit_str	"slot_suit"
-#define slot_l_ear_str      "slot_l_ear"
-#define slot_r_ear_str      "slot_r_ear"
+#define slot_ear_str        "slot_ear"
 #define slot_belt_str       "slot_belt"
 #define slot_shoes_str      "slot_shoes"
 #define slot_head_str      	"slot_head"
@@ -124,6 +124,7 @@
 #define slot_glasses_str  	"slot_glasses"
 #define slot_s_store_str	"slot_s_store"
 #define slot_tie_str		"slot_tie"
+#define slot_sling_str      "slot_sling"
 
 // Bitflags for clothing parts.
 #define HEAD        0x1
@@ -232,8 +233,7 @@ var/list/default_onmob_icons = list(
 		slot_r_hand_str = 'icons/mob/items/righthand.dmi',
 		slot_belt_str = 'icons/mob/belt.dmi',
 		slot_back_str = 'icons/mob/back.dmi',
-		slot_l_ear_str = 'icons/mob/ears.dmi',
-		slot_r_ear_str = 'icons/mob/ears.dmi',
+		slot_ears_str =     'icons/mob/ears.dmi',
 		slot_glasses_str = 'icons/mob/eyes.dmi',
 		slot_wear_id_str = 'icons/mob/mob.dmi',
 		slot_w_uniform_str = 'icons/mob/uniform.dmi',
@@ -244,6 +244,7 @@ var/list/default_onmob_icons = list(
 		slot_handcuffed_str = 'icons/mob/mob.dmi',
 		slot_legcuffed_str = 'icons/mob/mob.dmi',
 		slot_gloves_str = 'icons/mob/hands.dmi',
+		slot_sling_str = 'icons/mob/back.dmi',
 		slot_s_store_str = 'icons/mob/belt_mirror.dmi',
 		slot_tie_str = 'icons/mob/ties.dmi'
 		)

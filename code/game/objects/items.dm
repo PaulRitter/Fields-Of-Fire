@@ -291,11 +291,11 @@ var/list/global/slot_flags_enumeration = list(
 	"[slot_belt]" = SLOT_BELT,
 	"[slot_glasses]" = SLOT_EYES,
 	"[slot_head]" = SLOT_HEAD,
-	"[slot_l_ear]" = SLOT_EARS|SLOT_TWOEARS,
-	"[slot_r_ear]" = SLOT_EARS|SLOT_TWOEARS,
+	"[slot_ears]" = SLOT_EARS|SLOT_TWOEARS,
 	"[slot_w_uniform]" = SLOT_ICLOTHING,
 	"[slot_wear_id]" = SLOT_ID,
 	"[slot_tie]" = SLOT_TIE,
+	"[slot_sling]" = SLOT_SLING,
 	)
 
 //the mob M is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
@@ -333,11 +333,8 @@ var/list/global/slot_flags_enumeration = list(
 
 	//Lastly, check special rules for the desired slot.
 	switch(slot)
-		if(slot_l_ear, slot_r_ear)
-			var/slot_other_ear = (slot == slot_l_ear)? slot_r_ear : slot_l_ear
+		if(slot_ears)
 			if( (w_class > ITEM_SIZE_TINY) && !(slot_flags & SLOT_EARS) )
-				return 0
-			if( (slot_flags & SLOT_TWOEARS) && H.get_equipped_item(slot_other_ear) )
 				return 0
 		if(slot_wear_id, slot_belt)
 			if(!H.w_uniform && (slot_w_uniform in mob_equip))
@@ -680,15 +677,11 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 	var/mob_icon
 	if(icon_override)
 		mob_icon = icon_override
-		if(slot == 	slot_l_hand_str || slot == slot_l_ear_str)
+		if(slot == 	slot_l_hand_str || slot == slot_ear_str)
 			mob_state = "[mob_state]_l"
-		if(slot == 	slot_r_hand_str || slot == slot_r_ear_str)
-			mob_state = "[mob_state]_r"
 	else if(use_spritesheet(bodytype, slot, mob_state))
-		if(slot == slot_l_ear)
+		if(slot == slot_ears)
 			mob_state = "[mob_state]_l"
-		if(slot == slot_r_ear)
-			mob_state = "[mob_state]_r"
 
 		mob_icon = sprite_sheets[bodytype]
 	else if(item_icons && item_icons[slot])
