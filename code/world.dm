@@ -144,6 +144,11 @@
 		initialize_unit_tests()
 #endif
 
+#ifdef TRAVIS_NO_UNIT
+	spawn(1)
+		del(world)
+#endif
+
 	spawn(3000)		//so we aren't adding to the round-start lag
 		if(config.ToRban)
 			ToRban_autoupdate()

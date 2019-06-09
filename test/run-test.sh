@@ -241,7 +241,7 @@ function run_byond_tests {
     fi
     run_test_ci "check globals build" "python tools/GenerateGlobalVarAccess/gen_globals.py baystation12.dme code/_helpers/global_access.dm"
     run_test "check globals unchanged" "md5sum -c - <<< '7f2a0b987cb307550edec970832c281a *code/_helpers/global_access.dm'"
-    run_test "build map unit tests" "scripts/dm.sh -M$MAP_PATH baystation12.dme"
+    run_test "build map unit tests" "scripts/dm.sh -DTRAVIS_NO_UNIT -M$MAP_PATH baystation12.dme"
     run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
     run_test "run server" "DreamDaemon baystation12.dmb -invisible -trusted -core 2>&1 | tee log.txt"
     # run_test "check tests passed" "grep 'All Unit Tests Passed' log.txt"
