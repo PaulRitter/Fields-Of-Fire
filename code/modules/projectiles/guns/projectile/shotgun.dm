@@ -28,9 +28,8 @@
 
 /obj/item/weapon/gun/projectile/shotgun/pump/proc/pump(mob/M as mob)
 	playsound(M, 'sound/weapons/shotgunpump.ogg', 60, 1)
-
 	if(chambered)//We have a shell in the chamber
-		chambered.expend(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))//Eject casing
+		chambered.eject(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))//Eject casing
 		chambered = null
 
 	if(loaded.len)
