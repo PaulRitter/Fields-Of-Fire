@@ -44,7 +44,11 @@
 
 	next_click = world.time + 1
 
-	var/list/modifiers = params2list(params)
+	var/list/modifiers
+	if(islist(params))
+		modifiers = params
+	else
+		modifiers = params2list(params)
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return 1
@@ -240,11 +244,9 @@
 	if(!Adjacent(choice_references["[choice[1]]"]))
 		return 0
 
-	if(choice["shift"]) //it was shiftclicked
-		var/atom/selA = choice_references["[choice[1]]"]
-		selA.examine(src)
-	else
-		src.put_in_active_hand(choice_references["[choice[1]]"])
+	var/atom/selA = choice_references["[choice[1]]"]
+	ClickOn(selA, choice.Copy(2))
+
 	return 1
 // In case of use break glass
 /*

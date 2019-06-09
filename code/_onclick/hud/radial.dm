@@ -46,7 +46,7 @@
 	var/tooltip_theme = "radial-default"
 
 	var/selected_choice
-	var/selected_modifier
+	var/list/selected_modifiers
 	var/list/obj/screen/elements = list()
 	var/obj/screen/radial/center/close_button
 	var/client/current_user
@@ -208,12 +208,12 @@
 	choices.Cut()
 	current_page = 1
 
-/datum/radial_menu/proc/element_chosen(var/choice_id, var/list/modifier, var/mob/user)
+/datum/radial_menu/proc/element_chosen(var/choice_id, var/list/modifiers, var/mob/user)
 	if(choice_id == NEXT_PAGE_ID)
 		next_page()
 		return
 	selected_choice = choice_id
-	selected_modifier = modifier
+	selected_modifiers = modifiers
 
 /datum/radial_menu/proc/get_next_id()
 	return "c_[choices.len]"
@@ -297,7 +297,6 @@
 		tooltip = n_tooltip
 	if(istext(n_value))
 		value = n_value
-		
 
 /datum/radial_menu_choice/proc/ClickOn(var/mob/user, var/list/modifiers)
 	if(istype(parent))
@@ -335,7 +334,7 @@
 	menu.wait()
 	if(!menu.gc_destroyed)
 		var/list/answer = list(menu.selected_choice)
-		answer += menu.selected_modifier
+		answer += menu.selected_modifiers
 		qdel(menu)
 		current_user.radial_menus -= anchor
 		return answer
