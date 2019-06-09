@@ -10,7 +10,6 @@
 /obj/screen/radial/slice
 	icon_state = "radial_slice"
 	var/datum/radial_menu_choice/choice
-	var/next_page = FALSE
 	var/tooltip_desc
 
 /obj/screen/radial/slice/MouseEntered(location, control, params)
@@ -25,14 +24,11 @@
 	closeToolTip(usr)
 
 /obj/screen/radial/slice/Click(location, control, params)
-	return choice.ClickOn(usr, params)
+	return choice.ClickOn(usr, params2list(params))
 
 /obj/screen/radial/slice/proc/selected(var/mob/user, var/list/modifier)
 	if(user.client == parent.current_user)
-		if(next_page)
-			parent.next_page()
-		else
-			parent.element_chosen(choice.value, modifier, user)
+		parent.element_chosen(choice.value, modifier, user)
 
 /obj/screen/radial/center
 	name = "Close Menu"
@@ -121,7 +117,7 @@
 			elements += new_element
 
 	var/page = 1
-	page_data = list()
+	page_data = list(null) //null is required to set the len to 1
 	var/list/current = list()
 	var/list/choices_left = choices.Copy()
 	while(choices_left.len)
@@ -131,12 +127,12 @@
 			page_data.len++
 			current = list()
 		if(paged && current.len == max_elements - 1)
-			current += NEXT_PAGE_ID
+			current += new /datum/radial_menu_choice/next()
 			continue
 		else
 			current += shift(choices_left)
 	if(paged && current.len < max_elements)
-		current += NEXT_PAGE_ID
+		current += new /datum/radial_menu_choice/next()
 
 	page_data[page] = current
 	pages = page
@@ -161,10 +157,8 @@
 	E.maptext = null
 	E.mouse_opacity = 0
 	E.choice = null
-	E.next_page = FALSE
-	E.choice = null
 
-/datum/radial_menu/proc/SetElement(obj/screen/radial/slice/E,/datum/radial_menu_choice/choice,angle,anim,anim_order)
+/datum/radial_menu/proc/SetElement(obj/screen/radial/slice/E,var/datum/radial_menu_choice/choice,angle,anim,anim_order)
 	//Position
 	var/py = round(cos(angle) * radius) + py_shift
 	var/px = round(sin(angle) * radius)
@@ -183,21 +177,18 @@
 	E.alpha = 255
 	E.mouse_opacity = 1
 	E.overlays.len = 0
-	if(choice_id == NEXT_PAGE_ID)
-		E.name = "Next Page"
-		E.next_page = TRUE
-		push(E.overlays, "radial_next")
-		E.choice = new /datum/radial_menu_choice() //default will do, we only need the logic
-	else
-		E.name = choice.name
-		E.choice = choice
-		choice.parent = E
-		E.maptext = null
-		E.next_page = FALSE
-		if(choice.img)
+
+	E.name = choice.name
+	E.choice = choice
+	choice.parent = E
+	E.maptext = null
+	if(choice.img)
+		if(istext(choice.img))
+			push(E.overlays,image(icon_file, choice.img))
+		else
 			push(E.overlays,choice.img)
-		if(choice.tooltip)
-			E.tooltip_desc = choice.tooltip
+	if(choice.tooltip)
+		E.tooltip_desc = choice.tooltip
 
 /datum/radial_menu/New(var/icon_file, var/tooltip_theme, var/radius, var/min_angle)
 	if(icon_file)
@@ -218,6 +209,9 @@
 	current_page = 1
 
 /datum/radial_menu/proc/element_chosen(var/choice_id, var/list/modifier, var/mob/user)
+	if(choice_id == NEXT_PAGE_ID)
+		next_page()
+		return
 	selected_choice = choice_id
 	selected_modifier = modifier
 
@@ -287,26 +281,34 @@
 
 /datum/radial_menu_choice
 	var/name
-	var/image/img
+	var/img
 	var/tooltip
 	var/obj/screen/radial/slice/parent
 	var/value
 
-/datum/radial_menu_choice/New(var/n_name, var/image/n_img, var/n_tooltip)
+/datum/radial_menu_choice/New(var/n_name, var/image/n_img, var/n_tooltip, var/n_value)
 	..()
 	if(istext(n_name))
 		name = n_name
+		value = n_name
 	if(istype(n_img))
 		img = n_img
 	if(istext(n_tooltip))
 		tooltip = n_tooltip
+	if(istext(n_value))
+		value = n_value
+		
 
-/datum/radial_menu_choice/proc/ClickOn(var/mob/user, params)
+/datum/radial_menu_choice/proc/ClickOn(var/mob/user, var/list/modifiers)
 	if(istype(parent))
-		var/list/modifiers = params2list(params)
 		parent.selected(user, modifiers)
 		return 1
 	return 0
+
+/datum/radial_menu_choice/next
+	name = "Next Page"
+	img = "radial_next"
+	value = NEXT_PAGE_ID
 
 /*
 	Presents radial menu to user anchored to anchor (or user if the anchor is currently in users screen)
@@ -332,8 +334,8 @@
 	menu.show_to(user)
 	menu.wait()
 	if(!menu.gc_destroyed)
-		var/list/answer = menu.selected_choice
-		answer += menu.modifier
+		var/list/answer = list(menu.selected_choice)
+		answer += menu.selected_modifier
 		qdel(menu)
 		current_user.radial_menus -= anchor
 		return answer

@@ -228,7 +228,7 @@
 			choice_references["[thing.name]"] = thing
 
 	var/list/choice = show_radial_menu(src, T, all_choices)
-	if(!choice.len)
+	if(!choice || !choice.len)
 		return 0
 	
 	if(!(choice[1] in choice_references))
