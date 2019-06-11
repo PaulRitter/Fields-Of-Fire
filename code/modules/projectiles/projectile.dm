@@ -395,10 +395,11 @@
 
 /obj/item/projectile/proc/impact_effect(var/matrix/M, var/atom/A)
 	var/obj/effect/projectile/P
+	var/turf/T = get_turf(src)
 	if(ispath(impact_type))
-		P = new impact_type(location.loc)
+		P = new impact_type(T)
 	else //Get one dependent on the atom hit
-		P = A.get_impact_type(location.loc)
+		P = A.get_impact_type(T)
 	if(istype(P))
 		P.set_transform(M)
 		P.pixel_x = location.pixel_x
