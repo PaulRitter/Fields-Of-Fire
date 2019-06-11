@@ -690,6 +690,3 @@
 	gear_type = /obj/item/weapon/storage/backpack/britknight
 	equip_slot = slot_back
 */
-
-#undef WWI_OVERRIDE
-#undef MOB_OVERRIDE
