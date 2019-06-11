@@ -623,14 +623,11 @@
 	item_state = "EB-helm_armored"
 	icon_state = "EB-helm_armored"
 
-//GLOVE TODO BEGINS HERE
-/obj/item/clothing/gloves/thick/germanarmor
+//GLOVE
+/obj/item/clothing/gloves/thick/armored
 	desc = "Heavy insulated plate gloves."
-	name = "German plate gloves"
-	icon = WWI_OVERRIDE
-	icon_override = MOB_OVERRIDE
-	icon_state = "Guantlets"
-	item_state = "Guantlets"
+	icon = 'icons/FoF/objects.dmi'
+	icon_override = 'icons/FoF/clothing.dmi'
 	siemens_coefficient = 0
 	permeability_coefficient = 0.05
 	force = 5
@@ -638,48 +635,41 @@
 	cold_protection = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_COLD_PROTECTION_TEMPERATURE
 
-/obj/item/clothing/gloves/thick/britarmor
-	icon = WWI_OVERRIDE
-	icon_override = MOB_OVERRIDE
-	name = "British plate gloves"
-	desc = "Heavy insulated plate gloves."
-	siemens_coefficient = 0
-	permeability_coefficient = 0.05
-	force = 5
-	armor = list(melee = 20, bullet = 10, laser = 0, energy = 0, bomb = 10, bio = 0, rad = 0)
-	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_COLD_PROTECTION_TEMPERATURE
-	icon_state = "Gloves"
-	item_state = "Gloves"
+/obj/item/clothing/gloves/thick/armored/wu
+	name = "WU plate gloves"
+	icon_state = "WU-gloves_armored"
+	item_state = "WU-gloves_armored"
 
-/obj/item/clothing/head/helmet/britarmor
-	name = "British plate helmet"
-	desc = "A plated full helmet."
-	icon = WWI_OVERRIDE
-	icon_override = MOB_OVERRIDE
-	item_state = "Helmet"
-	icon_state = "Helmet"
-	body_parts_covered = HEAD|FACE
-	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
-	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
-	armor = list(melee = 20, bullet = 20, laser = 0, energy = 0, bomb = 20, bio = 0, rad = 0)
+/obj/item/clothing/gloves/thick/armored/eb
+	name = "EB plate gloves"
+	icon_state = "EB-gloves_armored"
+	item_state = "EB-gloves_armored"
 
-/obj/item/clothing/shoes/britarmor
-	name = "British plate boots"
-	desc = "These plated boots have seen many owners."
-	icon = WWI_OVERRIDE
-	icon_override = MOB_OVERRIDE
-	item_state = "Boots"
-	icon_state = "Boots"
-	force = 5
-	armor = list(melee = 20, bullet = 10, laser = 0, energy = 0, bomb = 10, bio = 5, rad = 0)
-	item_flags = NOSLIP
-	siemens_coefficient = 0.6
-	body_parts_covered = FEET
-	cold_protection = FEET
-	min_cold_protection_temperature = SHOE_MIN_COLD_PROTECTION_TEMPERATURE
+/obj/item/clothing/gloves/wwi
+	desc = "Pair of leather gloves."
+	icon = 'icons/FoF/objects.dmi'
+	icon_override = 'icons/FoF/clothing.dmi'
 
+/obj/item/clothing/gloves/wwi/wu
+	icon_state = "WU-gloves"
+	item_state = "WU-gloves"
+
+/obj/item/clothing/gloves/wwi/eb
+	icon_state = "EB-gloves"
+	item_state = "EB-gloves"
+
+/obj/item/clothing/gloves/wwi/fingerless
+	desc = "fingerless gloves"
+
+/obj/item/clothing/gloves/wwi/fingerless/wu
+	icon_state = "WU-gloves_fingerless"
+	item_state = "WU-gloves_fingerless"
+	
+/obj/item/clothing/gloves/wwi/fingerless/eb
+	icon_state = "EB-gloves_fingerless"
+	item_state = "EB-gloves_fingerless"
+
+/*
 /obj/item/clothing/suit/armor/special/wwi/britarmor
 	icon_override = MOB_OVERRIDE
 	icon = WWI_OVERRIDE
@@ -696,6 +686,10 @@
 	allowed = list(/obj/item/weapon/gun/projectile/wwi/lewis)
 	specials = list(/datum/armourspecials/gear/britplate)
 
+/datum/armourspecials/gear/britplate
+	gear_type = /obj/item/weapon/storage/backpack/britknight
+	equip_slot = slot_back
+*/
 
 #undef WWI_OVERRIDE
 #undef MOB_OVERRIDE

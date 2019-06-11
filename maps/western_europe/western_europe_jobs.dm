@@ -83,10 +83,6 @@
 	storage_slots_w = 2
 	canremove = 0
 
-/datum/armourspecials/gear/britplate
-	gear_type = /obj/item/weapon/storage/backpack/britknight
-	equip_slot = slot_back
-
 /datum/job/germsoldier
 	title = "German Soldier"
 	total_positions = -1

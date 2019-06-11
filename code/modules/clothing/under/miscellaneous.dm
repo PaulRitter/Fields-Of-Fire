@@ -1,5 +1,3 @@
-#define WWI_OVERRIDE 'icons/FoF/clothes.dmi'
-
 /obj/item/clothing/under/pj/red
 	name = "red pj's"
 	desc = "Sleepwear."
@@ -663,36 +661,20 @@
 	icon_state = "fleetrank_officer"
 
 obj/item/clothing/under/wwi
+	icon = 'icons/FoF/objects.dm'
+	icon_override = 'icons/FoF/clothing.dm'
 	has_sensor = 0
 
-obj/item/clothing/under/wwi/brit
-	desc = "Standard British soldier uniform."
-	name = "British uniform"
-	icon_state = "brittcloth"
-	worn_state = "brittcloth"
-	item_state = "brittcloth"
-	icon_override = WWI_OVERRIDE
-	icon = WWI_OVERRIDE
-	has_sensor = 0
+obj/item/clothing/under/wwi/wu
+	desc = "WU soldier uniform."
+	name = "WU uniform"
+	icon_state = "WU-suit"
+	worn_state = "WU-suit"
+	item_state = "WU-suit"
 
-obj/item/clothing/under/wwi/german
-	desc = "Standard German soldier uniform."
-	name = "German uniform"
-	icon_state = "germcloth"
-	worn_state = "germcloth"
-	item_state = "germcloth"
-	icon_override = WWI_OVERRIDE
-	icon = WWI_OVERRIDE
-	has_sensor = 0
-
-obj/item/clothing/under/wwi/french
-	desc = "Standard French soldier uniform."
-	name = "French uniform"
-	icon_state = "frenchcloth"
-	worn_state = "frenchcloth"
-	item_state = "frenchcloth"
-	icon_override = WWI_OVERRIDE
-	icon = WWI_OVERRIDE
-	has_sensor = 0
-
-#undef WWI_OVERRIDE
+obj/item/clothing/under/wwi/eb
+	desc = "EB soldier uniform."
+	name = "EB uniform"
+	icon_state = "EB-suit"
+	worn_state = "EB-suit"
+	item_state = "EB-suit"
