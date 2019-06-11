@@ -19,7 +19,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -37,7 +37,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germknight
+	//outfit_type = /decl/hierarchy/outfit/job/germknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -55,7 +55,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/frenchsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/frenchsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -73,7 +73,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britknight
+	//outfit_type = /decl/hierarchy/outfit/job/britknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -97,7 +97,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/germsquire
 	title = "German Squire"
@@ -113,7 +113,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/britag
 	title = "British AG"
@@ -129,4 +129,4 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO

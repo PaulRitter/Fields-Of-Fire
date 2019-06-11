@@ -661,8 +661,8 @@
 	icon_state = "fleetrank_officer"
 
 obj/item/clothing/under/wwi
-	icon = 'icons/FoF/objects.dm'
-	icon_override = 'icons/FoF/clothing.dm'
+	icon = 'icons/FoF/objects.dmi'
+	icon_override = 'icons/FoF/clothing.dmi'
 	has_sensor = 0
 
 obj/item/clothing/under/wwi/wu

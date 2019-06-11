@@ -1107,27 +1107,3 @@
 	desc = "Insert your Requisition Receipt into the punch card slot to recieve your gear."
 	vend_delay = 21
 	icon_state = "vendor"
-
-/obj/machinery/vending/wwi/frenchstandard
-	premium = list(/obj/structure/closet/crate/wwi/brit/lebel = 80)
-
-/obj/machinery/vending/wwi/britstandard
-	premium = list(/obj/structure/closet/crate/wwi/brit/smle = 80, /obj/structure/closet/crate/wwi/brit/squire = 80)
-
-/obj/machinery/vending/wwi/germstandard
-	premium = list(/obj/structure/closet/crate/wwi/germ/g98 = 80, /obj/structure/closet/crate/wwi/germ/squire = 80)
-
-/obj/machinery/vending/wwi/frenchmedic
-	premium = list(/obj/structure/closet/crate/wwi/brit/frenchmed = 80)
-
-/obj/machinery/vending/wwi/britmedic
-	premium = list(/obj/structure/closet/crate/wwi/brit/britmed = 80)
-
-/obj/machinery/vending/wwi/germmedic
-	premium = list(/obj/structure/closet/crate/wwi/germ/med = 80)
-
-/obj/machinery/vending/wwi/germknight
-	premium = list(/obj/structure/closet/crate/wwi/germ/knight = 40)
-
-/obj/machinery/vending/wwi/britknight
-	premium = list(/obj/structure/closet/crate/wwi/brit/knight = 40)

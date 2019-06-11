@@ -556,7 +556,7 @@
 //SUIT
 /obj/item/clothing/suit/storage/wwi
 	icon = 'icons/FoF/objects.dmi'
-	icon_override = 'icon/FoF/clothing.dmi'
+	icon_override = 'icons/FoF/clothing.dmi'
 	allowed = list(/obj/item/ammo_box, /obj/item/ammo_magazine, /obj/item/weapon/gun/projectile/wwi/colt1911, /obj/item/weapon/gun/projectile/wwi/bolt/winchester/sawn, /obj/item/weapon/gun/projectile/wwi/p08, /obj/item/weapon/gun/projectile/wwi/mauser, /obj/item/weapon/gun/projectile/wwi/ruby)
 
 //ARMOR
