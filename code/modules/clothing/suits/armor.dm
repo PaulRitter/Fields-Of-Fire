@@ -1,6 +1,3 @@
-#define WWI_OVERRIDE 'icons/FoF/clothes.dmi'
-#define MOB_OVERRIDE 'icons/FoF/mob_clothing.dmi'
-
 /obj/item/clothing/suit/armor
 	allowed = list(/obj/item/weapon/gun/energy,/obj/item/device/radio,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/gun/magnetic)
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
@@ -453,61 +450,17 @@
 	item_state = "m_vest"
 
 /obj/item/clothing/suit/storage/wwi
-	icon = 'icons/FoF/clothes.dmi'
+	icon = 'icons/FoF/objects.dmi'
+	icon_override = 'icon/FoF/clothing.dmi'
 	allowed = list(/obj/item/ammo_box, /obj/item/ammo_magazine, /obj/item/weapon/gun/projectile/wwi/colt1911, /obj/item/weapon/gun/projectile/wwi/bolt/winchester/sawn, /obj/item/weapon/gun/projectile/wwi/p08, /obj/item/weapon/gun/projectile/wwi/mauser, /obj/item/weapon/gun/projectile/wwi/ruby)
 
-/obj/item/clothing/suit/storage/wwi/germancoat
-	icon_override = MOB_OVERRIDE
-	icon = WWI_OVERRIDE
-	name = "German trenchcoat"
-	desc = "A thick overcoat to keep you warm in the battlefield. Has two interior pockets."
-	w_class = ITEM_SIZE_LARGE
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 10, bullet = 5, laser = 0, energy = 0, bomb = 5, bio = 5, rad = 0)
-	siemens_coefficient = 0.5
-	cold_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	min_cold_protection_temperature = ARMOR_MIN_COLD_PROTECTION_TEMPERATURE
-	icon_state = "germtrench"
-	item_state = "germtrench"
-	blood_overlay_type = "coat"
-
-/obj/item/clothing/suit/storage/wwi/britishcoat
-	icon_override = MOB_OVERRIDE
-	icon = WWI_OVERRIDE
-	name = "British trenchcoat"
-	desc = "A thick overcoat to keep you warm in the battlefield. Has two interior pockets."
-	w_class = ITEM_SIZE_LARGE
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 10, bullet = 5, laser = 0, energy = 0, bomb = 5, bio = 5, rad = 0)
-	siemens_coefficient = 0.5
-	cold_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	min_cold_protection_temperature = ARMOR_MIN_COLD_PROTECTION_TEMPERATURE
-	icon_state = "britttrench"
-	item_state = "britttrench"
-	blood_overlay_type = "coat"
-
-/obj/item/clothing/suit/storage/wwi/frenchcoat
-	icon_override = MOB_OVERRIDE
-	icon = WWI_OVERRIDE
-	name = "French trenchcoat"
-	desc = "A thick overcoat to keep you warm in the battlefield. Has two interior pockets."
-	w_class = ITEM_SIZE_LARGE
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 10, bullet = 5, laser = 0, energy = 0, bomb = 5, bio = 5, rad = 0)
-	siemens_coefficient = 0.5
-	cold_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	min_cold_protection_temperature = ARMOR_MIN_COLD_PROTECTION_TEMPERATURE
-	icon_state = "frenchtrench"
-	item_state = "frenchtrench"
-	blood_overlay_type = "coat"
-
-/obj/item/clothing/shoes/german
-	name = "German boots"
+/obj/item/clothing/shoes/wu
+	name = "WU boots"
 	desc = "Standard issue boots for keeping water off your feet."
-	icon = WWI_OVERRIDE
-	icon_override = MOB_OVERRIDE
-	item_state = "germboots"
-	icon_state = "germboots"
+	icon = 'icons/FoF/objects.dmi'
+	icon_override = 'icons/FoF/clothing.dmi'
+	item_state = "WU-boots"
+	icon_state = "WU-boots"
 	force = 5
 	armor = list(melee = 10, bullet = 5, laser = 0, energy = 0, bomb = 5, bio = 5, rad = 0)
 	item_flags = NOSLIP
