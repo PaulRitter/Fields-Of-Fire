@@ -93,6 +93,8 @@ var/list/supply_truck_pos = list()
 		if(!supply_truck_pos[faction_id])
 			message_admins("No Truck pos set, some smoothbrain mapper fucked up")
 			return
+		playsound(supply_truck_pos[faction_id], 'sound/effects/truck/truckarrivingnew.ogg')
+		sleep(4 SECONDS)
 		truck = new (supply_truck_pos[faction_id])
 		truck.contents = truck_contents
 		truck_contents.len = 0
@@ -102,6 +104,7 @@ var/list/supply_truck_pos = list()
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				if(RP in alreadyPrinted)
 					continue
+				RP.doPrint()
 				new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
 				alreadyPrinted += RP
 		allSay("Truck arrived at Base.")
@@ -127,6 +130,8 @@ var/list/supply_truck_pos = list()
 			allSay("We received message that your truck was destroyed. We have a new one standing by at command, watch your assets!")
 			at_base = 0
 			return 0
+		playsound(truck.loc, 'sound/effects/truck/truckleavingnew.ogg')
+		sleep(4 SECONDS)
 		truck_contents = truck.contents
 		truck.forceMove(null)
 		allSay("Truck sent to Command.")
@@ -281,6 +286,7 @@ var/list/supply_truck_pos = list()
 	for(var/obj/structure/receipt_printer/RP in radionet.printers)
 		if(RP in alreadyPrinted)
 			continue
+		RP.doPrint()
 		new /obj/item/weapon/paper/command_order(RP, C)
 		alreadyPrinted += RP
 

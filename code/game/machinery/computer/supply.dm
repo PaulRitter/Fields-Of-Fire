@@ -243,7 +243,7 @@ For vending packs, see vending_packs.dm*/
 	//authorization fluff
 	var/obj/item/weapon/card/id/card = user.get_id_card()	
 	var/id = copytext(replacetext(replacetext(splittext("\ref[card]", "x")[2], "]",""), "", "-"), 2) //this just takes the last bit of the ref and puts - between them
-	user.say("This is [(card && card.registered_name) ? card.registered_name : SO.orderedby.name]. Authorization [id]")
+	user.say("This is [(card && card.registered_name) ? card.registered_name : user.name]. Authorization [id]")
 	
 	if(!check_access(card))
 		commandResponse("Authorization denied. Who is this?")
@@ -325,6 +325,7 @@ For vending packs, see vending_packs.dm*/
 			commandResponse("Withdraw order updated. Now withdrawing [radionet.hub.nextWithdrawal] with next shipment.")
 		if("help") //prints a help sheet for the commands
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
 		if("packinfo") //prints an infopaper about a supply pack
 			if(!params[2])
@@ -335,9 +336,11 @@ For vending packs, see vending_packs.dm*/
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id, radionet.hub.supply_packs["[pack_id]"])
 		if("packlist") //prints a new inventory paper
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/inventory_manifest(RP.loc, radionet.hub)
 		if("orderinfo") //prints an infopaper about an order
 			if(!params[2])
@@ -348,9 +351,11 @@ For vending packs, see vending_packs.dm*/
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/order_form(RP.loc, radionet.hub.shoppinglist["[order_id]"], radionet.hub)
 		if("orderlist") //prints a list of all active orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/order_list(RP.loc, radionet.hub)
 		if("requestinfo") //prints an info sheet about a specific command order
 			if(!params[2])
@@ -361,9 +366,11 @@ For vending packs, see vending_packs.dm*/
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/command_order(RP.loc, radionet.hub.command_orders["[request_id]"])
 		if("requestlist") //prints a list of all active command orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
+				RP.doPrint()
 				new /obj/item/weapon/paper/request_list(RP.loc, radionet.hub)
 		if("sendtruck") //sends a truck
 			radionet.hub.truck_depart()
@@ -436,3 +443,6 @@ For vending packs, see vending_packs.dm*/
 /obj/structure/receipt_printer/Destroy()
 	..()
 	radionet.remove_printer(src)
+
+/obj/structure/receipt_printer/proc/doPrint()
+	playsound(src, 'sound/machinery/printer.oog')
