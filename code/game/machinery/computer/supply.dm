@@ -278,6 +278,10 @@ For vending packs, see vending_packs.dm*/
 
 	switch(trim(params[1]))
 		if("order") //creates an order
+			if(params.len < 2)
+				commandResponse("You didn't give me a pack id.")
+				return doCommand(user)
+
 			//syntax is [pack_id]x[amount]
 			var/list/orders = params.Copy(2)
 			var/list/packs = list()
@@ -312,8 +316,9 @@ For vending packs, see vending_packs.dm*/
 		if("funds") //return the total money at command
 			commandResponse("Our current budget is at [radionet.hub.commandMoney].")
 		if("withdraw") //places a withdraw order
-			if(!params[2])
+			if(params.len < 2)
 				commandResponse("You didn't specify an amount.")
+				return doCommand(user)
 			var/amount = trim(params[2])
 			if(!isnum(amount))
 				amount = text2num(amount)
@@ -328,8 +333,9 @@ For vending packs, see vending_packs.dm*/
 				RP.doPrint()
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
 		if("packinfo") //prints an infopaper about a supply pack
-			if(!params[2])
+			if(params.len < 2)
 				commandResponse("I'm gonna need an id with that.")
+				return doCommand(user)
 			var/pack_id = trim(params[2])
 			if(!radionet.hub.supply_packs["[pack_id]"])
 				commandResponse("There are no supply packs with that id.")
@@ -343,8 +349,9 @@ For vending packs, see vending_packs.dm*/
 				RP.doPrint()
 				new /obj/item/weapon/paper/inventory_manifest(RP.loc, radionet.hub)
 		if("orderinfo") //prints an infopaper about an order
-			if(!params[2])
+			if(params.len < 2)
 				commandResponse("I'm gonna need an id with that.")
+				return doCommand(user)
 			var/order_id = trim(params[2])
 			if(!radionet.hub.shoppinglist["[order_id]"])
 				commandResponse("There are no orders with that id.")
@@ -358,8 +365,9 @@ For vending packs, see vending_packs.dm*/
 				RP.doPrint()
 				new /obj/item/weapon/paper/order_list(RP.loc, radionet.hub)
 		if("requestinfo") //prints an info sheet about a specific command order
-			if(!params[2])
+			if(params.len < 2)
 				commandResponse("I'm gonna need an id with that.")
+				return doCommand(user)
 			var/request_id = trim(params[2])
 			if(!radionet.hub.command_orders["[request_id]"])
 				commandResponse("There are no command orders with that id.")
@@ -373,7 +381,8 @@ For vending packs, see vending_packs.dm*/
 				RP.doPrint()
 				new /obj/item/weapon/paper/request_list(RP.loc, radionet.hub)
 		if("sendtruck") //sends a truck
-			radionet.hub.truck_depart()
+			spawn()
+				radionet.hub.truck_depart()
 		if("truckstatus") //returns a rough idea of how long the truck will take
 			if(!radionet.hub.moving)
 				if(radionet.hub.at_base)
