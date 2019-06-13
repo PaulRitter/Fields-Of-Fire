@@ -56,10 +56,6 @@
 	description = "A small roll of gauze brought from home."
 	cost = 4
 
-/datum/gear/misc/bopener
-	display_name = "bottle opener"
-	path = /obj/item/weapon/screwdriver/opener
-
 /datum/gear/misc/tincup
 	display_name = "tin cup"
 	path = /obj/item/weapon/reagent_containers/glass/trench

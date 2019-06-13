@@ -335,26 +335,6 @@
 		W.update_icon()
 		return
 
-/obj/item/weapon/storage/box/matches/trench
-	name = "matchbook"
-	desc = "A small book of matches. They're advertised as being waterproof."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "matches"
-	item_state = "matches"
-	storage_slots_w = 10
-	storage_slots_h = 2
-	can_hold = list(/obj/item/weapon/flame/match/trench)
-	startswith = list(/obj/item/weapon/flame/match/trench = 5)
-	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
-		if(istype(W) && !W.lit && !W.burnt)
-			W.lit = 1
-			W.damtype = "burn"
-			W.icon_state = "match_litup"
-			W.set_light(2)
-			GLOB.processing_objects.Add(W)
-		W.update_icon()
-		return
-
 /obj/item/weapon/storage/box/matches/trench/empty
 	icon_state = "matches-0"
 

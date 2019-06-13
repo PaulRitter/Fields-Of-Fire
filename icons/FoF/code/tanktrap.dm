@@ -58,7 +58,7 @@
 		qdel(src)
 
 /obj/structure/tanktrap/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/weldingtool/trench))
+	if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(do_after(user, 20) && WT.remove_fuel(3, user))
 			user.visible_message("<span class='info'>You salvage the tank trap.</span>")
@@ -74,7 +74,7 @@
 
 
 /obj/structure/tanktrap_dead/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/weldingtool/trench))
+	if(istype(W, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(do_after(user, 20) && WT.remove_fuel(3, user))
 			user.visible_message("<span class='info'>You salvage the tank trap.</span>")
