@@ -135,10 +135,14 @@
 /obj/effect/projectile/generic_impact
 	icon_state = "impact_generic"
 
-//obj/effect/projectile/wood_impact
+/obj/effect/projectile/wood_impact
+	icon_state = "impact_wood"
 
-//obj/effect/projectile/metal_impact
+/obj/effect/projectile/metal_impact
+	icon_state = "impact_metal"
 
-//obj/effect/projectile/mob_impact
+/obj/effect/projectile/mob_impact
+	icon_state = "impact_blood"
 
-//obj/effect/projectile/sand_impact
+/obj/effect/projectile/sand_impact
+	icon_state = "impact_sand"

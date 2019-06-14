@@ -548,3 +548,6 @@ its easier to just keep the beam vertical.
 
 /atom/proc/get_impact_type(var/turf/location)
 	return new /obj/effect/projectile/generic_impact(location)
+
+/mob/living/get_impact_type(var/turf/location)
+	return new /obj/effect/projectile/mob_impact(location)
