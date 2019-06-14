@@ -92,7 +92,7 @@
 	can_hold = list(/obj/item/weapon/coin,/obj/item/weapon/spacecash)
 
 /obj/item/weapon/storage/bag/wwi
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks,/obj/item/ammo_magazine)
 	storage_slots_w = 4
 	storage_slots_h = 4
@@ -103,16 +103,16 @@
 	desc = "A burlap sack of processed oats."
 	storage_slots_w = 8
 	storage_slots_h = 2
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/oats = 8)
+	startswith = list()
 
 /obj/item/weapon/storage/bag/wwi/beans
 	name = "bag of beans"
 	desc = "A burlap sack of... beans?"
 	storage_slots_w = 8
 	storage_slots_h = 2
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/beans = 8)
+	startswith = list()
 
 /obj/item/weapon/storage/bag/wwi/ham
 	name = "bag of ham"
 	desc = "A burlap sack of dried ham. That can't be sanitary."
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/ham = 4)
+	startswith = list()

@@ -32,16 +32,6 @@
 	center_of_mass = "x=17;y=16"
 	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
 
-obj/item/weapon/wrench/trench
-	name = "wrench"
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-wrench"
-	desc = "A heavy wrench coated in rust. A small wheel near the head allows for size adjustment."
-	force = 15
-	throwforce = 10
-	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
-	w_class = ITEM_SIZE_NORMAL
-
 /*
  * Screwdriver
  */
@@ -110,12 +100,6 @@ obj/item/weapon/wrench/trench
 		return
 	else
 		..()
-
-/obj/item/weapon/wirecutters/trench
-	name = "wirecutters"
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_wirecutter"
-	desc = "A rusty pair of wirecutters."
 
 /*
  * Welding Tool
@@ -431,17 +415,6 @@ obj/item/weapon/wrench/trench
 	icon = 'icons/obj/items.dmi'
 	icon_state = "red_crowbar"
 	item_state = "crowbar_red"
-
-obj/item/weapon/crowbar/trench
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-crowbar"
-	name = "crowbar"
-	desc = "A rusty crowbar with a menacing hooked end."
-	force = 15
-	throwforce = 10
-	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
-	w_class = ITEM_SIZE_NORMAL
-	armor_penetration = 20
 
 /obj/item/weapon/weldingtool/attack(mob/living/M, mob/living/user, target_zone)
 

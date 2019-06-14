@@ -459,7 +459,7 @@
 	startswith = list(/obj/item/clothing/accessory/armband/med = 5)
 
 /obj/item/weapon/storage/box/letter
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lettercase"
 	name = "Envelope"
 	desc = "The envelope they gave you with your tags. Contains a Requisition Receipt and Transportation Receipt. Don't use the Transportation Receipt until you've gotten your gear with the Requisition Receipt."

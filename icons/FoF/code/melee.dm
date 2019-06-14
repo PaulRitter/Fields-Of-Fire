@@ -45,7 +45,7 @@
 obj/item/weapon/melee/hammer
 	name = "hammer"
 	desc = "Nails, skulls, what isn't a heavy rusted hammer good for pounding on?" //L-Lewd
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_multitool-hammer"
 	w_class = ITEM_SIZE_NORMAL
 	force = 15

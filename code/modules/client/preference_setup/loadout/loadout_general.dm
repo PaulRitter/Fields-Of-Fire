@@ -52,7 +52,7 @@
 
 /datum/gear/misc/bpack
 	display_name = "roll of gauze"
-	path = /obj/item/stack/medical/bruise_pack/trench
+	path = /obj/item/stack/medical/bruise_pack
 	description = "A small roll of gauze brought from home."
 	cost = 4
 
@@ -63,7 +63,7 @@
 
 /datum/gear/misc/glasses
 	display_name = "glasses"
-	path = /obj/item/clothing/glasses/regular/trench
+	path = /obj/item/clothing/glasses/regular
 
 /datum/gear/ammo
 	display_name = ".45 ACP magazine"
@@ -209,43 +209,6 @@
 	path = /obj/item/ammo_magazine/smle_strip
 	cost = 2
 	description = "An additional stripper clip of .303 caliber."
-
-/datum/gear/food
-	display_name = "ration soup"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/soup
-	sort_category = "Food and Drinks"
-	cost = 2
-	description = "A scrounged up can of soup."
-
-/datum/gear/food/beans
-	display_name = "ration beans"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/beans
-	cost = 2
-	description = "A can of beans. The staple of any meal."
-
-/datum/gear/food/fish
-	display_name = "ration fish"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/fish
-	cost = 2
-	description = "A spare can of fish nobody could put an accurate age on."
-
-/datum/gear/food/beans2
-	display_name = "addtional ration beans"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/beans
-	cost = 2
-	description = "Another can of beans. Oh joy."
-
-/datum/gear/food/soup
-	display_name = "additional ration soup"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/soup
-	cost = 2
-	description = "Yet another scrounged up can of old soup."
-
-/datum/gear/food/fish2
-	display_name = "additional ration fish"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/fish
-	cost = 2
-	description = "An extra can of seafood surprise."
 
 /datum/gear/food/beanbag
 	display_name = "bag of beans"

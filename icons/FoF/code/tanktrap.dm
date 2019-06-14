@@ -93,7 +93,7 @@
 	if(!I || !user)
 		return 0
 
-	if(istype(I, /obj/item/weapon/crowbar/trench))
+	if(istype(I, /obj/item/weapon/crowbar))
 		user.visible_message("<span class='notice'>[user] starts prying apart the [src]...</span>",\
 			"<span class='notice'>You start deconstructing [src]...</span>")
 		spawn(0)

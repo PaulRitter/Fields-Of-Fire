@@ -201,7 +201,7 @@
 	new /obj/effect/decal/cleanable/liquid_fuel(src.loc, amount,1)
 
 /obj/structure/reagent_dispensers/fueltank/wwi
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "Fuel_canister"
 	flags = CONDUCT
 	flags = null

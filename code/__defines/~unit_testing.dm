@@ -8,3 +8,5 @@
  *   #define UNIT_TEST 1
  */
 #define UNIT_TEST 0
+
+#define NEEDS_RESPRITE 'icons/FoF/cards.dmi'

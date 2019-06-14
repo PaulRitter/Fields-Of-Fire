@@ -370,4 +370,4 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/wood/med/fresh
 
 /obj/structure/closet/crate/wood/med/fresh/WillContain()
-	return list(/obj/item/weapon/storage/belt/trenchmed = 1, /obj/item/stack/medical/bruise_pack/trench/ten = 2, /obj/item/stack/medical/splint/ghetto/three = 2)
+	return list(/obj/item/weapon/storage/belt/trenchmed = 1, /obj/item/stack/medical/bruise_pack = 2, /obj/item/stack/medical/splint/ghetto/three = 2)

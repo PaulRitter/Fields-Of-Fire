@@ -54,10 +54,10 @@
 	desc = "An imported American shotgun useful for clearing trenches. Takes shotgun shells."
 	icon_state = "trenchgun"
 	item_state = "shotgun_w"
-	icon = 'icons/FoF/weaponsnew.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi' //MARKER_PAUL
 	item_icons = list(
-		slot_l_hand_str = 'icons/FoF/lefthand_guns.dmi',
-		slot_r_hand_str = 'icons/FoF/righthand_guns.dmi',
+		slot_l_hand_str = 'icons/FoF/needs_resprite.dmi', //lefthand_guns.dmi
+		slot_r_hand_str = 'icons/FoF/needs_resprite.dmi', //righthand_guns.dmi
 		)
 	fire_sound = 'sound/weapons/trenchgun.ogg'
 	max_shells = 5

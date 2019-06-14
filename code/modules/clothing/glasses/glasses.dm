@@ -401,15 +401,3 @@
 	icon_state = "tajblind_meson"
 	item_state = "tajblind_meson"
 	off_state = "tajblind_meson"
-
-/obj/item/clothing/glasses/regular/trench
-	name = "Glasses"
-	icon = 'icons/FoF/misc.dmi'
-	desc = "Generic issued glasses."
-	icon_state = "glasses"
-	item_state = "hipster_glasses"
-
-/obj/item/clothing/glasses/regular/trench/prescription
-	prescription = 5
-	name = "Prescription Glasses"
-	desc = "Prescription glasses made just for you."
