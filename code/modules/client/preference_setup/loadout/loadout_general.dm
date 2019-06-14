@@ -264,27 +264,3 @@
 	path = /obj/item/weapon/storage/bag/wwi/oats
 	cost = 6
 	description = "A sack of dried ham. But why?"
-
-/datum/gear/food/wine
-	display_name = "bottle of wine"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/wine
-	cost = 4
-	description = "A bottle of Wingman Wine."
-
-/datum/gear/food/whiskey
-	display_name = "bottle of whiskey"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/whiskey
-	cost = 4
-	description = "A bottle of Streamline Whiskey."
-
-/datum/gear/food/schnapps
-	display_name = "bottle of schnapps"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/schnapps
-	cost = 4
-	description = "A bottle of Bluefish Schnapps."
-
-/datum/gear/food/coffee
-	display_name = "tin cup of coffee"
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffee/trench
-	cost = 2
-	description = "A warm cup of coffee you somehow haven't spilled on the ride to the front."
