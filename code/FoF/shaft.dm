@@ -5,7 +5,6 @@
 /obj/item/weapon/shaft
 	name = ""
 	icon = 'icons/FoF/melee.dmi'
-	icon_state = "club"
 	force = 10
 	throwforce = 2
 	var/list/nails_required = list(
@@ -16,7 +15,8 @@
 	)
 	var/list/results = list() //gets populated by children cause eb and wu have different colors hurr durr im bimmer
 
-/obj/item/weapon/shaft/New(var/nails = 0)
+/obj/item/weapon/shaft/New(loc, var/nails = 0)
+	. = ..(loc)
 	if(nails > SHAFT_MAX_NAILS)
 		nails = SHAFT_MAX_NAILS
 	for(var/i in nails)
@@ -50,7 +50,11 @@
 			return 0
 		var/obj/item/stack/nail/N = W
 
-		N.forceMove(src)
+		if(!N.use(1))
+			return 0
+
+		
+		contents += new N.type(src, 1)
 		update_vars()
 		to_chat(user, "<span class='notice'>You add \a [N.singular_name] to \the [src]</span>")
 		return 1
@@ -64,6 +68,7 @@
 		var/atom/product = new productType(loc)
 		transfer_fingerprints_to(product)
 		src.forceMove(null)
+		qdel(W)
 		user.put_in_hands(product)
 		to_chat(user, "<span class='notice'>You construct \a [product]</span>")
 		return 1
@@ -117,4 +122,4 @@
 
 /obj/item/shaft_component/shovel_head
 	name = "Shovel Head"
-	icon_state = "Shovel-head"
+	icon_state = "shovel-head"

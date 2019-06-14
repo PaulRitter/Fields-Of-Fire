@@ -2,7 +2,7 @@
     name = "Nails"
     max_amount = 7
     icon = 'icons/FoF/melee.dmi'
-    icon_state = "nail-handfull"
+    icon_state = "nail-handful"
     w_class = ITEM_SIZE_SMALL
     sharp = 1
     throwforce = 10

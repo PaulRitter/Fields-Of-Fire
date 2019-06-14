@@ -92,7 +92,7 @@ throw_speed = 2
 		to_chat(user, "<span class='notice'>You break off the shovel head</span>")
 		var/atom/movable/A = new shafttype(loc)
 		new /obj/item/shaft_component/shovel_head(loc)
-		forceMove(null)
+		src.forceMove(null)
 		user.put_in_hands(A)
 		return 1
 	return ..()
