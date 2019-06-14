@@ -27,8 +27,10 @@
 /obj/item/weapon/shaft/update_icon()
 	if(!contents.len)
 		icon_state = initial(name) + "-shaft"
-	else
+	else if(contents.len <= SHAFT_MAX_NAILS)
 		icon_state = initial(name) + "-club_[contents.len]"
+	else
+		icon_state = initial(name) + "-club_[SHAFT_MAX_NAILS]"
 
 /obj/item/weapon/shaft/examine(mob/user, distance)
 	..()

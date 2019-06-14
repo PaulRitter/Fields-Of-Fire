@@ -87,12 +87,12 @@ throw_speed = 2
 	icon = 'icons/FoF/melee.dmi'
 	var/shafttype
 
-/obj/item/weapon/shovel/trench/attack_hand(mob/user)
+/obj/item/weapon/shovel/trench/attack_hand(mob/user) //only works when laying on ground so far
 	if((user.a_intent == I_HURT) && shafttype)
 		to_chat(user, "<span class='notice'>You break off the shovel head</span>")
 		var/atom/movable/A = new shafttype(loc)
 		new /obj/item/shaft_component/shovel_head(loc)
-		src.forceMove(null)
+		qdel(src)
 		user.put_in_hands(A)
 		return 1
 	return ..()
