@@ -139,7 +139,7 @@
 					I.talk_into(src, message, null, verb, speaking)
 					I.add_fingerprint(src)
 					used_radios += I
-		if("headset")
+		if(SAY_HEADSET)
 			if(ears && istype(ears,/obj/item/device/radio))
 				var/obj/item/device/radio/R = ears
 				R.talk_into(src,message,null,verb,speaking)

@@ -694,7 +694,7 @@
 
 	var/message_mode=""
 	if(copytext(message,1,2) == ";")
-		message_mode = "headset"
+		message_mode = SAY_HEADSET
 		message = copytext(message,2)
 
 	if(length(message) >= 2)
