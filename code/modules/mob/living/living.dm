@@ -568,9 +568,10 @@ default behaviour is:
 		stop_pulling()
 		. = ..()
 
-	for (var/obj/item/weapon/storage/s in usr.s_active)
-		if (!(s in contents) && get_turf(s_active) != get_turf(src))
-			s.close(src)
+	if(s_active)
+		for (var/obj/item/weapon/storage/s in s_active)
+			if (!(s in contents) && get_turf(s_active) != get_turf(src))
+				s.close(src)
 
 	if(update_slimes)
 		for(var/mob/living/carbon/slime/M in view(1,src))
