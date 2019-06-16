@@ -73,10 +73,10 @@ obj/item/weapon/wrench/trench
 
 
 obj/item/weapon/crowbar/trench
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-crowbar"
 	name = "crowbar"
 	desc = "A rusty crowbar with a menacing hooked end."
+	icon = 'icons/FoF/tools_ww1.dmi'
+	icon_state = "ww1_crowbar"
 	force = 15
 	throwforce = 10
 	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
