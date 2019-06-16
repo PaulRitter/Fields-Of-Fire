@@ -32,16 +32,6 @@
 	center_of_mass = "x=17;y=16"
 	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
 
-obj/item/weapon/wrench/trench
-	name = "wrench"
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-wrench"
-	desc = "A heavy wrench coated in rust. A small wheel near the head allows for size adjustment."
-	force = 15
-	throwforce = 10
-	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
-	w_class = ITEM_SIZE_NORMAL
-
 /*
  * Screwdriver
  */
@@ -64,22 +54,6 @@ obj/item/weapon/wrench/trench
 	center_of_mass = "x=16;y=7"
 	attack_verb = list("stabbed","shanked","jabbed")
 	lock_picking_level = 5
-
-/obj/item/weapon/screwdriver/trench
-	name = "screwdriver"
-	desc = "A small screwdriver with a wide grip. Makes a nice punch weapon if you're desperate."
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_screwdriver"
-	force = 10
-	slot_flags = SLOT_BELT
-
-/obj/item/weapon/screwdriver/opener
-	name = "can opener"
-	desc = "A can opener that doubles as a screwdriver in a pinch. You can't rob somebody with it, even if it is pointy."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "opener"
-	force = 0
-	slot_flags = SLOT_BELT
 
 /obj/item/weapon/screwdriver/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!istype(M) || user.a_intent == "help")
@@ -126,12 +100,6 @@ obj/item/weapon/wrench/trench
 		return
 	else
 		..()
-
-/obj/item/weapon/wirecutters/trench
-	name = "wirecutters"
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_wirecutter"
-	desc = "A rusty pair of wirecutters."
 
 /*
  * Welding Tool
@@ -299,7 +267,7 @@ obj/item/weapon/wrench/trench
 
 /obj/item/weapon/weldingtool/update_icon()
 	..()
-	icon_state = welding ? "welder1" : "welder"
+	icon_state = welding ? "[initial(icon_state)]1" : initial(icon_state)
 	var/mob/M = loc
 	if(istype(M))
 		M.update_inv_l_hand()
@@ -448,16 +416,6 @@ obj/item/weapon/wrench/trench
 	icon_state = "red_crowbar"
 	item_state = "crowbar_red"
 
-obj/item/weapon/crowbar/trench
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-crowbar"
-	name = "crowbar"
-	desc = "A rusty crowbar with a menacing hooked end."
-	force = 15
-	throwforce = 10
-	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
-	w_class = ITEM_SIZE_NORMAL
-	armor_penetration = 20
 
 /obj/item/weapon/weldingtool/attack(mob/living/M, mob/living/user, target_zone)
 
@@ -477,26 +435,6 @@ obj/item/weapon/crowbar/trench
 
 	else
 		return ..()
-
-obj/item/weapon/weldingtool/trench
-	name = "welding tool"
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_welder"
-	desc = "A rusty old welding tool attached to a fuel tank."
-	w_class = ITEM_SIZE_NORMAL
-
-/obj/item/weapon/weldingtool/trench/get_storage_cost()
-	if(isOn())
-		return ITEM_SIZE_NO_CONTAINER
-	return ..()
-
-/obj/item/weapon/weldingtool/trench/update_icon()
-	..()
-	icon_state = welding ? "ww1_welder1" : "ww1_welder"
-	var/mob/M = loc
-	if(istype(M))
-		M.update_inv_l_hand()
-		M.update_inv_r_hand()
 
 /*/obj/item/weapon/combitool
 	name = "combi-tool"
