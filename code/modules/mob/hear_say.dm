@@ -49,6 +49,9 @@
 		var/mob/living/carbon/human/H = speaker
 		speaker_name = H.GetVoice()
 
+	if(get_dist(src, speaker) > client.view) //Somebody just out of view
+		speaker_name = "A voice from the [dir2text(get_dir(src, speaker))]"
+
 	if(italics)
 		message = "<i>[message]</i>"
 
