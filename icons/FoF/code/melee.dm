@@ -60,12 +60,16 @@
 		w_class = 2
 		item_state = "classic_baton"
 
-obj/item/weapon/melee/hammer
+/obj/item/weapon/melee/hammer
 	name = "hammer"
-	desc = "Nails, skulls, what isn't a heavy rusted hammer good for pounding on?" //L-Lewd
+	desc = "When all you have is a hammer, everything looks like a nail."
 	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-hammer"
+	icon_state = "ww1_hammer"
 	w_class = ITEM_SIZE_NORMAL
 	force = 15
 	throwforce = 10
 	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
+
+/obj/item/weapon/melee/hammer/New()
+	..()
+	icon_state = pick("ww1_hammer","ww1_hammer-alt")
