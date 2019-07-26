@@ -14,6 +14,10 @@
 	description = "<span class='info'>I have recently had something to drink.</span>\n"
 	happiness = 2
 
+/datum/happiness_event/thirst/parched
+	description = "<span class='none'>I could go for something to drink.</span>\n"
+	happiness = -2
+
 /datum/happiness_event/thirst/thirsty
 	description = "<span class='warning'>I'm getting a bit thirsty.</span>\n"
 	happiness = -7
@@ -26,7 +30,7 @@
 
 //nutrition
 /datum/happiness_event/nutrition/fat
-	description = "<span class='warning'><B>I'm so fat..</B></span>\n" 
+	description = "<span class='warning'><B>I'm so fat..</B></span>\n"
 	happiness = -4
 
 /datum/happiness_event/nutrition/wellfed
@@ -100,8 +104,13 @@
 	happiness = 3
 	timeout = 2400
 
+/datum/happiness_event/coffee
+	description = "<span class='info'>I had a good cup of joe.</span>\n"
+	happiness = 3
+	timeout = 1800
+
 /datum/happiness_event/relaxed//For nicotine.
-	description = "<span class='info'>I feel relaxed.</span>\n"
+	description = "<span class='info'>Nothing like a good smoke.</span>\n"
 	happiness = 1
 	timeout = 1800
 
@@ -111,12 +120,12 @@
 	timeout = 1800
 
 /datum/happiness_event/hot_food //Hot food feels good!
-	description = "<span class='info'>I've eaten something warm.</span>\n"
+	description = "<span class='info'>I had a hot meal.</span>\n"
 	happiness = 3
 	timeout = 1800
 
 /datum/happiness_event/cold_drink //Cold drinks feel good!
-	description = "<span class='info'>I've had something refreshing.</span>\n"
+	description = "<span class='info'>I drank something refreshing.</span>\n"
 	happiness = 3
 	timeout = 1800
 
