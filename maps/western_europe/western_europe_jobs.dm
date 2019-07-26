@@ -3,7 +3,7 @@
 	allowed_jobs = list(/datum/job/britsoldier,/datum/job/germknight,/datum/job/frenchsoldier,/datum/job/britknight,/datum/job/germsoldier,/datum/job/germsquire,/datum/job/britag)
 	allowed_spawns = list("Tester","British Soldier","German Knight","French Soldier","British Knight","German Soldier","German Squire","British AG")
 
-	default_spawn = "Tester"
+	default_spawn = "The Rear"
 
 /datum/job/britsoldier
 	title = "British Soldier"
