@@ -5,6 +5,7 @@
 
 /datum/reagent/blood
 	value = 2
+	quench_amount = 4
 
 /datum/reagent/antibodies
 	value = 6
@@ -32,6 +33,7 @@
 
 /datum/reagent/ethanol
 	value = 0.01
+	quench_amount = 5
 
 /datum/reagent/hydrazine
 	value = 0.017
@@ -101,6 +103,7 @@
 
 /datum/reagent/drink
 	value = 0.1
+	quench_amount = 6
 
 /datum/reagent/drink/milk/chocolate
 	value = 0.11
@@ -110,6 +113,7 @@
 
 /datum/reagent/drink/coffee
 	value = 0.12
+	quench_amount = 8
 
 /datum/reagent/drink/coffee/soy_latte
 	value = 0.13
