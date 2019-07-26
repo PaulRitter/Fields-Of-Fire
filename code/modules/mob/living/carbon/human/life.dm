@@ -808,7 +808,16 @@
 					healthbar.icon_state = "health3"
 				else
 					healthbar.icon_state = "health4"
-
+		if(thirst_HUD)
+			switch(thirst)
+				if(THIRST_LEVEL_FILLED to INFINITY)
+					thirst_HUD.icon_state = "thirst0"
+				if(THIRST_LEVEL_MEDIUM to THIRST_LEVEL_FILLED)
+					thirst_HUD.icon_state = "thirst1"
+				if(THIRST_LEVEL_THIRSTY to THIRST_LEVEL_MEDIUM)
+					thirst_HUD.icon_state = "thirst2"
+				if(0 to THIRST_LEVEL_THIRSTY)
+					thirst_HUD.icon_state = "thirst3"
 		if(nutrition_icon)
 			switch(nutrition)
 				if(HUNGER_SATED to INFINITY)				nutrition_icon.icon_state = "nutrition0"

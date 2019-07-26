@@ -136,6 +136,7 @@
 	if(!istype(M, /mob/living/carbon/slime) && alien != IS_SLIME)
 		return
 	M.adjustToxLoss(2 * removed)
+	M.add_event("hydrate", /datum/happiness_event/cold_drink)
 
 /datum/reagent/water/touch_turf(var/turf/simulated/T)
 	if(!istype(T))

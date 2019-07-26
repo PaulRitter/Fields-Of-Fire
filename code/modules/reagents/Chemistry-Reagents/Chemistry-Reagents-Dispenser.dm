@@ -102,7 +102,7 @@
 	var/targ_temp = 310
 	var/halluci = 0
 
-	quench_amount = 5
+	quench_amount = 2
 
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
@@ -122,7 +122,7 @@
 		strength_mod *= 5
 	if(alien == IS_DIONA)
 		strength_mod = 0
-
+	M.add_event("drunk", /datum/happiness_event/booze)
 	M.add_chemical_effect(CE_ALCOHOL, 1)
 	var/effective_dose = dose * strength_mod * (1 + volume/60) //drinking a LOT will make you go down faster
 
