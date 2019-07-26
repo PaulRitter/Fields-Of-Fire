@@ -103,7 +103,7 @@
 			owner.add_event("thirst", /datum/happiness_event/thirst/watered)
 		if(THIRST_LEVEL_THIRSTY to THIRST_LEVEL_MEDIUM)
 			owner.add_event("thirst", /datum/happiness_event/thirst/parched)
-		if(0 to THIRST_LEVEL_THIRSTY)
+		if(THIRST_LEVEL_DEHYDRATED to THIRST_LEVEL_THIRSTY)
 			owner.add_event("thirst", /datum/happiness_event/thirst/thirsty)
 			if(prob(1))
 				to_chat(owner, "<span class='warning'>You fall down because of your thirst.</span>")
