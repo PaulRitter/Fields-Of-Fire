@@ -5,8 +5,8 @@
 
 /obj/structure/supply_truck
 	name = "Supply Truck"
-	icon = 'icons/placeholders/truck.dmi'
-	icon_state = "truck-placeholder"
+	icon = 'icons/FoF/trucks.dmi'
+	icon_state = "cargo_truck"
 	anchored = 1
 	density = 1
 	plane = ABOVE_HUMAN_PLANE
@@ -177,7 +177,7 @@
 					break
 
 		if(doBreak || (z >= maxZ))
-			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev.")
+			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev. <A HREF='?_src_=vars;Vars=\ref[src]'>[VV]</A>")
 			break
 
 		var/man_y = y + (getPosSize(x, y, z, alreadyRendered)/modifier) //for half boxes
@@ -196,7 +196,7 @@
 	overlays |= truck_images
 
 	if(!foreground)
-		foreground = image('icons/placeholders/truck.dmi', "truck-placeholder foreground")
+		foreground = image('icons/FoF/trucks.dmi', "cargo_truck-cover")
 	overlays |= foreground
 
 /obj/structure/supply_truck/proc/getPosSize(var/x, var/y, var/z, var/list/already_rendered)
