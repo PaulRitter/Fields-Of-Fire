@@ -454,4 +454,4 @@ For vending packs, see vending_packs.dm*/
 	radionet.remove_printer(src)
 
 /obj/structure/receipt_printer/proc/doPrint()
-	playsound(src, 'sound/machines/printer.ogg')
+	playsound(src, 'sound/machines/printer.ogg', 50, 1)

@@ -93,7 +93,7 @@ var/list/supply_truck_pos = list()
 		if(!supply_truck_pos[faction_id])
 			message_admins("No Truck pos set, some smoothbrain mapper fucked up")
 			return
-		playsound(supply_truck_pos[faction_id], 'sound/effects/truck/truckarrivingnew.ogg')
+		playsound(supply_truck_pos[faction_id], 'sound/effects/truck/truckarrivingnew.ogg', 100, 1, 10)
 		sleep(4 SECONDS)
 		truck = new (supply_truck_pos[faction_id])
 		truck.contents = truck_contents
@@ -130,7 +130,7 @@ var/list/supply_truck_pos = list()
 			allSay("We received message that your truck was destroyed. We have a new one standing by at command, watch your assets!")
 			at_base = 0
 			return 0
-		playsound(truck.loc, 'sound/effects/truck/truckleavingnew.ogg')
+		playsound(truck.loc, 'sound/effects/truck/truckleavingnew.ogg', 100, 1)
 		sleep(4 SECONDS)
 		truck_contents = truck.contents
 		truck.forceMove(null)
