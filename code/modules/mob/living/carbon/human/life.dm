@@ -816,7 +816,7 @@
 					thirst_HUD.icon_state = "thirst1"
 				if(THIRST_LEVEL_THIRSTY to THIRST_LEVEL_MEDIUM)
 					thirst_HUD.icon_state = "thirst2"
-				if(THIRST_LEVEL_DEHYDRATED to THIRST_LEVEL_THIRSTY)
+				if(0 to THIRST_LEVEL_THIRSTY)
 					thirst_HUD.icon_state = "thirst3"
 		if(nutrition_icon)
 			switch(nutrition)
