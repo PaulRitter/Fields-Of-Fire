@@ -21,8 +21,8 @@ var/list/supply_truck_pos = list()
 /obj/structure/radio_hub
 	name = "Radio HUB"
 	desc = "This HUB relays all received signals to command. Do not tamper."
-	icon = 'icons/placeholders/comm_tower.dmi'
-	icon_state = "comm_tower"
+	icon = 'icons/FoF/tower.dmi'
+	icon_state = "radio_tower"
 	anchored = 1
 	density = 1
 	plane = ABOVE_HUMAN_PLANE
@@ -298,6 +298,7 @@ var/list/supply_truck_pos = list()
 
 /obj/structure/radio_hub/Destroy()
 	broken = TRUE
+	icon_state = "[initial(icon_state)]-pwnd"
 	return QDEL_HINT_LETMELIVE
 
 #define RADIO_HUB_REPAIR_CABLE_AMOUNT 10
@@ -317,11 +318,13 @@ var/list/supply_truck_pos = list()
 				return 0
 
 			broken = FALSE
+			icon_state = initial(icon_state)
 			S.use(RADIO_HUB_REPAIR_CABLE_AMOUNT)
 			return 1
 	return 0
 #undef RADIO_HUB_REPAIR_CABLE_AMOUNT
 
+//for mappers
 /obj/structure/radio_hub/faction_1
 	faction_id = "faction_1"
 
