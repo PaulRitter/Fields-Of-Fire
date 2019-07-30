@@ -12,7 +12,6 @@
 	force = 40
 	var/defence = 0
 	var/def_boost = 15
-	wreckage = /obj/effect/decal/mecha_wreckage/durand
 
 /*
 /obj/mecha/combat/durand/New()
