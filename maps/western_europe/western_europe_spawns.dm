@@ -44,7 +44,7 @@ GLOBAL_LIST_EMPTY(trench_spawns)
 	GLOB.trench_spawns += loc
 
 /obj/effect/landmark/start/britag
-	name = "British Squire"
+	name = "British AG"
 
 /obj/effect/landmark/start/britag/New()
 	..()
