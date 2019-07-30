@@ -239,6 +239,8 @@
 		to_chat(user, "<span class='warning'>It looks jammed.</span>")
 	if(ammo_magazine)
 		to_chat(user, "It has \a [ammo_magazine] loaded.")
+	if(chambered && in_range(user, src))
+		to_chat(user, "<span class='info'>It has a round in the chamber.</span>")
 //	to_chat(user, "Has [getAmmo()] round\s remaining.")
 	return
 
