@@ -268,10 +268,6 @@
 		return
 	M.add_chemical_effect(CE_PAINKILLER, 10)
 	M.add_chemical_effect(CE_BRAIN_REGEN, 1)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		H.confused++
-		H.drowsyness++
 
 /datum/reagent/imidazoline
 	name = "Imidazoline"
