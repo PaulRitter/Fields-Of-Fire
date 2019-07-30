@@ -11,7 +11,7 @@
 	happiness = 4
 
 /datum/happiness_event/thirst/watered
-	description = "<span class='info'>I have recently had something to drink.</span>\n"
+	description = "<span class='info'>My thirst is quenched.</span>\n"
 	happiness = 2
 
 /datum/happiness_event/thirst/parched
@@ -26,6 +26,19 @@
 	description = "<span class='danger'>I need water!</span>\n"
 	happiness = -14
 
+
+//illness
+/datum/happiness_event/sick/cold
+	description = "<span class='warning'>I'm catching a cold.</span>\n"
+	happiness = -4
+
+/datum/happiness_event/sick/ill
+	description = "<span class='warning'>I'm ill with something.</span>\n"
+	happiness = -8
+
+/datum/happiness_event/sick/flu
+	description = "<span class='warning'><B>I'm sick as hell.</B></span>\n"
+	happiness = -14
 
 
 //nutrition
@@ -82,6 +95,10 @@
 	happiness = -6
 	timeout = 1800
 
+/datum/happiness_event/disgust/bloodspray
+	description = "<span class='danger'>I got someone's blood on my face! This is horrifying!</span>\n"
+	happiness = -16
+	timeout = 2400
 
 
 //Generic events
@@ -132,6 +149,24 @@
 /datum/happiness_event/high
 	description = "<span class='binfo'>I'm high as fuck</span>\n"
 	happiness = 12
+
+
+//pain and injuries
+/datum/happiness_event/bleed/cut
+	description = "<span class='warning'>I'm bleeding from somewhere!</span>\n"
+	happiness = -8
+
+/datum/happiness_event/pain/little
+	description = "<span class='warning'>I'm in a bit of pain.</span>\n"
+	happiness = -4
+
+/datum/happiness_event/pain/some
+	description = "<span class='warning'>I'm in quite some pain.</span>\n"
+	happiness = -8
+
+/datum/happiness_event/pain/lots
+	description = "<span class='warning'><B>This really hurts!</B></span>\n"
+	happiness = -12
 
 
 
