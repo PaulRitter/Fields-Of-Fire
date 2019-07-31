@@ -55,4 +55,4 @@
 
 	for(var/mob/M in listening)
 		M << speech_bubble
-		M.hear_say(message, verb, speaking, alt_name, 0, src)
+		M.hear_say(message, verb, speaking, alt_name, 0, src, shouting = TRUE)
