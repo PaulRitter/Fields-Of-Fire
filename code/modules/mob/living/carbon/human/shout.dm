@@ -4,7 +4,8 @@
 		If they can't be seen, it'll say "a voice from [dir2text(get_dir(hearer, speaker))]: [message]"
 */
 /mob/living/carbon/human/proc/shout_say(var/message, var/datum/language/speaking = null, var/alt_name="", var/verb="yells")
-
+	if(!message || message=="")
+		return
 	if (istype(src.wear_mask, /obj/item/clothing/mask/muzzle))
 		to_chat(src, "<span class='danger'>You're muzzled and cannot speak!</span>")
 		return
@@ -22,10 +23,6 @@
 			if(!message_data[3]) //if a speech problem like hulk forces someone to yell then everyone hears it
 				verb = message_data[2]
 				message_range = 18
-
-
-	if(!message || message=="")
-		return
 
 	var/list/listening = hearers(message_range, src)
 	listening |= src
