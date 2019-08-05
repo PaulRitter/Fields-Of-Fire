@@ -21,6 +21,7 @@
 	allowed_magazines = /obj/item/ammo_magazine/box/a792
 	one_hand_penalty = -1
 	burst_delay = 2
+	burst = 5
 	firemodes = list(
 		list(mode_name="short bursts",	burst=5, fire_delay=3, move_delay=12, one_hand_penalty=8, burst_accuracy = list(0,-2,-2,-3,-3),          dispersion = list(1.3, 1.3, 1.6, 1.6, 1.8)),
 		list(mode_name="long bursts",	burst=8, fire_delay=3, move_delay=15, one_hand_penalty=9, burst_accuracy = list(0,-2,-2,-3,-3,-4,-4,-5), dispersion = list(1.3, 1.3, 1.6, 1.6, 1.8, 1.8, 2.0, 2.0)),
@@ -56,6 +57,7 @@
 	slot_flags = 0
 	load_method = MAGAZINE
 	burst_delay = 2
+	burst = 5
 	firemodes = list(
 		list(mode_name="short bursts", fire_delay=3,	burst=5, move_delay=12, one_hand_penalty=8, burst_accuracy = list(0,-2,-2,-3,-3),          dispersion = list(1.3, 1.3, 1.6, 1.6, 1.8)),
 		list(mode_name="long bursts", fire_delay=3,	burst=8, move_delay=15, one_hand_penalty=9, burst_accuracy = list(0,-2,-2,-3,-3,-4,-4,-5), dispersion = list(1.3, 1.3, 1.6, 1.6, 1.8, 1.8, 2.0, 2.0)),
@@ -92,6 +94,7 @@
 	load_method = MAGAZINE
 	jam_chance = 8
 	burst_delay = 2
+	burst = 3
 	firemodes = list(
 		list(mode_name="3-round bursts", burst=3, fire_delay=6, move_delay=6,    burst_accuracy=list(0,-1,-1),       dispersion=list(1.0, 1.4, 1.4)),
 		list(mode_name="short bursts", 	burst=5, fire_delay=6, move_delay=6,    burst_accuracy=list(-2,-2,-3,-3,-4), dispersion=list(1.0, 1.4, 1.4, 1.6, 1.6)),

@@ -60,6 +60,7 @@
 						H.bloody_hands(src)
 						var/blinding = FALSE
 						if(ran_zone() == BP_HEAD)
+							H.add_event("bloodspray", /datum/happiness_event/disgust/bloodspray)
 							blinding = TRUE
 							for(var/obj/item/I in list(H.head, H.glasses, H.wear_mask))
 								if(I && (I.body_parts_covered & EYES))
@@ -199,6 +200,7 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large,var/spra
 
 	if(istype(source,/mob/living/carbon/human))
 		var/mob/living/carbon/human/M = source
+		M.add_event("bleeding", /datum/happiness_event/bleed/cut)
 		source = M.get_blood(M.vessel)
 
 	// Are we dripping or splattering?
