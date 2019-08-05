@@ -142,7 +142,7 @@
 	icon_state = "impact_metal"
 
 /obj/effect/projectile/mob_impact
-	icon_state = "impact_blood"
+	icon_state = "impact_mob"
 
 /obj/effect/projectile/sand_impact
 	icon_state = "impact_sand"

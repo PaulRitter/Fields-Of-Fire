@@ -917,7 +917,7 @@ proc/generate_image(var/tx as num, var/ty as num, var/tz as num, var/range as nu
 
 GLOBAL_LIST_EMPTY(icon_state_lengths) //icon file = list(icon_state = length in frames)
 
-proc/get_animation_length(var/icon_file, var/icon_state)
+proc/get_animation_length(var/icon_file, var/icon_state, var/icon_size = 32, var/dir = NORTH)
 	if(icon_file in GLOB.icon_state_lengths)
 		var/list/L = GLOB.icon_state_lengths[icon_file]
 		if(L["[icon_state]"])
@@ -926,20 +926,27 @@ proc/get_animation_length(var/icon_file, var/icon_state)
 	var/icon/icon_to_check = icon(icon_file, icon_state)
 	var/frames = 0
 	var/null_frame_count = 0
-	for(var/i = 1 to 99)
-		if(null_frame_count > 3) //3 null frames in a row
-			break
+	var/cur_frame = 1
+	var/last_x = icon_size/2 //Last known x position of a pixel. By default we start in the center of the file
+	var/last_y = icon_size/2 //Last known y position of a pixel
+	while(null_frame_count < 3)
 		var/frame_found = FALSE
-		for(var/x = 1 to 32)
-			for(var/y = 1 to 32)
-				if(icon_to_check.GetPixel(x,y, frame = i))
-					frame_found = TRUE
+		if(icon_to_check.GetPixel(last_x,last_y, dir,frame = cur_frame))//We step out from the center, where most sprites are based from
+			frame_found = TRUE
+		else
+			for(var/x = 1 to icon_size)
+				for(var/y = 1 to icon_size)
+					if(icon_to_check.GetPixel(x,y,dir,frame = cur_frame))
+						last_x = x
+						last_y = y
+						frame_found = TRUE
+						break
+				if(frame_found)
 					break
-			if(frame_found) //We've found a frame, break
-				break
 		if(!frame_found)
 			null_frame_count++
 			continue
+		cur_frame++
 		frames++
 	qdel(icon_to_check)
 
