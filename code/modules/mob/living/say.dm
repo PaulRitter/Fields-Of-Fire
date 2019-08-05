@@ -2,30 +2,17 @@ var/list/department_radio_keys = list(
 	  ":r" = "right ear",	".r" = "right ear",
 	  ":l" = "left ear",	".l" = "left ear",
 	  ":i" = "intercom",	".i" = "intercom",
-	  ":h" = "department",	".h" = "department",
-	  ":s" = "SHIPCOM",		".s" = "SHIPCOM",
-	  ":f" = "FLEETCOM",	".f" = "FLEETCOM",
-	  ":t" = "TEAMCOM",		".t" = "TEAMCOM",
-	  ":q" = "SQUADCOM",	".q" = "SQUADCOM",
-	  ":e" = "EBAND",		".e" = "EBAND",
-	  ":g" = "GCPD",		".g" = "GCPD",
-	  ":t" = "TACCOM",		".t" = "TACCOM",
-	  ":b" = "INNIECOM",	".b" = "INNIECOM",
-	  ":c" = "Battlenet",
+	  ":h" = SAY_DEPARTMENT,".h" = SAY_DEPARTMENT,
+	  ":w" = SAY_WHISPER,	".w" = SAY_WHISPER,
+	  ":s" = SAY_SHOUT,		".s" = SAY_SHOUT,
 
 	  ":R" = "right ear",	".R" = "right ear",
 	  ":L" = "left ear",	".L" = "left ear",
 	  ":I" = "intercom",	".I" = "intercom",
-	  ":H" = "department",	".H" = "department",
-	  ":S" = "SHIPCOM",		".S" = "SHIPCOM",
-	  ":F" = "FLEETCOM",	".F" = "FLEETCOM",
-	  ":T" = "TEAMCOM",		".T" = "TEAMCOM",
-	  ":Q" = "SQUADCOM",	".Q" = "SQUADCOM",
-	  ":E" = "EBAND",		".E" = "EBAND",
-	  ":G" = "GCPD",		".G" = "GCPD",
-	  ":T" = "TACCOM",		".T" = "TACCOM",
-	  ":B" = "INNIECOM",	".B" = "INNIECOM",
-	  ":C" = "Battlenet",
+	  ":H" = SAY_DEPARTMENT,".H" = SAY_DEPARTMENT,
+	  ":W" = SAY_WHISPER,	".W" = SAY_WHISPER,
+	  ":s" = SAY_SHOUT,		".S" = SAY_SHOUT,
+
 
 	/*
 	  ":r" = "right ear",	".r" = "right ear",
@@ -172,7 +159,7 @@ proc/get_radio_key_from_channel(var/channel)
 			return say_dead(message)
 		return
 
-	var/message_mode = parse_message_mode(message, "headset")
+	var/message_mode = parse_message_mode(message, SAY_HEADSET)
 
 	switch(copytext(message,1,2))
 		if("*") return emote(copytext(message,2))
@@ -180,7 +167,7 @@ proc/get_radio_key_from_channel(var/channel)
 
 	//parse the radio code and consume it
 	if (message_mode)
-		if (message_mode == "headset")
+		if (message_mode == SAY_HEADSET)
 			message = copytext(message,2)	//it would be really nice if the parse procs could do this for us.
 		else
 			message = copytext(message,3)

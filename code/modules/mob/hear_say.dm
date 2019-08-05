@@ -1,6 +1,6 @@
 // At minimum every mob has a hear_say proc.
 
-/mob/proc/hear_say(var/message, var/verb = "says", var/datum/language/language = null, var/alt_name = "",var/italics = 0, var/mob/speaker = null, var/sound/speech_sound, var/sound_vol)
+/mob/proc/hear_say(var/message, var/verb = "says", var/datum/language/language = null, var/alt_name = "",var/italics = 0, var/mob/speaker = null, var/sound/speech_sound, var/sound_vol, var/shouting = FALSE)
 	if(!client)
 		return
 
@@ -48,6 +48,11 @@
 	if(istype(speaker, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = speaker
 		speaker_name = H.GetVoice()
+
+	if(get_dist(src, speaker) > client.view) //Somebody just out of view
+		speaker_name = "A voice from the [dir2text(get_dir(src, speaker))]"
+	else if(shouting)
+		message = "<b>[message]</b>"
 
 	if(italics)
 		message = "<i>[message]</i>"

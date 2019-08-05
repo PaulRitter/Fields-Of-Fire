@@ -206,7 +206,7 @@
 /obj/item/device/radio/proc/autosay(var/message, var/from, var/channel, var/language_name) //BS12 EDIT
 	var/datum/radio_frequency/connection = null
 	if(channel && channels && channels.len > 0)
-		if (channel == "department")
+		if (channel == SAY_DEPARTMENT)
 			channel = channels[1]
 		connection = secure_radio_connections[channel]
 	else
@@ -222,12 +222,12 @@
 // Interprets the message mode when talking into a radio, possibly returning a connection datum
 /obj/item/device/radio/proc/handle_message_mode(mob/living/M as mob, message, message_mode)
 	// If a channel isn't specified, send to common.
-	if(!message_mode || message_mode == "headset")
+	if(!message_mode || message_mode == SAY_HEADSET)
 		return radio_connection
 
 	// Otherwise, if a channel is specified, look for it.
 	if(channels && channels.len > 0)
-		if (message_mode == "department") // Department radio shortcut
+		if (message_mode == SAY_DEPARTMENT) // Department radio shortcut
 			message_mode = channels[1]
 
 		if (channels[message_mode]) // only broadcast if the channel is set on
