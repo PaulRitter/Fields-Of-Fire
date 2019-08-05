@@ -931,7 +931,7 @@ proc/get_animation_length(var/icon_file, var/icon_state, var/icon_size = 32, var
 	var/last_y = icon_size/2 //Last known y position of a pixel
 	while(null_frame_count < 3)
 		var/frame_found = FALSE
-		if(icon_to_check.GetPixel(last_x,last_y, dir,frame = cur_frame))//We step out from the center, where most sprites are based from
+		if(icon_to_check.GetPixel(last_x,last_y, dir,frame = cur_frame))//See if there is a pixel in dead center, or where we last saw a pixel in the previous frame.
 			frame_found = TRUE
 		else
 			for(var/x = 1 to icon_size)
