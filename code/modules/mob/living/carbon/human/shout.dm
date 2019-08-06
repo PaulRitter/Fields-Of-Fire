@@ -3,6 +3,16 @@
 		If they can be seen, it'll be shown in bold.
 		If they can't be seen, it'll say "a voice from [dir2text(get_dir(hearer, speaker))]: [message]"
 */
+
+/mob/living/carbon/human/verb/shout_verb(message as text)
+	set name = "Shout"
+	set category = "IC"
+
+	if(typing_indicator)
+		qdel(typing_indicator)
+
+	shout_say(message)
+
 /mob/living/carbon/human/proc/shout_say(var/message, var/datum/language/speaking = null, var/alt_name="", var/verb="yells")
 	if(!message || message=="")
 		return
