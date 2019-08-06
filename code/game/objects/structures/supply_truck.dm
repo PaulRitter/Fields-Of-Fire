@@ -177,7 +177,7 @@
 					break
 
 		if(doBreak || (z >= maxZ))
-			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev. <A HREF='?_src_=vars;Vars=\ref[src]'>[VV]</A>")
+			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev. <A HREF='?_src_=vars;Vars=\ref[src]'>\[VV\]</A>")
 			break
 
 		var/man_y = y + (getPosSize(x, y, z, alreadyRendered)/modifier) //for half boxes
