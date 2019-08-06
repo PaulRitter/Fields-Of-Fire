@@ -9,6 +9,9 @@
 	throwpass = 1
 	var/health = 50
 
+/obj/structure/sandbag/get_impact_type(var/turf/location)
+	return new /obj/effect/projectile/sand_impact(location)
+
 /obj/structure/barricadeunsc
 	name = "Barricade"
 	icon = 'code/modules/halo/icons/machinery/structures.dmi'
