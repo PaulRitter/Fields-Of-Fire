@@ -17,12 +17,11 @@
 	level = 1
 	anchored = 1
 	var/datum/radionet/radionet //to see if we actually have a proper connection
+	var/inactive = FALSE
 	name = "Radio cable"
 	desc = "A heavy cable for transmitting radio signals. Nearly indestructable."
-	icon = 'icons/obj/power_cond_white.dmi'
-	icon_state = "0-1"
-	var/d1 = 0
-	var/d2 = 1
+	icon = 'icons/FoF/radio_cable.dmi'
+	icon_state = "cable"
 
 	plane = ABOVE_TURF_PLANE
 	layer = ABOVE_TILE_LAYER
@@ -39,10 +38,8 @@
 	propagateRadionet()
 
 /obj/structure/radio_cable/Destroy()
-	..()
 	var/list/connectedThings = get_connections()
-	forceMove(null) //so we wont be propagated over
-	gibs(loc, null, /obj/effect/gibspawner/robot)
+	inactive = TRUE
 	var/list/newRNs = list()
 	for(var/A in connectedThings)
 		if(istype(A, /obj/structure/radio_cable))
@@ -51,10 +48,22 @@
 				var/datum/radionet/RN = new ()
 				propagateRadionet(RN, C)
 				newRNs += RN
+	. = ..()
+
+/obj/structure/radio_cable/proc/get_dirs()
+	if(icon_state == "cable_end")
+		return list(GLOB.reverse_dir[dir])
+
+	if(dir & (dir - 1)) //we are diagonal
+		return list(turn(dir, 45), turn(dir, -45))
+	else //we're straight
+		return list(dir, GLOB.reverse_dir[dir])
 
 /obj/structure/radio_cable/proc/get_connections()
 	. = list()
-	for(var/cable_dir in list(d1, d2))
+	var/list/dirs = get_dirs()
+
+	for(var/cable_dir in dirs)
 		var/turf/step = get_step(loc, cable_dir)
 		for(var/atom/AM in step)
 			if(isConnected(AM))
@@ -70,9 +79,11 @@
 		if(1.0)
 			if (prob(50))
 				qdel(src)
+				gibs(loc, null, /obj/effect/gibspawner/robot)
 		if(2.0)
 			if(prob(25))
 				qdel(src)
+				gibs(loc, null, /obj/effect/gibspawner/robot)
 
 /obj/structure/radio_cable/attackby(obj/item/W, mob/user)
 
@@ -94,17 +105,23 @@
 /obj/structure/radio_cable/proc/isConnected(var/obj/O)
 	if(!O)
 		return 0
-	
+	if(!O.loc)
+		return 0
+	if(O == src)
+		return 0
+
 	var/dist = get_dist(loc, O.loc)
 	if(istype(O, /obj/structure/radio_cable))
 		var/obj/structure/radio_cable/SC = O
-		if(dist == 1)
-			var/r1 = turn(d1, 180)
-			var/r2 = turn(d2, 180)
-			if(SC.d1 == r1 || SC.d1 == r2 || SC.d2 == r1 || SC.d2 == r2)
-				return 1
-		else if(SC.loc == loc)
-			if(SC.d1 == d1 || SC.d2 == d1 || SC.d1 == d2 || SC.d2 == d2)
+		if(SC.inactive)
+			return 0
+		if((SC.icon_state == "cable_end") && (SC.loc == loc))
+			return 1
+		var/dirn = get_dir(src, SC)
+		if(dist == 1 && !(dirn & (dirn - 1))) //next to us in a cardinal dir
+			var/mydir = (icon_state == "cable_end") ? dir : GLOB.reverse_dir[dir]
+			var/scdir = (SC.icon_state == "cable_end") ? GLOB.reverse_dir[SC.dir] : SC.dir
+			if(mydir & scdir)
 				return 1
 	
 	if((istype(O, /obj/machinery/computer/supply) || istype(O , /obj/structure/radio_hub) || istype(O, /obj/structure/receipt_printer)) && (O.loc == loc))
@@ -146,6 +163,14 @@
 				RN.add_printer(R)
 			found_printers |= R
 
+/obj/structure/radio_cable/AltClick(mob/user)
+	. = ..()
+	to_chat(user, "=== \ref[src] ===")
+	to_chat(user, "RN: \ref[radionet]")
+	to_chat(user, "Connections:")
+	for(var/atom/con in get_connections())
+		to_chat(user, "- [con] <A HREF='?_src_=vars;Vars=\ref[con]'>\[VV\]</A>: [dir2text(get_dir(src, con))]")
+
 // *** INHAND ***
 /obj/item/stack/radio_cable
 	name = "radio cable coil"
@@ -166,7 +191,7 @@
 	slot_flags = SLOT_BELT
 	item_state = "coil"
 
-// called when cable_coil is clicked on a turf/simulated/floor
+// called when radio_cable is clicked on a turf/simulated/floor
 /obj/item/stack/radio_cable/proc/turf_place(turf/simulated/F, mob/user)
 	if(!isturf(user.loc))
 		return
@@ -183,15 +208,36 @@
 	if(user.loc == F)
 		dirn = user.dir			// if laying on the tile we're on, lay in the direction we're facing
 	else
-		dirn = get_dir(F, user)
+		dirn = get_dir(user, F)
 
-	for(var/obj/structure/radio_cable/LC in F)
-		if((LC.d1 == dirn && LC.d2 == 0 ) || ( LC.d2 == dirn && LC.d1 == 0))
-			to_chat(user, "<span class='warning'>There's already a cable at that position.</span>")
+	if(dirn & (dirn - 1)) //no diagonal stuff
+		to_chat(user, "You can't lay a cable at that angle.")
+		return
+
+	var/complete = FALSE
+	var/finaldir = dirn
+	var/obj/structure/radio_cable/to_qdel
+	for(var/obj/structure/radio_cable/RC in F)
+		if(RC.icon_state == "cable_end")
+			if(RC.dir == dirn)
+				to_chat(user, "There's already a cable at that position.")
+				return
+			else if(RC.dir != GLOB.reverse_dir[dirn])
+				complete = TRUE
+				finaldir = GLOB.reverse_dir[(dirn + RC.dir)]
+				to_qdel = RC
+			else if(RC.dir == GLOB.reverse_dir[dirn])
+				complete = TRUE
+				finaldir = dirn
+				to_qdel = RC
+		else if(RC.dir & dirn || ((RC.dir & (RC.dir - 1)) && (GLOB.reverse_dir[RC.dir] & dirn)))
+			to_chat(user, "There's already a cable at that position.")
 			return
 
-	put_cable(F, user, 0, dirn)
+	put_cable(F, user, finaldir, complete)
+	qdel(to_qdel)
 
+//called when radio_cable is clicked on a obj/structure/radio_cable
 /obj/item/stack/radio_cable/proc/cable_join(obj/structure/radio_cable/C, mob/user)
 	var/turf/U = user.loc
 	if(!isturf(U))
@@ -206,63 +252,35 @@
 		to_chat(user, "You can't lay cable at a place that far away.")
 		return
 
-	if(U == T) //if clicked on the turf we're standing on, try to put a cable in the direction we're facing
+	var/dirn = get_dir(C, user)
+	if(dirn & (dirn - 1))
+		to_chat(user, "You can't lay a cable at that angle.")
+		return
+
+	if(U == T || C.icon_state == "cable_end") //if clicked on the turf we're standing on, try to put a cable in the direction we're facing
 		turf_place(T,user)
 		return
 
-	var/dirn = get_dir(C, user)
-
-	// one end of the clicked cable is pointing towards us
-	if(C.d1 == dirn || C.d2 == dirn)
+	var/fdirn = GLOB.reverse_dir[dirn] // the opposite direction
+	if(C.dir == dirn || C.dir == fdirn)
 		// cable is pointing at us, we're standing on an open tile
 		// so create a stub pointing at the clicked cable on our tile
 
-		var/fdirn = GLOB.reverse_dir[dirn] // the opposite direction
-
 		for(var/obj/structure/radio_cable/LC in U)		// check to make sure there's not a cable there already
-			if(LC.d1 == fdirn || LC.d2 == fdirn)
+			if(LC.dir == dirn || LC.dir == fdirn)
 				to_chat(user, "There's already a cable at that position.")
 				return
-		put_cable(U,user,0,fdirn)
+		put_cable(U,user,dirn,FALSE)
 		return
 
-	// exisiting cable doesn't point at our position, so see if it's a stub
-	else if(C.d1 == 0)
-							// if so, make it a full cable pointing from it's old direction to our dirn
-		var/nd1 = C.d2	// these will be the new directions
-		var/nd2 = dirn
-
-		if(nd1 > nd2)		// swap directions to match icons/states
-			nd1 = dirn
-			nd2 = C.d2
-
-		for(var/obj/structure/radio_cable/LC in T)		// check to make sure there's no matching cable
-			if(LC == C)			// skip the cable we're interacting with
-				continue
-			if((LC.d1 == nd1 && LC.d2 == nd2) || (LC.d1 == nd2 && LC.d2 == nd1) )	// make sure no cable matches either direction
-				to_chat(user, "There's already a cable at that position.")
-				return
-
-		qdel(C)
-		var/obj/structure/radio_cable/SC = new (T)
-		SC.icon_state = "[nd1]-[nd2]"
-		SC.d1 = nd1
-		SC.d2 = nd2
-		SC.add_fingerprint()
-
-/obj/item/stack/radio_cable/proc/put_cable(turf/simulated/F, mob/user, d1, d2)
+/obj/item/stack/radio_cable/proc/put_cable(turf/simulated/F, mob/user, dirn, complete)
 	if(!istype(F))
 		return
 
-	if(d1 > d2)		// swap directions to match icons/states
-		var/t = d1
-		d1 = d2
-		d2 = t
-
 	var/obj/structure/radio_cable/C = new(F)
-	C.icon_state = "[d1]-[d2]"
-	C.d1 = d1
-	C.d2 = d2
+	C.dir = dirn
+	if(!complete)
+		C.icon_state = "cable_end"
 	use(1)
 	C.add_fingerprint(user)
 
