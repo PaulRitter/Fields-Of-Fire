@@ -206,8 +206,8 @@ For vending packs, see vending_packs.dm*/
 
 /obj/machinery/computer/supply
 	name = "Supply requests radio"
-	icon = 'icons/obj/computer.dmi'
-	icon_state = "request"
+	icon = 'icons/FoF/furniture.dmi'
+	icon_state = "cargo_radio"
 	req_access = list(access_cargo)
 	circuit = "/obj/item/weapon/circuitboard/orderradio"
 	var/datum/radionet/radionet
@@ -436,8 +436,8 @@ For vending packs, see vending_packs.dm*/
 /obj/structure/receipt_printer
 	name = "Supply Receipt Printer"
 	desc = "Receives and prints papers command sends"
-	icon = 'icons/obj/library.dmi'
-	icon_state = "fax"
+	icon = 'icons/FoF/furniture.dmi'
+	icon_state = "cargo_printer"
 	anchored = 1
 	density = 1
 	var/datum/radionet/radionet
@@ -455,3 +455,4 @@ For vending packs, see vending_packs.dm*/
 
 /obj/structure/receipt_printer/proc/doPrint()
 	playsound(src, 'sound/machines/printer.ogg', 50, 1)
+	flick("[initial(icon_state)]-print", src)
