@@ -38,7 +38,7 @@
 
 obj/item/weapon/wrench/trench
 	name = "wrench"
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_wrench"
 	desc = "A heavy wrench coated in rust. A small wheel near the head allows for size adjustment."
 	force = 15
@@ -50,7 +50,7 @@ obj/item/weapon/wrench/trench
 /obj/item/weapon/screwdriver/trench
 	name = "screwdriver"
 	desc = "A small screwdriver with a wide grip. Makes a nice punch weapon if you're desperate."
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_screwdriver"
 	force = 10
 	slot_flags = SLOT_BELT
@@ -59,7 +59,7 @@ obj/item/weapon/wrench/trench
 /obj/item/weapon/screwdriver/opener
 	name = "can opener"
 	desc = "A can opener that doubles as a screwdriver in a pinch. You can't rob somebody with it, even if it is pointy."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "opener"
 	force = 0
 	slot_flags = SLOT_BELT
@@ -67,7 +67,7 @@ obj/item/weapon/wrench/trench
 
 /obj/item/weapon/wirecutters/trench
 	name = "wirecutters"
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_wirecutter"
 	desc = "A rusty pair of wirecutters."
 
@@ -75,7 +75,7 @@ obj/item/weapon/wrench/trench
 obj/item/weapon/crowbar/trench
 	name = "crowbar"
 	desc = "A rusty crowbar with a menacing hooked end."
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_crowbar"
 	force = 15
 	throwforce = 10
@@ -86,7 +86,7 @@ obj/item/weapon/crowbar/trench
 
 obj/item/weapon/weldingtool/trench
 	name = "welding tool"
-	icon = 'icons/FoF/tools_ww1.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ww1_welder"
 	desc = "A rusty old welding tool attached to a fuel tank."
 	w_class = ITEM_SIZE_NORMAL
@@ -97,7 +97,7 @@ obj/item/weapon/weldingtool/trench
 	return ..()
 
 /obj/item/weapon/reagent_containers/food/snacks/can
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 
 /obj/item/weapon/reagent_containers/food/snacks/can/soup
 	name = "\improper Ration Soup"
@@ -180,7 +180,7 @@ obj/item/weapon/weldingtool/trench
 	bitesize = 5
 
 /obj/item/weapon/reagent_containers/food/snacks/oats
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "food_grains"
 	name = "\improper handful of oats"
 	desc = "Processed oats can be eaten raw and last forever. If only they didn't taste so bad."
@@ -199,7 +199,7 @@ obj/item/weapon/weldingtool/trench
 	bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/ham
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "food_ham"
 	name = "\improper slab of smoked ham"
 	desc = "A cutlet of smoked ham. Full of salt preserved goodness."
@@ -218,7 +218,7 @@ obj/item/weapon/weldingtool/trench
 
 /obj/item/weapon/reagent_containers/food/snacks/beans
 	name = "\improper handful of beans"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	desc = "These are healthy. Right?"
 	icon_state = "food_beans"
 	center_of_mass = "x=16;y=15"
@@ -241,7 +241,7 @@ obj/item/weapon/weldingtool/trench
 /obj/item/weapon/reagent_containers/food/snacks/fish
 	name = "\improper smoked fish"
 	desc = "Someone smoked this fish whole. Watch for bones. Or don't."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "food_fish"
 	center_of_mass = "x=16;y=12"
 	nutriment_desc = list("dried meat" = 2,"salt" = 4)
@@ -259,7 +259,7 @@ obj/item/weapon/weldingtool/trench
 	bitesize = 5
 
 /obj/item/weapon/reagent_containers/food/snacks/bowl
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 
 /obj/item/weapon/reagent_containers/food/snacks/bowl/oats
 	name = "\improper bowl of oats"
