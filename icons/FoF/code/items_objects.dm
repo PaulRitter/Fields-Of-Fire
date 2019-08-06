@@ -14,7 +14,7 @@
 	startswith = list(/obj/item/weapon/reagent_containers/pill/iron = 7)
 
 /obj/item/weapon/storage/belt/trenchmed
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	name = "medical satchel"
 	desc = "A red bag with a yellow cross that shows that the contents are medical in nature. Fits around your waist as well as your torso."
 	w_class = ITEM_SIZE_HUGE
@@ -27,7 +27,7 @@
 /obj/item/weapon/storage/belt/trenchmed/New()
 	..()
 	new /obj/item/weapon/storage/pill_bottle/iron(src)
-	new /obj/item/stack/medical/bruise_pack/trench/ten(src)
+	new /obj/item/stack/medical/bruise_pack(src)
 	new /obj/item/stack/medical/splint/ghetto/three(src)
 	new /obj/item/weapon/reagent_containers/syringe/steroid(src)
 

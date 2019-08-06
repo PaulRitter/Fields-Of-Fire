@@ -19,7 +19,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -37,7 +37,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germknight
+	//outfit_type = /decl/hierarchy/outfit/job/germknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -55,7 +55,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/frenchsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/frenchsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -73,7 +73,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britknight
+	//outfit_type = /decl/hierarchy/outfit/job/britknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
@@ -82,10 +82,6 @@
 	can_hold = list(/obj/item/ammo_magazine/box/mp303)
 	storage_slots_w = 2
 	canremove = 0
-
-/datum/armourspecials/gear/britplate
-	gear_type = /obj/item/weapon/storage/backpack/britknight
-	equip_slot = slot_back
 
 /datum/job/germsoldier
 	title = "German Soldier"
@@ -101,7 +97,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/germsquire
 	title = "German Squire"
@@ -117,7 +113,7 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/britag
 	title = "British AG"
@@ -133,4 +129,4 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO

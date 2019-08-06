@@ -52,13 +52,9 @@
 
 /datum/gear/misc/bpack
 	display_name = "roll of gauze"
-	path = /obj/item/stack/medical/bruise_pack/trench
+	path = /obj/item/stack/medical/bruise_pack
 	description = "A small roll of gauze brought from home."
 	cost = 4
-
-/datum/gear/misc/bopener
-	display_name = "bottle opener"
-	path = /obj/item/weapon/screwdriver/opener
 
 /datum/gear/misc/tincup
 	display_name = "tin cup"
@@ -67,7 +63,7 @@
 
 /datum/gear/misc/glasses
 	display_name = "glasses"
-	path = /obj/item/clothing/glasses/regular/trench
+	path = /obj/item/clothing/glasses/regular
 
 /datum/gear/ammo
 	display_name = ".45 ACP magazine"
@@ -214,43 +210,6 @@
 	cost = 2
 	description = "An additional stripper clip of .303 caliber."
 
-/datum/gear/food
-	display_name = "ration soup"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/soup
-	sort_category = "Food and Drinks"
-	cost = 2
-	description = "A scrounged up can of soup."
-
-/datum/gear/food/beans
-	display_name = "ration beans"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/beans
-	cost = 2
-	description = "A can of beans. The staple of any meal."
-
-/datum/gear/food/fish
-	display_name = "ration fish"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/fish
-	cost = 2
-	description = "A spare can of fish nobody could put an accurate age on."
-
-/datum/gear/food/beans2
-	display_name = "addtional ration beans"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/beans
-	cost = 2
-	description = "Another can of beans. Oh joy."
-
-/datum/gear/food/soup
-	display_name = "additional ration soup"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/soup
-	cost = 2
-	description = "Yet another scrounged up can of old soup."
-
-/datum/gear/food/fish2
-	display_name = "additional ration fish"
-	path = /obj/item/weapon/reagent_containers/food/snacks/can/fish
-	cost = 2
-	description = "An extra can of seafood surprise."
-
 /datum/gear/food/beanbag
 	display_name = "bag of beans"
 	path = /obj/item/weapon/storage/bag/wwi/beans
@@ -268,27 +227,3 @@
 	path = /obj/item/weapon/storage/bag/wwi/oats
 	cost = 6
 	description = "A sack of dried ham. But why?"
-
-/datum/gear/food/wine
-	display_name = "bottle of wine"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/wine
-	cost = 4
-	description = "A bottle of Wingman Wine."
-
-/datum/gear/food/whiskey
-	display_name = "bottle of whiskey"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/whiskey
-	cost = 4
-	description = "A bottle of Streamline Whiskey."
-
-/datum/gear/food/schnapps
-	display_name = "bottle of schnapps"
-	path = /obj/item/weapon/reagent_containers/food/drinks/bottle/trench/schnapps
-	cost = 4
-	description = "A bottle of Bluefish Schnapps."
-
-/datum/gear/food/coffee
-	display_name = "tin cup of coffee"
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffee/trench
-	cost = 2
-	description = "A warm cup of coffee you somehow haven't spilled on the ride to the front."

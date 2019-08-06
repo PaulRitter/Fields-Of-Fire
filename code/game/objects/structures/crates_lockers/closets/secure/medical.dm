@@ -10,12 +10,12 @@
 /obj/structure/closet/secure_closet/medical1
 	name = "medical equipment closet"
 	desc = "Filled with medical junk."
-	icon_state = "medical1"
-	icon_closed = "medical"
-	icon_locked = "medical1"
-	icon_opened = "medicalopen"
-	icon_broken = "medicalbroken"
-	icon_off = "medicaloff"
+	icon_state = "medcloset"
+	icon_closed = "medcloset"
+	icon_locked = "medcloset"
+	icon_opened = "medcloset_open"
+	icon_broken = "medcloset"
+	icon_off = "medcloset"
 	req_access = list()
 
 /obj/structure/closet/secure_closet/medical1/WillContain()

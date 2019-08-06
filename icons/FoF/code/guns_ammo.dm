@@ -1,4 +1,4 @@
-#define NEEDS_RESPRITE 'icons/FoF/weaponsnew.dmi'
+#define 'icons/FoF/needs_resprite.dmi' 'icons/FoF/cards.dmi'
 
 /obj/item/weapon/gun/projectile/wwi
 	icon = 'icons/FoF/munitionsx32.dmi'
@@ -9,7 +9,7 @@
 /obj/item/weapon/gun/projectile/wwi/mg08
 	name = "\improper MG 08-15"
 	desc = "A lightened and thus more portable version of the original german MG08 heavy machinegun. Supports 50-round drum feed system. Uses 7.92mm ammo."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "mg08"
 	item_state = "mg08_w"
 	caliber = "a792"
@@ -28,8 +28,8 @@
 		list(mode_name="semi auto",	burst=1, fire_delay=0, move_delay=12, one_hand_penalty=8, burst_accuracy = list(0),          dispersion = list(1)),
 		)
 	item_icons = list(
-		slot_l_hand_str = 'icons/FoF/lefthand_guns.dmi',
-		slot_r_hand_str = 'icons/FoF/righthand_guns.dmi',
+		slot_l_hand_str = 'icons/FoF/needs_resprite.dmi',
+		slot_r_hand_str = 'icons/FoF/needs_resprite.dmi',
 		)
 	w_class = ITEM_SIZE_HUGE
 	max_shells = 50
@@ -46,7 +46,7 @@
 /obj/item/weapon/gun/projectile/wwi/lewis
 	name = "\improper Lewis gun"
 	desc = "An offshoot of the British Vickers machine gun, known by its distinctive barrel cooling shroud and top mounted 47-round pan magazine. Uses .303 British ammo."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lewis"
 	item_state = "mg08_w"
 	caliber = "a303"
@@ -64,8 +64,8 @@
 		list(mode_name="semi auto", fire_delay=0,	burst=1, move_delay=12, one_hand_penalty=8, burst_accuracy = list(0),          dispersion = list(1)),
 		)
 	item_icons = list(
-		slot_l_hand_str = 'icons/FoF/lefthand_guns.dmi',
-		slot_r_hand_str = 'icons/FoF/righthand_guns.dmi',
+		slot_l_hand_str = 'icons/FoF/needs_resprite.dmi',
+		slot_r_hand_str = 'icons/FoF/needs_resprite.dmi',
 		)
 	w_class = ITEM_SIZE_HUGE
 	max_shells = 47
@@ -82,7 +82,7 @@
 /obj/item/weapon/gun/projectile/wwi/chauchat
 	name = "\improper FM Chauchat"
 	desc = "A French light machine gun, known for overheating and frequent failures. Supports 20-round magazine feed system. Uses 8mm ammo."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "chauchat"
 	item_state = "chauchat"
 	caliber = "8mm"
@@ -101,8 +101,8 @@
 		list(mode_name="semi auto",	burst=1, fire_delay=0, move_delay=12, one_hand_penalty=8, burst_accuracy = list(0),          dispersion = list(1)),
 		)
 	item_icons = list(
-		slot_l_hand_str = 'icons/FoF/lefthand_guns.dmi',
-		slot_r_hand_str = 'icons/FoF/righthand_guns.dmi',
+		slot_l_hand_str = 'icons/FoF/needs_resprite.dmi',
+		slot_r_hand_str = 'icons/FoF/needs_resprite.dmi',
 		)
 	w_class = ITEM_SIZE_HUGE
 	max_shells = 20
@@ -118,7 +118,7 @@
 
 /obj/item/weapon/gun/projectile/wwi/ruby
 	name = "\improper Ruby"
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	desc = "A cheap Spanish pistol, favoured by the French army for its portability and decent firepower. Uses .32 ACP."
 	magazine_type = /obj/item/ammo_magazine/c32acp
 	ammo_type = /obj/item/ammo_casing/c32acp || /obj/item/ammo_casing/c32acp
@@ -139,7 +139,7 @@
 
 /obj/item/weapon/gun/projectile/wwi/mauser
 	name = "\improper Mauser C96"
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	desc = "A Mauser, expensive yet reliable German pistol. Takes 9mm stripper clips."
 	magazine_type = /obj/item/ammo_magazine/c9mm
 	fire_sound = 'sound/weapons/ruby.ogg'
@@ -240,7 +240,7 @@
 /obj/item/weapon/gun/projectile/wwi/bolt/g98rifle
 	name = "\improper G98 rifle"
 	desc = "A simple yet reliable German rifle. Supports 7.92mm stripper clips."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "g98"
 	item_state = "ba_rifle"
 	magazine_type = /obj/item/ammo_magazine/g792
@@ -269,7 +269,7 @@
 /obj/item/weapon/gun/projectile/wwi/bolt/lebel
 	name = "\improper Lebel"
 	desc = "A sturdy old French rifle, able to be used as a club in a pinch. Uses 8mm ammo."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lebel"
 	caliber = "8mm"
 	fire_sound = 'sound/weapons/lebel.ogg'
@@ -282,7 +282,7 @@
 /obj/item/weapon/gun/projectile/wwi/bolt/smle
 	name = "\improper Lee-Enfield"
 	desc = "The British Army's standard rifle from its official adoption in 1895. Takes 5-round .303 British stripper clips."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "smle"
 	slot_flags = SLOT_BACK
 	fire_sound = 'sound/weapons/smle.ogg'
@@ -302,7 +302,7 @@
 /obj/item/weapon/gun/projectile/wwi/bolt/smle/scoped
 	name = "\improper Scoped Lee-Enfield"
 	desc = "The British Army's standard rifle from its official adoption in 1895. This one has an attached scope. Takes 5-round .303 British stripper clips."
-	icon = NEEDS_RESPRITE
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "smle_scoped"
 	accuracy = 2
 	scoped_accuracy = 6
@@ -331,7 +331,7 @@
 	desc = "An imported American repeating rifle built to be used with smokeless powder. Uses .30-30 Winchester casings."
 	icon_state = "winch"
 	item_state = "ba_rifle"
-	icon = 'icons/FoF/weaponsnew.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	slot_flags = SLOT_BACK
 	caliber = "a3030"
 	fire_sound = 'sound/weapons/trenchgun.ogg'
@@ -345,7 +345,7 @@
 		to_chat(user, "<span class='notice'>You begin to shorten \the [src].</span>")
 		if(do_after(user, 30, src))
 			icon_state = "winch_sawed"
-			icon = 'icons/FoF/weaponsnew.dmi'
+			icon = 'icons/FoF/needs_resprite.dmi'
 			item_state = "ba_rifle"
 			w_class = ITEM_SIZE_NORMAL
 			force = 5
@@ -401,7 +401,7 @@
 
 /obj/item/ammo_magazine/box/a792
 	name = "7.92mm box magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "mg08mag"
 	mag_type = MAGAZINE
 	caliber = "a792"
@@ -415,7 +415,7 @@
 
 /obj/item/ammo_magazine/box/mp303
 	name = ".303 British drum magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lewismag"
 	mag_type = MAGAZINE
 	caliber = "a303"
@@ -429,7 +429,7 @@
 
 /obj/item/ammo_magazine/box/c8mm
 	name = "8mm box magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "chauchatmag"
 	mag_type = MAGAZINE
 	caliber = "8mm"
@@ -443,7 +443,7 @@
 
 /obj/item/ammo_magazine/c32acp
 	name = ".32 ACP magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "rubymag"
 	mag_type = MAGAZINE
 	caliber = ".32"
@@ -457,7 +457,7 @@
 
 /obj/item/ammo_magazine/c9mm
 	name = "9mm stripper clip"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "c96clip"
 	caliber = "9mm"
 	max_ammo = 10
@@ -470,7 +470,7 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/c9mml
 	name = "9mm magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "p08mag"
 	mag_type = MAGAZINE
 	caliber = "9mm"
@@ -484,7 +484,7 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/a445
 	name = "speed loader (.455)"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "webleymag"
 	caliber = "455"
 	ammo_type = /obj/item/ammo_casing/a455
@@ -498,7 +498,7 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/g792
 	name = "7.92mm stripper clip"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "stripclip"
 	caliber = "a792"
 	ammo_type = /obj/item/ammo_casing/a792
@@ -511,7 +511,7 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/smle_strip
 	name = ".303 stripper clip"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "stripclip"
 	caliber = "a303"
 	ammo_type = /obj/item/ammo_casing/a303
@@ -524,7 +524,7 @@ obj/item/ammo_magazine/c9mm/empty
 
 /obj/item/ammo_magazine/smle_mag
 	name = "SMLE magazine"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "smlemag"
 	caliber = "a303"
 	ammo_type = /obj/item/ammo_casing/a303
@@ -538,7 +538,7 @@ obj/item/ammo_magazine/c9mm/empty
 /obj/item/ammo_magazine/a45
 	name = ".45 ACP magazine"
 	icon_state = "coltmag"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	mag_type = MAGAZINE
 	ammo_type = /obj/item/ammo_casing/a45
 	matter = list(DEFAULT_WALL_MATERIAL = 525)
@@ -566,7 +566,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A 7.92mm casing."
 	caliber = "a792"
 	projectile_type = /obj/item/projectile/bullet/rifle/a792
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 250)
@@ -576,7 +576,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A 7.92mm casing. This one looks altered."
 	caliber = "a792"
 	projectile_type = /obj/item/projectile/bullet/rifle/a792/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	randpixel = 8
@@ -586,7 +586,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .303 British casing."
 	caliber = "a303"
 	projectile_type = /obj/item/projectile/bullet/rifle/a303
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 250)
@@ -596,7 +596,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .303 British casing. This one looks altered."
 	caliber = "a303"
 	projectile_type = /obj/item/projectile/bullet/rifle/a303/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	randpixel = 8
@@ -606,7 +606,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "An 8mm casing."
 	caliber = "8mm"
 	projectile_type = /obj/item/projectile/bullet/rifle/c8mm
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 250)
@@ -616,7 +616,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "An 8mm casing. This one looks altered."
 	caliber = "8mm"
 	projectile_type = /obj/item/projectile/bullet/rifle/c8mm/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	randpixel = 8
@@ -626,7 +626,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .32 ACP casing."
 	caliber = ".32"
 	projectile_type = /obj/item/projectile/bullet/pistol/c32acp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 60)
@@ -635,7 +635,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .32 ACP casing. This one looks altered."
 	caliber = ".32"
 	projectile_type = /obj/item/projectile/bullet/pistol/c32acp/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 60)
@@ -644,7 +644,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A 9mm casing."
 	caliber = "9mm"
 	projectile_type = /obj/item/projectile/bullet/pistol/c9mm
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 60)
@@ -654,7 +654,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A 9mm casing. This one looks altered."
 	caliber = "9mm"
 	projectile_type = /obj/item/projectile/bullet/pistol/c9mm/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 60)
@@ -664,7 +664,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .455 casing."
 	caliber = "455"
 	projectile_type = /obj/item/projectile/bullet/pistol/a445
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 250)
@@ -674,7 +674,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .455 casing. This one looks altered."
 	caliber = "455"
 	projectile_type = /obj/item/projectile/bullet/pistol/a445/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 250)
@@ -684,7 +684,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .30-30 Winchester casing."
 	caliber = "a3030"
 	projectile_type = /obj/item/projectile/bullet/rifle/a3030
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 350)
@@ -694,7 +694,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .30-30 Winchester casing. This one looks altered."
 	caliber = "a3030"
 	projectile_type = /obj/item/projectile/bullet/rifle/a3030/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "looseriflerounds_1"
 	spent_icon = "rifle-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 350)
@@ -704,7 +704,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .45 ACP casing."
 	caliber = "45"
 	projectile_type = /obj/item/projectile/bullet/pistol/a45
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 75)
@@ -714,7 +714,7 @@ obj/item/ammo_magazine/c9mm/empty
 	desc = "A .45 ACP casing. This one looks altered."
 	caliber = "45"
 	projectile_type = /obj/item/projectile/bullet/pistol/a45/hp
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "pbullet"
 	spent_icon = "r-casing-spent"
 	matter = list(DEFAULT_WALL_MATERIAL = 75)
@@ -744,7 +744,7 @@ obj/item/ammo_magazine/c9mm/empty
 	name = "shotgun shell"
 	desc = "A dirty shotgun shell."
 	icon_state = "shotgunshell"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	spent_icon = "spent_shotgunshell"
 	projectile_type = /obj/item/projectile/bullet/pellet/shotgun
 	matter = list(DEFAULT_WALL_MATERIAL = 360)

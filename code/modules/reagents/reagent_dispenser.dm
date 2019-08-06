@@ -75,10 +75,10 @@
 
 //Dispensers
 /obj/structure/reagent_dispensers/watertank
-	name = "watertank"
-	desc = "A tank containing water."
-	icon = 'icons/obj/objects.dmi'
-	icon_state = "watertank"
+	name = "waterbarrel"
+	desc = "A barrel containing water."
+	icon = 'icons/FoF/furniture.dmi'
+	icon_state = "barrel"
 	amount_per_transfer_from_this = 10
 	possible_transfer_amounts = "10;25;50;100"
 	initial_capacity = 50000
@@ -86,10 +86,10 @@
 	flags = OBJ_CLIMBABLE
 
 /obj/structure/reagent_dispensers/fueltank
-	name = "fueltank"
-	desc = "A tank containing fuel."
-	icon = 'icons/obj/objects.dmi'
-	icon_state = "weldtank"
+	name = "fuelbarrel"
+	desc = "A barrel containing fuel."
+	icon = 'icons/FoF/furniture.dmi'
+	icon_state = "alt-barrel"
 	amount_per_transfer_from_this = 10
 	var/modded = 0
 	var/obj/item/device/assembly_holder/rig = null
@@ -201,7 +201,7 @@
 	new /obj/effect/decal/cleanable/liquid_fuel(src.loc, amount,1)
 
 /obj/structure/reagent_dispensers/fueltank/wwi
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "Fuel_canister"
 	flags = CONDUCT
 	flags = null

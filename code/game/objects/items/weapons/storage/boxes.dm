@@ -335,26 +335,6 @@
 		W.update_icon()
 		return
 
-/obj/item/weapon/storage/box/matches/trench
-	name = "matchbook"
-	desc = "A small book of matches. They're advertised as being waterproof."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "matches"
-	item_state = "matches"
-	storage_slots_w = 10
-	storage_slots_h = 2
-	can_hold = list(/obj/item/weapon/flame/match/trench)
-	startswith = list(/obj/item/weapon/flame/match/trench = 5)
-	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
-		if(istype(W) && !W.lit && !W.burnt)
-			W.lit = 1
-			W.damtype = "burn"
-			W.icon_state = "match_litup"
-			W.set_light(2)
-			GLOB.processing_objects.Add(W)
-		W.update_icon()
-		return
-
 /obj/item/weapon/storage/box/matches/trench/empty
 	icon_state = "matches-0"
 
@@ -479,7 +459,7 @@
 	startswith = list(/obj/item/clothing/accessory/armband/med = 5)
 
 /obj/item/weapon/storage/box/letter
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lettercase"
 	name = "Envelope"
 	desc = "The envelope they gave you with your tags. Contains a Requisition Receipt and Transportation Receipt. Don't use the Transportation Receipt until you've gotten your gear with the Requisition Receipt."
@@ -492,129 +472,3 @@
 
 /obj/item/weapon/storage/box/letter/german
 	startswith = list(/obj/item/weapon/coin/req = 1,/obj/item/wwi/transit/german = 1)
-
-/obj/structure/closet/crate/wwi
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "wcrate"
-	icon_opened = "wcrate_o"
-	w_class = ITEM_SIZE_HUGE
-
-/obj/structure/closet/crate/wwi/germ
-
-/obj/structure/closet/crate/wwi/brit
-
-/obj/structure/closet/crate/wwi/brit/lebel
-	name = "Lebel box"
-
-/obj/structure/closet/crate/wwi/brit/lebel/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
-					/obj/item/clothing/accessory/storage/wwi/french,
-					/obj/item/clothing/suit/storage/wwi/frenchcoat,
-					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
-					/obj/item/clothing/mask/gas/wwi/french,
-					/obj/item/weapon/melee/combat_knife/french,
-					/obj/item/clothing/head/helmet/frenchsoft)
-
-/obj/structure/closet/crate/wwi/brit/smle
-	name = "Lee-Enfield box"
-
-/obj/structure/closet/crate/wwi/brit/smle/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/clothing/accessory/storage/wwi/brit,
-					/obj/item/clothing/suit/storage/wwi/britishcoat,
-					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)
-
-/obj/structure/closet/crate/wwi/germ/g98
-	name = "G98 box"
-
-/obj/structure/closet/crate/wwi/germ/g98/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/clothing/accessory/storage/wwi/germ,
-					/obj/item/clothing/suit/storage/wwi/germancoat,
-					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/structure/closet/crate/wwi/brit/britmed
-	name = "Medic box"
-
-/obj/structure/closet/crate/wwi/brit/britmed/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/britmedcoat,
-					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)
-
-/obj/structure/closet/crate/wwi/brit/frenchmed
-	name = "Medic box"
-
-/obj/structure/closet/crate/wwi/brit/frenchmed/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/frenchmedcoat,
-					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
-					/obj/item/clothing/mask/gas/wwi/french,
-					/obj/item/weapon/melee/combat_knife/french,
-					/obj/item/clothing/head/helmet/frenchsoft)
-
-/obj/structure/closet/crate/wwi/germ/med
-	name = "Medic box"
-
-/obj/structure/closet/crate/wwi/germ/med/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/germanmedcoat,
-					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/structure/closet/crate/wwi/germ/knight
-	name = "Knight box"
-
-/obj/structure/closet/crate/wwi/germ/knight/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/mg08,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/ammo_magazine/box/a792,/obj/item/ammo_magazine/box/a792,
-					/obj/item/weapon/melee/combat_knife/german)
-
-/obj/structure/closet/crate/wwi/germ/squire
-	name = "AMG box"
-
-/obj/structure/closet/crate/wwi/germ/squire/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/clothing/accessory/storage/wwi/germ,
-					/obj/item/clothing/suit/storage/wwi/germancoat,
-					/obj/item/ammo_magazine/g792,
-					/obj/item/ammo_magazine/box/a792, /obj/item/ammo_magazine/box/a792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/structure/closet/crate/wwi/brit/knight
-	name = "Knight box"
-
-/obj/structure/closet/crate/wwi/brit/knight/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/lewis,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/ammo_magazine/box/mp303,/obj/item/ammo_magazine/box/mp303,
-					/obj/item/weapon/melee/combat_knife/british)
-
-/obj/structure/closet/crate/wwi/brit/squire
-	name = "AMG box"
-
-/obj/structure/closet/crate/wwi/brit/squire/WillContain()
-	return list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/clothing/accessory/storage/wwi/brit,
-					/obj/item/clothing/suit/storage/wwi/britishcoat,
-					/obj/item/ammo_magazine/smle_strip,
-					/obj/item/ammo_magazine/box/mp303,/obj/item/ammo_magazine/box/mp303,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)

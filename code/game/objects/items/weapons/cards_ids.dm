@@ -428,7 +428,7 @@ var/const/NO_EMAG_ACT = -50
 	access = list(access_merchant)
 
 obj/item/weapon/card/id/wwi
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	name = "dog tags"
 	w_class = ITEM_SIZE_SMALL
 	desc = "Identification tags that show what rank and position you are."

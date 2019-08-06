@@ -209,7 +209,7 @@
 /obj/item/weapon/storage/fancy/cigarettes/fundamentals
 	name = "pack of Fundamentals"
 	desc = "This pack of cigarettes came all the way from Britain. Has a peculiarly rugged taste."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "Zpacket"
 	item_state = "Zpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/fundamentals = 10)
@@ -217,7 +217,7 @@
 /obj/item/weapon/storage/fancy/cigarettes/topdog
 	name = "case of TopDogs"
 	desc = "British cigarettes advertised as being smoked by those in charge. They come in a fancy little hardcase."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "papcase"
 	item_state = "papcase"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/fundamentals = 8)

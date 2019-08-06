@@ -1,10 +1,10 @@
 obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	icon_opened = "crateopen"
-	icon_closed = "crate"
+	icon = 'icons/FoF/furniture.dmi'
+	icon_state = "large-crate"
+	icon_opened = "large-crate_open"
+	icon_closed = "large-crate"
 	flags = OBJ_CLIMBABLE
 	setup = 0
 
@@ -325,52 +325,49 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/paper_refill/WillContain()
 	return list(/obj/item/weapon/paper = 30)
 
-/obj/structure/closet/crate/trench
-	icon = 'icons/FoF/misc.dmi'
+/obj/structure/closet/crate/small
+	name = "small wooden crate"
+	desc = "A small wooden crate."
+	icon_state = "crate"
+	icon_closed = "crate"
+	icon_opened = "crate_open"
 
-/obj/structure/closet/crate/trench/wood
-	name = "wooden crate"
-	desc = "A simple wooden crate."
-	icon_state = "wcrate"
-	icon_closed = "wcrate"
-	icon_opened = "wcrate_o"
-
-/obj/structure/closet/crate/trench/ammo
+/obj/structure/closet/crate/ammo
 	name = "ammo crate"
 	desc = "A simple wooden crate. It has little pictures of bullets printed on it."
-	icon_state = "ammcrate"
-	icon_closed = "ammcrate"
-	icon_opened = "ammcrate_o"
+	icon_state = "ammo-crate"
+	icon_closed = "ammo-crate"
+	icon_opened = "ammo-crate_empty"
 
-/obj/structure/closet/crate/trench/ammo/brit
+/obj/structure/closet/crate/ammo/brit
 	name = ".303 stripper clip crate"
 	desc = "A simple wooden crate. This one contains a shipment of .303 rounds."
 
-/obj/structure/closet/crate/trench/ammo/brit/WillContain()
+/obj/structure/closet/crate/ammo/brit/WillContain()
 	return list(/obj/item/ammo_magazine/smle_strip = 10)
 
-/obj/structure/closet/crate/trench/ammo/french
+/obj/structure/closet/crate/ammo/french
 	name = "8mm crate"
 	desc = "A simple wooden crate. This one contains a shipment of 8mm rounds."
 
-/obj/structure/closet/crate/trench/ammo/french/WillContain()
+/obj/structure/closet/crate/ammo/french/WillContain()
 	return list(/obj/item/ammo_box/lebel = 8)
 
-/obj/structure/closet/crate/trench/ammo/german
+/obj/structure/closet/crate/ammo/german
 	name = "7.92mm crate"
 	desc = "A simple wooden crate. This one contains a shipment of 7.92mm rounds."
 
-/obj/structure/closet/crate/trench/ammo/german/WillContain()
+/obj/structure/closet/crate/ammo/german/WillContain()
 	return list(/obj/item/ammo_magazine/g792 = 10)
 
-/obj/structure/closet/crate/trench/wood/med
+/obj/structure/closet/crate/wood/med
 	name = "medical crate"
 	desc = "A simple wooden crate. This one has a small yellow cross printed on to indicate it is medical in nature."
 	icon_state = "medcrate"
 	icon_closed = "medcrate"
 	icon_opened = "medcrate_o"
 
-/obj/structure/closet/crate/trench/wood/med/fresh
+/obj/structure/closet/crate/wood/med/fresh
 
-/obj/structure/closet/crate/trench/wood/med/fresh/WillContain()
-	return list(/obj/item/weapon/storage/belt/trenchmed = 1, /obj/item/stack/medical/bruise_pack/trench/ten = 2, /obj/item/stack/medical/splint/ghetto/three = 2)
+/obj/structure/closet/crate/wood/med/fresh/WillContain()
+	return list(/obj/item/weapon/storage/belt/trenchmed = 1, /obj/item/stack/medical/bruise_pack = 2, /obj/item/stack/medical/splint/ghetto/three = 2)

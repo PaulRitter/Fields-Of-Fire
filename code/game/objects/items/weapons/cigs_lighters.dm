@@ -80,11 +80,6 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	desc = "A match. This one has seen better days."
 	GLOB.processing_objects.Remove(src)
 
-/obj/item/weapon/flame/match/trench
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "match_unlit"
-	desc = "A thick match for letting snipers know where you are at night."
-
 //////////////////
 //FINE SMOKABLES//
 //////////////////
