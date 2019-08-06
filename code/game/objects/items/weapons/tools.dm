@@ -267,7 +267,7 @@
 
 /obj/item/weapon/weldingtool/update_icon()
 	..()
-	icon_state = welding ? "welder1" : "welder"
+	icon_state = welding ? "[initial(icon_state)]1" : initial(icon_state)
 	var/mob/M = loc
 	if(istype(M))
 		M.update_inv_l_hand()
@@ -415,6 +415,7 @@
 	icon = 'icons/obj/items.dmi'
 	icon_state = "red_crowbar"
 	item_state = "crowbar_red"
+
 
 /obj/item/weapon/weldingtool/attack(mob/living/M, mob/living/user, target_zone)
 
