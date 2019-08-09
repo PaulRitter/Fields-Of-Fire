@@ -9,8 +9,7 @@
 
 /obj/screen/radial/slice
 	icon_state = "radial_slice"
-	var/choice
-	var/next_page = FALSE
+	var/datum/radial_menu_choice/choice
 	var/tooltip_desc
 
 /obj/screen/radial/slice/MouseEntered(location, control, params)
@@ -25,11 +24,11 @@
 	closeToolTip(usr)
 
 /obj/screen/radial/slice/Click(location, control, params)
-	if(usr.client == parent.current_user)
-		if(next_page)
-			parent.next_page()
-		else
-			parent.element_chosen(choice,usr)
+	return choice.ClickOn(usr, params2list(params))
+
+/obj/screen/radial/slice/proc/selected(var/mob/user, var/list/modifier)
+	if(user.client == parent.current_user)
+		parent.element_chosen(choice.value, modifier, user)
 
 /obj/screen/radial/center
 	name = "Close Menu"
@@ -40,16 +39,14 @@
 		parent.finished = TRUE
 
 /datum/radial_menu
-	var/list/choices = list() //List of choice id's
-	var/list/choices_icons = list() //choice_id -> icon
-	var/list/choices_values = list() //choice_id -> choice
-	var/list/choices_tooltips = list() //choice_id -> tooltip
+	var/list/choices = list() //List of /datum/radial_menu_choice
 	var/list/page_data = list() //list of choices per page
 
 	var/icon_file = 'icons/mob/radial.dmi'
 	var/tooltip_theme = "radial-default"
 
 	var/selected_choice
+	var/list/selected_modifiers
 	var/list/obj/screen/elements = list()
 	var/obj/screen/radial/center/close_button
 	var/client/current_user
@@ -120,7 +117,7 @@
 			elements += new_element
 
 	var/page = 1
-	page_data = list(null)
+	page_data = list(null) //null is required to set the len to 1
 	var/list/current = list()
 	var/list/choices_left = choices.Copy()
 	while(choices_left.len)
@@ -130,12 +127,12 @@
 			page_data.len++
 			current = list()
 		if(paged && current.len == max_elements - 1)
-			current += NEXT_PAGE_ID
+			current += new /datum/radial_menu_choice/next()
 			continue
 		else
 			current += shift(choices_left)
 	if(paged && current.len < max_elements)
-		current += NEXT_PAGE_ID
+		current += new /datum/radial_menu_choice/next()
 
 	page_data[page] = current
 	pages = page
@@ -160,9 +157,8 @@
 	E.maptext = null
 	E.mouse_opacity = 0
 	E.choice = null
-	E.next_page = FALSE
 
-/datum/radial_menu/proc/SetElement(obj/screen/radial/slice/E,choice_id,angle,anim,anim_order)
+/datum/radial_menu/proc/SetElement(obj/screen/radial/slice/E,var/datum/radial_menu_choice/choice,angle,anim,anim_order)
 	//Position
 	var/py = round(cos(angle) * radius) + py_shift
 	var/px = round(sin(angle) * radius)
@@ -181,23 +177,18 @@
 	E.alpha = 255
 	E.mouse_opacity = 1
 	E.overlays.len = 0
-	if(choice_id == NEXT_PAGE_ID)
-		E.name = "Next Page"
-		E.next_page = TRUE
-		push(E.overlays, "radial_next")
-	else
-		if(istext(choices_values[choice_id]))
-			E.name = choices_values[choice_id]
+
+	E.name = choice.name
+	E.choice = choice
+	choice.parent = E
+	E.maptext = null
+	if(choice.img)
+		if(istext(choice.img))
+			push(E.overlays,image(icon_file, choice.img))
 		else
-			var/atom/movable/AM = choices_values[choice_id] //Movables only
-			E.name = AM.name
-		E.choice = choice_id
-		E.maptext = null
-		E.next_page = FALSE
-		if(choices_icons[choice_id])
-			push(E.overlays,choices_icons[choice_id])
-		if(choices_tooltips[choice_id])
-			E.tooltip_desc = choices_tooltips[choice_id]
+			push(E.overlays,choice.img)
+	if(choice.tooltip)
+		E.tooltip_desc = choice.tooltip
 
 /datum/radial_menu/New(var/icon_file, var/tooltip_theme, var/radius, var/min_angle)
 	if(icon_file)
@@ -215,13 +206,14 @@
 
 /datum/radial_menu/proc/Reset()
 	choices.Cut()
-	choices_icons.Cut()
-	choices_values.Cut()
-	choices_tooltips.Cut()
 	current_page = 1
 
-/datum/radial_menu/proc/element_chosen(choice_id,mob/user)
-	selected_choice = choices_values[choice_id]
+/datum/radial_menu/proc/element_chosen(var/choice_id, var/list/modifiers, var/mob/user)
+	if(choice_id == NEXT_PAGE_ID)
+		next_page()
+		return
+	selected_choice = choice_id
+	selected_modifiers = modifiers
 
 /datum/radial_menu/proc/get_next_id()
 	return "c_[choices.len]"
@@ -229,30 +221,14 @@
 /datum/radial_menu/proc/set_choices(var/list/new_choices)
 	if(choices.len)
 		Reset()
-	for(var/list/E in new_choices)
-		var/id = get_next_id()
-		choices += id
-		var/choice_name = E[1]
-		choices_values[id] = choice_name
+	//check if they are valid (no double values)
+	var/list/all_values = list()
+	for(var/datum/radial_menu_choice/choice in new_choices)
+		if(choice.value in all_values)
+			continue
 
-		if(E.len > 1)
-			var/extracted_image
-			var/choice_icon = E[2]
-			if(istext(choice_icon)) //a string representing an icon_state from our icon_file
-				extracted_image = extract_image(image(icon = icon_file, icon_state = choice_icon))
-			else
-				extracted_image = extract_image(choice_icon)
-			if(extracted_image)
-				choices_icons[id] = extracted_image
-
-		if(E.len > 2)
-			var/choice_tooltip = E[3]
-			choices_tooltips[id] = choice_tooltip
-
-		if(E.len > 3) // Radial's replacement for the actual name. Currently only used for talismans.
-			choice_name = E[4]
-			choices_values[id] = choice_name
-
+		all_values += choice.value
+		choices += choice
 	setup_menu()
 
 
@@ -302,6 +278,37 @@
 		custom_check.holder = null
 		custom_check = null
 	. = ..()
+
+/datum/radial_menu_choice
+	var/name
+	var/img
+	var/tooltip
+	var/obj/screen/radial/slice/parent
+	var/value
+
+/datum/radial_menu_choice/New(var/n_name, var/image/n_img, var/n_tooltip, var/n_value)
+	..()
+	if(istext(n_name))
+		name = n_name
+		value = n_name
+	if(istype(n_img))
+		img = n_img
+	if(istext(n_tooltip))
+		tooltip = n_tooltip
+	if(istext(n_value))
+		value = n_value
+
+/datum/radial_menu_choice/proc/ClickOn(var/mob/user, var/list/modifiers)
+	if(istype(parent))
+		parent.selected(user, modifiers)
+		return 1
+	return 0
+
+/datum/radial_menu_choice/next
+	name = "Next Page"
+	img = "radial_next"
+	value = NEXT_PAGE_ID
+
 /*
 	Presents radial menu to user anchored to anchor (or user if the anchor is currently in users screen)
 	Choices should be a list where list keys are movables or text used for element names and return value
@@ -326,7 +333,8 @@
 	menu.show_to(user)
 	menu.wait()
 	if(!menu.gc_destroyed)
-		var/answer = menu.selected_choice
+		var/list/answer = list(menu.selected_choice)
+		answer += menu.selected_modifiers
 		qdel(menu)
 		current_user.radial_menus -= anchor
 		return answer
