@@ -241,9 +241,6 @@
 	if(!choice_references["[choice[1]]"])
 		return 0
 
-	if(!Adjacent(choice_references["[choice[1]]"]))
-		return 0
-
 	var/atom/selA = choice_references["[choice[1]]"]
 	ClickOn(selA, choice.Copy(2))
 
