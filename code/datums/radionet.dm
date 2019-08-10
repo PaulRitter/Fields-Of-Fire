@@ -29,12 +29,7 @@
 	color = COLOR_BROWN_ORANGE
 
 /obj/structure/radio_cable/New()
-	..()
-	// ensure d1 & d2 reflect the icon_state for entering and exiting cable
-	var/dash = findtext(icon_state, "-")
-	d1 = text2num( copytext( icon_state, 1, dash ) )
-	d2 = text2num( copytext( icon_state, dash+1 ) )
-
+	. = ..()
 	propagateRadionet()
 
 /obj/structure/radio_cable/Destroy()
@@ -109,7 +104,6 @@
 		return 0
 	if(O == src)
 		return 0
-
 	var/dist = get_dist(loc, O.loc)
 	if(istype(O, /obj/structure/radio_cable))
 		var/obj/structure/radio_cable/SC = O
