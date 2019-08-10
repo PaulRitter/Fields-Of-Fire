@@ -8,7 +8,7 @@ contains all command orders
 contains supply truck
 - code/game/machinery/computer/supply.dm
 contains supply radio
-- code\game\objects\items\weapons\circuitboards\computer\supply.dm
+- code/game/objects/items/weapons/circuitboards/computer/supply.dm
 supply radio circuits
 - code/datums/radionet.dm
 radionet cable + hub + net datum
@@ -19,8 +19,8 @@ var/list/supply_truck_pos = list()
 
 // *** HUB ***
 /obj/structure/radio_hub
-	name = "Radio HUB"
-	desc = "This HUB relays all received signals to command. Do not tamper."
+	name = "Radio Hub"
+	desc = "This Hub relays all received signals to command. Do not tamper."
 	icon = 'icons/FoF/tower.dmi'
 	icon_state = "radio_tower"
 	anchored = 1
@@ -100,13 +100,9 @@ var/list/supply_truck_pos = list()
 		truck_contents.len = 0
 		truck.update_icon()
 		if(truck.contents.len)
-			var/list/alreadyPrinted = list()
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
-				if(RP in alreadyPrinted)
-					continue
 				RP.doPrint()
 				new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
-				alreadyPrinted += RP
 		allSay("Truck arrived at Base.")
 		at_base = 1
 	else //at station
