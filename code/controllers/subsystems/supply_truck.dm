@@ -301,18 +301,27 @@ var/list/supply_truck_pos = list()
 /obj/structure/radio_hub/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/stack/radio_cable))
 		var/obj/item/stack/radio_cable/S = O
+		if(!broken)
+			to_chat(user, "<span class='notice'>\The [src] doesn't need repairing!</span>")
+			return 0
+			
 		if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
-			to_chat(user, "<span class='notice'>You don't have enough [S.singular_name] to repair \the [src]</span>")
+			to_chat(user, "<span class='notice'>You don't have enough [S.singular_name] to repair \the [src].</span>")
 			return 0
 
-		to_chat(user, "<span class='notice'>You start repairing \the [src]</span>")
-		user.visible_message("<span class='notice'>[user] starts repairing \the [src]</span>")
+		to_chat(user, "<span class='notice'>You start repairing \the [src].</span>")
+		user.visible_message("<span class='notice'>[user] starts repairing \the [src].</span>")
 		if(do_after(user, 10 SECONDS, src))
-			if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
-				to_chat(user, "<span class='notice'>You finish repairing \the [src]</span>")
-				user.visible_message("<span class='notice'>[user] finishes repairing \the [src]</span>")
+			if(!broken)
+				to_chat(user, "<span class='notice'>\The [src] already got repaired!</span>")
 				return 0
 
+			if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
+				to_chat(user, "<span class='notice'>You don't have enough [S.singular_name] to repair \the [src].</span>")
+				return 0
+
+			to_chat(user, "<span class='notice'>You finish repairing \the [src].</span>")
+			user.visible_message("<span class='notice'>[user] finishes repairing \the [src].</span>")
 			broken = FALSE
 			icon_state = initial(icon_state)
 			S.use(RADIO_HUB_REPAIR_CABLE_AMOUNT)
