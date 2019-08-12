@@ -1,5 +1,5 @@
 /* Contents:
- - supplyradio (This one approves orders)
+ - supply_oradio (This one approves orders)
  - orderradio (This is the public-facing one)
 For the shuttle controller, see supplyshuttle.dm
 For cargo crates, see supplypacks.dm
@@ -95,7 +95,7 @@ For vending packs, see vending_packs.dm*/
 	info += {"<h3>[GLOB.using_map.station_name] Supply Order Form</h3><br>
 		REQUESTED BY: [pname]<hr>"}
 
-	info+= "CONTENTS:<br>"
+	info += "CONTENTS:<br>"
 	for(var/pack_id in SO.packs)
 		var/datum/supply_pack/SP = hub.supply_packs[pack_id]
 		info += "#[pack_id] [SP.name] (x[SO.packs[pack_id]])<br>"
@@ -214,16 +214,17 @@ For vending packs, see vending_packs.dm*/
 
 /obj/machinery/computer/supply/New()
 	..()
-	var/datum/radionet/RN = new()
 	for(var/obj/structure/radio_cable/C in loc)
-		if(C.radionet != RN)
-			C.propagateRadionet(RN)
+		if(!C.radionet)
+			C.propagateRadionet()
+		else
+			C.radionet.add_radio(src)
 
 /obj/machinery/computer/supply/Destroy()
 	. = ..()
 	radionet.remove_radio(src)
 
-/obj/machinery/computer/supply/attack_ai(var/mob/user as mob)
+/obj/machinery/computer/supply/attack_ai(var/mob/user as mob) // phase out
 	add_hiddenprint(user)
 	return attack_hand(user)
 
@@ -262,11 +263,11 @@ For vending packs, see vending_packs.dm*/
 	if(!checkConnection())
 		return 0
 
-	var/command = input(user, pick("What do you need?","Go ahead.","Listening."), "Say Command") as text|null
+	var/command = input(user, pick("What do you need?","Go ahead.","Listening."), "Speak to HQ - \"help\" for help") as text|null
 	if(!command)
 		if(continuing)
 			user.say(pick("Thats all.", "Signing off.", "Ending Transmission.", "That should be all."))
-			commandResponse(pick("Got it. Signing off.", "Affirmative.", "Goodbye"))
+			commandResponse(pick("Got it. Signing off.", "Affirmative.", "Goodbye."))
 		else
 			user.say(pick("Nevermind.","Sorry, called on accident.", "Errrr, you're breaking up.", "Erm, I gotta go."))
 			commandResponse(pick("Stop wasting my time.", "Keep the line clear.", "Stop fucking around."))
@@ -279,7 +280,7 @@ For vending packs, see vending_packs.dm*/
 	switch(trim(params[1]))
 		if("order") //creates an order
 			if(params.len < 2)
-				commandResponse("You didn't give me a pack id.")
+				commandResponse("You didn't give me a pack ID.")
 				return doCommand(user)
 
 			//syntax is [pack_id]x[amount]
@@ -301,7 +302,7 @@ For vending packs, see vending_packs.dm*/
 				packs["[sp_param[1]]"] = amount
 
 			if(inv_packids.len)
-				commandResponse("Order failed. You stated following invalid request numbers: [inv_packids.Join(",")]")
+				commandResponse("[inv_packids.Join(",")] - these pack IDs do not exist.")
 				return doCommand(user)
 			
 			if(!packs.len)
@@ -309,12 +310,16 @@ For vending packs, see vending_packs.dm*/
 				return doCommand(user)
 
 			return doOrder(packs)
+
 		if("cancel") //cancels an order
 			return cancelOrder(trim(params[2]))	
+
 		if("total") //returns the total order price
 			commandResponse("Current order total is at [radionet.hub.getOrderPrice()].")
+
 		if("funds") //return the total money at command
 			commandResponse("Our current budget is at [radionet.hub.commandMoney].")
+
 		if("withdraw") //places a withdraw order
 			if(params.len < 2)
 				commandResponse("You didn't specify an amount.")
@@ -328,67 +333,76 @@ For vending packs, see vending_packs.dm*/
 
 			radionet.hub.nextWithdrawal += amount
 			commandResponse("Withdraw order updated. Now withdrawing [radionet.hub.nextWithdrawal] with next shipment.")
+
 		if("help") //prints a help sheet for the commands
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/communication_guidelines(RP.loc)
+
 		if("packinfo") //prints an infopaper about a supply pack
 			if(params.len < 2)
-				commandResponse("I'm gonna need an id with that.")
+				commandResponse("I'm gonna need an ID with that.")
 				return doCommand(user)
 			var/pack_id = trim(params[2])
 			if(!radionet.hub.supply_packs["[pack_id]"])
-				commandResponse("There are no supply packs with that id.")
+				commandResponse("There are no supply packs with that ID.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/supply_pack_info(RP.loc, pack_id, radionet.hub.supply_packs["[pack_id]"])
+
 		if("packlist") //prints a new inventory paper
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/inventory_manifest(RP.loc, radionet.hub)
+
 		if("orderinfo") //prints an infopaper about an order
 			if(params.len < 2)
-				commandResponse("I'm gonna need an id with that.")
+				commandResponse("I'm gonna need an ID with that.")
 				return doCommand(user)
 			var/order_id = trim(params[2])
 			if(!radionet.hub.shoppinglist["[order_id]"])
-				commandResponse("There are no orders with that id.")
+				commandResponse("There are no orders with that ID.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/order_form(RP.loc, radionet.hub.shoppinglist["[order_id]"], radionet.hub)
+
 		if("orderlist") //prints a list of all active orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/order_list(RP.loc, radionet.hub)
+
 		if("requestinfo") //prints an info sheet about a specific command order
 			if(params.len < 2)
-				commandResponse("I'm gonna need an id with that.")
+				commandResponse("I'm gonna need an ID with that.")
 				return doCommand(user)
 			var/request_id = trim(params[2])
 			if(!radionet.hub.command_orders["[request_id]"])
-				commandResponse("There are no command orders with that id.")
+				commandResponse("There are no command orders with that ID.")
 				return doCommand(user)
 
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/command_order(RP.loc, radionet.hub.command_orders["[request_id]"])
+
 		if("requestlist") //prints a list of all active command orders
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/request_list(RP.loc, radionet.hub)
+
 		if("sendtruck") //sends a truck
 			spawn()
 				radionet.hub.truck_depart()
+
 		if("truckstatus") //returns a rough idea of how long the truck will take
 			if(!radionet.hub.moving)
 				if(radionet.hub.at_base)
-					commandResponse("Truck should be your location.")
+					commandResponse("Truck should be at your location.")
 				else
-					commandResponse("We got the truck over here.")
+					commandResponse("We have the truck over here.")
 			else
 				commandResponse("Truck is on the road.")
 		else
@@ -401,21 +415,11 @@ For vending packs, see vending_packs.dm*/
 		V.show_message("<b>[src]</b> says, \"[message]\"")
 
 /obj/machinery/computer/supply/proc/doOrder(var/list/packs)
-	var/obj/structure/supply_truck/T = new ()
-	var/size = 0
-	for(var/pack_id in packs)
-		for(var/i = 0; i < packs["[pack_id]"]; i++)
-			var/atom/A = radionet.hub.supply_packs["[pack_id]"].create(null)
-			size += T.getSize(A)
-			qdel(A)
-	T.forceMove(null)
-
 	//make our supply_order datum
-	var/datum/supply_order/O = new ()
+	var/datum/supply_order/O = new (radionet.hub)
 	O.packs = packs
 	O.orderedby = usr
 	O.id = ++radionet.hub.orderid
-	O.hub = radionet.hub
 
 	radionet.hub.shoppinglist["[O.id]"] += O
 	for(var/obj/structure/receipt_printer/RP in radionet.printers)
@@ -435,7 +439,7 @@ For vending packs, see vending_packs.dm*/
 
 /obj/structure/receipt_printer
 	name = "Supply Receipt Printer"
-	desc = "Receives and prints papers command sends"
+	desc = "Receives and prints papers from HQ."
 	icon = 'icons/FoF/furniture.dmi'
 	icon_state = "cargo_printer"
 	anchored = 1
@@ -444,13 +448,14 @@ For vending packs, see vending_packs.dm*/
 
 /obj/structure/receipt_printer/New()
 	..()
-	var/datum/radionet/RN = new()
 	for(var/obj/structure/radio_cable/C in loc)
-		if(C.radionet != RN)
-			C.propagateRadionet(RN)
+		if(!C.radionet)
+			C.propagateRadionet()
+		else
+			C.radionet.add_printer(src)
 
 /obj/structure/receipt_printer/Destroy()
-	..()
+	. = ..()
 	radionet.remove_printer(src)
 
 /obj/structure/receipt_printer/proc/doPrint()

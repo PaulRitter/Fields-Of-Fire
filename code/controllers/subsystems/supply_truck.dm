@@ -20,7 +20,7 @@ var/list/supply_truck_pos = list()
 // *** HUB ***
 /obj/structure/radio_hub
 	name = "Radio Hub"
-	desc = "This Hub relays all received signals to command. Do not tamper."
+	desc = "This hub relays all received signals to HQ. Do not tamper."
 	icon = 'icons/FoF/tower.dmi'
 	icon_state = "radio_tower"
 	anchored = 1
@@ -65,15 +65,16 @@ var/list/supply_truck_pos = list()
 
 /obj/structure/radio_hub/New()
 	..()
+
 	if(!faction_id)
-		message_admins("there is a radio hub which holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z], someone spawned some fucky stuff or some smoothbrain mapper fucked up.")
+		message_admins("Radio hub holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z]")
 		qdel(src)
 		return 0
 
 	//setting up our cargo system
 	var/pack_id = 1
-	for(var/typepath in subtypesof(/datum/supply_pack))
-		supply_packs["[pack_id++]"] = new typepath()
+	for(var/packtype in subtypesof(/datum/supply_pack))
+		supply_packs["[pack_id++]"] = new packtype()
 
 	transitCost = rand(20,30)
 	
@@ -81,21 +82,63 @@ var/list/supply_truck_pos = list()
 	add_command_order(new /datum/command_order/per_unit/per_reagent/default())
 
 	//finding a connected radionet
-	var/datum/radionet/RN = new()
 	for(var/obj/structure/radio_cable/C in loc)
-		if(C.radionet != RN)
-			C.propagateRadionet(RN)
+		if(!C.radionet)
+			C.propagateRadionet()
+		else
+			C.radionet.add_hub(src)
+
+	truck = new (null)
+
+/obj/structure/radio_hub/Destroy()
+	broken = TRUE
+	icon_state = "[initial(icon_state)]-pwnd"
+	return QDEL_HINT_LETMELIVE
 
 //the truck arriving either at base or at command
 //receives truck_contents and handles selling to command
 /obj/structure/radio_hub/proc/truck_arrive()
 	if(!at_base) //not at station
 		if(!supply_truck_pos[faction_id])
-			message_admins("No Truck pos set, some smoothbrain mapper fucked up")
+			message_admins("No truck landmark set, this is a mapping issue")
 			return
-		playsound(supply_truck_pos[faction_id], 'sound/effects/truck/truckarrivingnew.ogg', 100, 1, 10)
+
+		if (supply_truck_pos[faction_id][2] != truck.direction)
+			truck.toggleDirection()
+
+		playsound(supply_truck_pos[faction_id][1], 'sound/effects/truck/truckarrivingnew.ogg', 100, 1, 10)
 		sleep(4 SECONDS)
-		truck = new (supply_truck_pos[faction_id])
+
+		truck.forceMove(locate(supply_truck_pos[faction_id][1].x - (supply_truck_pos[faction_id][2] == WEST ? 4 : 0), supply_truck_pos[faction_id][1].y, supply_truck_pos[faction_id][1].z))
+
+		var/turf/refT = supply_truck_pos[faction_id][1]
+		var/properThrow = TRUE // shows if we're going to get thrown in front of the truck; should we even care about the y coord?
+
+		var/turf/throwAt = get_step(get_step(refT, GLOB.reverse_dir[truck.direction]), GLOB.reverse_dir[truck.direction])
+		if (!throwAt)
+			properThrow = FALSE
+			throwAt = get_random_turf_in_range(refT, 10, 10)
+			if (turf_contains_dense_objects(throwAt))
+				throwAt = refT
+
+		for (var/turf/T in truck.locs)
+			for (var/mob/M in T)
+				if (properThrow && throwAt.y != M.loc.y)
+					throwAt = get_step(throwAt, NORTH)
+
+				M.forceMove(throwAt)
+
+				to_chat(M, "<span class='alert'>You are hit by the arriving truck!</span>")
+				M.visible_message("<span class='notice'>[M] is hit by the oncoming supply truck!</span>")
+
+				playsound(M, 'sound/mecha/mechstep.ogg', 100, 0, 5) // for lack of better sound
+
+				if (istype(M, /mob/living))
+					var/mob/living/L = M
+					shake_camera(L, 3, 2)
+					L.apply_damage(3 * (throwAt.x - M.x + 1))
+					L.apply_effect(0.5 * (throwAt.x - M.x + 1), PARALYZE)
+
 		truck.contents = truck_contents
 		truck_contents.len = 0
 		truck.update_icon()
@@ -103,12 +146,12 @@ var/list/supply_truck_pos = list()
 			for(var/obj/structure/receipt_printer/RP in radionet.printers)
 				RP.doPrint()
 				new /obj/item/weapon/paper/truck_manifest(RP, truck.getGroupedContentList(), price, shipments)
-		allSay("Truck arrived at Base.")
+		allSay("Truck arrived at FOB.")
 		at_base = 1
 	else //at station
 		commandMoney += sell(truck_contents)
 		truck_contents.len = 0
-		allSay("Truck arrived at Command.")
+		allSay("Truck arrived at HQ.")
 		at_base = 0
 	moving = 0
 
@@ -123,14 +166,16 @@ var/list/supply_truck_pos = list()
 		if(!truck)
 			//this could also trigger on truck destruction, but having this feedback only when using the radio adds a bit of immersion
 			//~also its easier this way~
-			allSay("We received message that your truck was destroyed. We have a new one standing by at command, watch your assets!")
+			allSay("We received message that your truck was destroyed. We have a new one standing by at HQ, watch your assets!")
 			at_base = 0
+			if (!truck) // precaution
+				truck = new (null)
 			return 0
 		playsound(truck.loc, 'sound/effects/truck/truckleavingnew.ogg', 100, 1)
 		sleep(4 SECONDS)
 		truck_contents = truck.contents
 		truck.forceMove(null)
-		allSay("Truck sent to Command.")
+		allSay("Truck sent to HQ.")
 	else
 		//buys all of shopping list
 		var/list/L = buy()
@@ -138,7 +183,7 @@ var/list/supply_truck_pos = list()
 			return 0
 		truck_contents = L
 		commandMoney -= transitCost
-		allSay("Truck left Command and is enroute.")
+		allSay("Truck left HQ and is enroute.")
 	
 	moving = 1
 	spawn(rand(movetimeMin, movetimeMax))
@@ -213,9 +258,6 @@ var/list/supply_truck_pos = list()
 
 	var/list/contents = list()
 
-	//how much space will a truck have
-	var/obj/structure/supply_truck/T = new ()
-
 	//fluff vars
 	price = 0
 	shipments++
@@ -230,7 +272,7 @@ var/list/supply_truck_pos = list()
 		nextWithdrawal = 0
 		contents += crate
 
-	var/doBreak = 0
+	var/doBreak = FALSE
 	for(var/order in shoppinglist)
 		var/datum/supply_order/SO = shoppinglist["[order]"]
 		var/order_size = 0
@@ -240,9 +282,8 @@ var/list/supply_truck_pos = list()
 			
 			var/idx
 			for(idx = 0; idx < SO.packs["[pack_id]"]; idx++)
-				var/atom/A = SP.create(SO)
-				if(!T.hasSpace(size + order_size + T.getSize(A))) //can it fit in the truck?
-					doBreak = 1
+				if(!truck.hasSpace(size + order_size + truck.getSize(SP.containertype))) //can it fit in the truck?
+					doBreak = TRUE
 					break
 
 				//paying for the order
@@ -251,6 +292,8 @@ var/list/supply_truck_pos = list()
 
 				if(prob(0.5)) //1 in 200 crates will be lost
 					continue
+
+				var/atom/A = SP.create(SO)
 
 				if(!SP.contraband)
 					new /obj/item/weapon/paper/shipping_manifest(A, SP, shipments, SO)
@@ -267,8 +310,6 @@ var/list/supply_truck_pos = list()
 
 		size += order_size
 		shoppinglist.Remove(SO)
-	
-	T.forceMove(null)
 
 	return contents
 
@@ -292,11 +333,6 @@ var/list/supply_truck_pos = list()
 	for(var/obj/machinery/computer/supply/S in radionet.radios)
 		S.commandResponse("[message]")
 
-/obj/structure/radio_hub/Destroy()
-	broken = TRUE
-	icon_state = "[initial(icon_state)]-pwnd"
-	return QDEL_HINT_LETMELIVE
-
 #define RADIO_HUB_REPAIR_CABLE_AMOUNT 10
 /obj/structure/radio_hub/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/stack/radio_cable))
@@ -313,7 +349,7 @@ var/list/supply_truck_pos = list()
 		user.visible_message("<span class='notice'>[user] starts repairing \the [src].</span>")
 		if(do_after(user, 10 SECONDS, src))
 			if(!broken)
-				to_chat(user, "<span class='notice'>\The [src] already got repaired!</span>")
+				to_chat(user, "<span class='notice'>\The [src] has already been repaired!</span>")
 				return 0
 
 			if(!S.can_use(RADIO_HUB_REPAIR_CABLE_AMOUNT))
@@ -329,13 +365,6 @@ var/list/supply_truck_pos = list()
 	return 0
 #undef RADIO_HUB_REPAIR_CABLE_AMOUNT
 
-//for mappers
-/obj/structure/radio_hub/faction_1
-	faction_id = "faction_1"
-
-/obj/structure/radio_hub/faction_2
-	faction_id = "faction_2"
-
 /*
 SUPPLY ORDER
 */
@@ -344,15 +373,16 @@ SUPPLY ORDER
 	var/mob/orderedby = null // who ordered it
 	var/id = 0
 	var/obj/structure/radio_hub/hub //what hub it got ordered over
+	var/size = 0
 
-/datum/supply_order/proc/getSize()
-	. = 0
-	var/obj/structure/supply_truck/T = new ()
+/datum/supply_order/New(var/obj/structure/radio_hub/RH)
+	hub = RH
+
+	if (!hub.truck)
+		hub.truck = new (null)
+
 	for(var/pack_id in packs)
-		var/atom/movable/A = hub.supply_packs["[pack_id]"].create(null)
-		. += T.getSize(A) * packs["[pack_id]"]
-		A.forceMove(null)
-	T.forceMove(null)
+		size += hub.truck.getSize(hub.supply_packs["[pack_id]"].containertype) * packs["[pack_id]"]
 
 /datum/supply_order/proc/getCost()
 	. = 0

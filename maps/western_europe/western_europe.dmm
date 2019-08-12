@@ -112,10 +112,10 @@
 "ch" = (/obj/item/weapon/wwi/can/beans,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "ci" = (/obj/item/weapon/wwi/can/fish,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cj" = (/obj/item/weapon/wwi/can/ham,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"ck" = (/obj/effect/landmark/supply_truck/faction_1,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cl" = (/obj/effect/landmark/supply_truck/faction_2,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"ck" = (/obj/effect/landmark/supply_truck{direction = 8; faction_id = "faction_1"},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cl" = (/obj/effect/landmark/supply_truck{faction_id = "faction_2"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cm" = (/obj/structure/radio_cable{icon_state = "0-8"},/obj/machinery/computer/supply,/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cn" = (/obj/structure/radio_cable{icon_state = "0-8"},/obj/structure/radio_hub/faction_1,/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cn" = (/obj/structure/radio_cable{icon_state = "0-8"},/obj/structure/radio_hub{faction_id = "faction_1"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "co" = (/obj/item/weapon/reagent_containers/glass/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cp" = (/obj/item/weapon/reagent_containers/food/drinks/coffee/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cq" = (/obj/item/weapon/reagent_containers/food/drinks/bottle/trench/schnapps,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -130,7 +130,7 @@
 "cz" = (/obj/item/stack/medical/splint/ghetto,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cA" = (/obj/item/clothing/accessory/storage/wwi/brit,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cB" = (/obj/machinery/light/spot,/obj/structure/radio_cable{icon_state = "1-4"},/turf/simulated/floor/planet/dirt,/area/the_shit)
-"cC" = (/obj/structure/radio_hub/faction_2,/obj/structure/radio_cable{icon_state = "0-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
+"cC" = (/obj/structure/radio_hub{faction_id = "faction_2"},/obj/structure/radio_cable{icon_state = "0-8"},/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cE" = (/obj/item/metalscraps,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cF" = (/obj/item/weapon/wrench/trench,/turf/simulated/floor/planet/dirt,/area/the_shit)
 "cG" = (/obj/item/weapon/screwdriver/opener,/turf/simulated/floor/planet/dirt,/area/the_shit)
@@ -283,7 +283,7 @@ aaaaababababahbgbhbibjbkblbmbnbobpbqbrbsbtbubvbwabababababababababababababababab
 aaaaababababahbxbybzbAbBbCbDbEbFbGbHbIbJbKabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahbLbMbNbObPbQbRbSbTbUbVabbWagababababadadadadadadababababababadadadadadadabababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahbXbYbZcacbcccdcecfcgchcicjagabababahababababababagababababahababababababagababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
-aaaaababababahcocpcqcrcsabctcucvcwcxcyczagcAababahckabababababagababababahclabababababagababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
+aaaaababababahcocpcqcrcsabctcucvcwcxcyczagcAababahabababababckagababababahclabababababagababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahcEcFcGcHcIcJcKcLcMcNcOcPcQagcRabababaiaiaiaiaiaiababababababaiaiaiaiaiaiabababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahcTcUcVcWafcXcYcZcMdadbdcddagababababdSababababababababababababdSabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
 aaaaababababahdfdgdhdidjdkdldmdndodpdqdragabdIdMdJdMdNabdKdKdKdLdLdLabdIdMdJdMcmabdKdKdKdLdLdLabababababababababababababababababababababababababababababababababababababababababababababababababababaaaa
