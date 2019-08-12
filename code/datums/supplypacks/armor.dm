@@ -1,23 +1,23 @@
-/datum/supply_pack/britarmor
-	name = "British Armor"
+/datum/supply_pack/wuarmor
+	name = "Western Union Armor"
 	contains = list(
-		/obj/item/clothing/gloves/thick/britarmor = 1,
-		/obj/item/clothing/head/helmet/britarmor = 1,
-		/obj/item/clothing/shoes/britarmor = 1,
-		/obj/item/clothing/suit/armor/special/wwi/britarmor = 1
+		/obj/item/clothing/gloves/thick/armored/wu = 1,
+		/obj/item/clothing/head/helmet/wwi/armored/wu = 1,
+		/obj/item/clothing/shoes/boots/armored/wu = 1,
+		/obj/item/clothing/suit/storage/wwi/plate_armor/wu = 1
 	)
-	containername = "British Armor Crate"
+	containername = "Western Union Armor Crate"
 	cost = 20
 	group = "Clothing"
 
-/datum/supply_pack/germanarmor
-	name = "German Armor"
+/datum/supply_pack/ebarmor
+	name = "Eastern Bloc Armor"
 	contains = list(
-		/obj/item/clothing/gloves/thick/germanarmor = 1,
-		/obj/item/clothing/head/helmet/germanarmor = 1,
-		/obj/item/clothing/shoes/germanarmor = 1,
-		/obj/item/clothing/suit/storage/wwi/germanarmor = 1
+		/obj/item/clothing/gloves/thick/armored/eb = 1,
+		/obj/item/clothing/head/helmet/wwi/armored/eb = 1,
+		/obj/item/clothing/shoes/boots/armored/eb = 1,
+		/obj/item/clothing/suit/storage/wwi/plate_armor/eb = 1
 	)
-	containername = "German Armor Crate"
+	containername = "Eastern Bloc Armor Crate"
 	cost = 20
 	group = "Clothing"

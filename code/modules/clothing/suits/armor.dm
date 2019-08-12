@@ -575,7 +575,7 @@
 	icon_state = "WU-armor"
 	item_state = "WU-armor"
 
-/obj/item/clothing/suit/storage/wwi/plate_armor/wu
+/obj/item/clothing/suit/storage/wwi/plate_armor/eb
 	name = "EB plate armor"
 	icon_state = "EB-armor"
 	item_state = "EB-armor"
