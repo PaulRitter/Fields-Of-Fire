@@ -41,12 +41,23 @@
 	var/list/truck_images = list()
 	var/image/foreground = null
 
+	var/direction = EAST
+	
+
 /obj/structure/supply_truck/examine(mob/user, distance, infix, suffix)
 	if(contents.len)
 		var/txt_cont = jointext(getGroupedContentList(),"\n - ")
-		to_chat(user, "Contents:\n - [txt_cont].") //byond gets all errory when put it inside the string
+		to_chat(user, "Contents:\n - [txt_cont].") //byond gets all errory when I put it inside the string
 	else
 		to_chat(user, "\the [src] is empty")
+
+/obj/structure/supply_truck/proc/toggleDirection()
+	var/icon/I = new(src.icon)
+	I.Flip(direction == EAST ? WEST : EAST)
+	src.icon = I
+	start_pixel_x = direction == EAST ? 2 : 2.65
+	step_pixel_x = -step_pixel_x
+	direction = direction == EAST ? WEST : EAST
 
 /obj/structure/supply_truck/proc/sanityCheck(var/mob/user)
 	if(Adjacent(user))
@@ -85,7 +96,7 @@
 	_using += user
 	user.visible_message("<span class='notice'>[user] starts putting \the [A] into \the [src]</span>")
 	to_chat(user, "<span class='notice'>You start to put \the [A] into \the [src]")
-	if(do_after(user, 5 SECONDS, src, progress = 2))
+	if(do_after(user, 5 SECONDS, src, over_user = TRUE))
 		A.forceMove(src)
 		user.visible_message("<span class='notice'>[user] finishes putting \the [A] into \the [src]</span>")
 		to_chat(user, "<span class='notice'>You finish putting \the [A] into \the [src]")
@@ -110,7 +121,7 @@
 	_using += user
 	user.visible_message("<span class='notice'>[user] starts to pull \the [A] out of \the [src]</span>")
 	to_chat(user, "<span class='notice'>You start to pull \the [A] out of \the [src]")
-	if(do_after(user, 5 SECONDS, src, progress = 2))
+	if(do_after(user, 5 SECONDS, src, over_user = TRUE))
 		A.forceMove(get_turf(user))
 		user.visible_message("<span class='notice'>[user] pulls \the [A] out of \the [src]</span>")
 		to_chat(user, "<span class='notice'>You successfully pull \the [A] out of \the [src]")
@@ -140,27 +151,34 @@
 // 
 /obj/structure/supply_truck/update_icon()
 	. = ..()
+
 	overlays -= truck_images	
+
 	var/list/temp_images = truck_images.Copy()
 	truck_images.len = 0
 
 	overlays -= foreground
 
 	var/x = 0
-	var/y = maxY-1
+	var/y = maxY - 1
 	var/z = 0
-	var/list/renderOrder = getWeightedContentList()
+
+	var/list/renderOrder = getWeightedContentList(direction == WEST)
 	var/list/alreadyRendered = list()
+
 	for(var/atom/A in renderOrder)
 		if(!getSize(A))
 			continue
+
 		var/index = "\ref[A]"
 		if(!(index in temp_images))
 			temp_images[index] = image(A.icon, A.icon_state)
+
 		var/image/I = temp_images[index]
-		var/doBreak = 0
-		var/alreadyLooped = 0
-		while(skipCoords(x,y,z,alreadyRendered,getSize(A)))
+		var/doBreak = FALSE
+		var/alreadyLooped = FALSE
+
+		while(skipCoords(x, y, z, alreadyRendered, getSize(A)))
 			var/nextPos = nextPos(x, y, z)
 			x = nextPos[1]
 			y = nextPos[2]
@@ -169,18 +187,18 @@
 			if(z >= maxZ)
 				if(!alreadyLooped)
 					x = 0
-					y = maxY-1
+					y = maxY - 1
 					z = 0
-					alreadyLooped = 1
+					alreadyLooped = TRUE
 				else
-					doBreak = 1 
+					doBreak = TRUE
 					break
 
 		if(doBreak || (z >= maxZ))
-			message_admins("had to force renderbreak in supply truck contents renderer! this should not have happened! make a pic of the content-var of the truck and send it to a dev. <A HREF='?_src_=vars;Vars=\ref[src]'>\[VV\]</A>")
+			message_admins("Had to force renderbreak in supply truck contents renderer! This should not have happened! Take a pic of the content-var of the truck and send it to a dev. <A HREF='?_src_=vars;Vars=\ref[src]'>\[VV\]</A>")
 			break
 
-		var/man_y = y + (getPosSize(x, y, z, alreadyRendered)/modifier) //for half boxes
+		var/man_y = y + (getPosSize(x, y, z, alreadyRendered) / modifier) //for half boxes
 		I.pixel_x = (start_pixel_x * WORLD_ICON_SIZE) + (x * (step_pixel_x * WORLD_ICON_SIZE))
 		I.pixel_y = (start_pixel_y * WORLD_ICON_SIZE) + (man_y * (step_pixel_y * WORLD_ICON_SIZE)) + (z * (step_pixel_z * WORLD_ICON_SIZE))
 		
@@ -196,7 +214,12 @@
 	overlays |= truck_images
 
 	if(!foreground)
-		foreground = image('icons/FoF/trucks.dmi', "cargo_truck-cover")
+		var/icon/I = icon('icons/FoF/trucks.dmi', "cargo_truck-cover")
+		if(direction == WEST)
+			I.Flip(direction == EAST ? WEST : EAST)
+
+		foreground = image(I)
+
 	overlays |= foreground
 
 /obj/structure/supply_truck/proc/getPosSize(var/x, var/y, var/z, var/list/already_rendered)
@@ -204,6 +227,7 @@
 	for(var/list/R in already_rendered)
 		if((x == R[1]) && (y == R[2]) && (z == R[3]))
 			sum += R[4]
+			
 	return sum
 
 /obj/structure/supply_truck/proc/skipCoords(var/x, var/y, var/z, var/list/already_rendered, var/size)
@@ -226,26 +250,27 @@
 	else
 		return 1
 
-/obj/structure/supply_truck/proc/getSize(var/atom/A)
-	if(!A)
+/obj/structure/supply_truck/proc/getSize(var/typepath)
+	if(!typepath)
 		return 0
 
 	for(var/type in allowedTypes)
-		if(istype(A, type))
+		if(istype(typepath, type))
 			return allowedTypes[type]
 
 	return 0 //if it got added but we don't know it, it'll probably fuck up the renderer, so we let it ignore it using this
 
 //use this to determine if something can be added too
 //basic desc bubblesort, since we want to render the biggest objs first
-/obj/structure/supply_truck/proc/getWeightedContentList()
+/obj/structure/supply_truck/proc/getWeightedContentList(var/reverse = FALSE)
 	var/list/L = contents.Copy()
 	for(var/atom/A in L)
 		for(var/i = 1; i < L.len; i++)
-			if(getSize(L[i]) < getSize(L[i+1]))
+			if(getSize(L[i]) < getSize(L[i + 1]))
 				var/atom/T = L[i]
-				L[i] = L[i+1]
-				L[i+1] = T
+				L[i] = L[i + 1]
+				L[i + 1] = T
+
 	return L
 
 /obj/structure/supply_truck/proc/nextPos(var/x, var/y, var/z)
@@ -253,11 +278,11 @@
 		y--
 	else
 		x++
-		y = maxY-1
+		y = maxY - 1
 
 	if(x == maxX)
 		x = 0
-		y = maxY-1
+		y = maxY - 1
 		z++
 
 	return list(x, y, z)

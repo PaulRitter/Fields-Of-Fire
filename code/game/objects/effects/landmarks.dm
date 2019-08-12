@@ -236,19 +236,19 @@
 /obj/effect/landmark/supply_truck
 	name = "supply_truck"
 	var/faction_id
+	var/direction = EAST // direction truck arrives from
 
 /obj/effect/landmark/supply_truck/New()
 	..()
+	
 	if(!faction_id)
-		message_admins("there is a supply_truck landmark which holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z], someone spawned some fucky stuff or some smoothbrain mapper fucked up.")
+		message_admins("Supply landmark holds no faction_id at x:[loc.x] y:[loc.y] z:[loc.z]")
+		return 0
+
+	if(!direction || (direction != EAST && direction != WEST))
+		message_admins("Supply landmark with invalid direction at x:[loc.x] y:[loc.y] z:[loc.z]")
 		return 0
 	
-	supply_truck_pos["[faction_id]"] = loc
+	supply_truck_pos["[faction_id]"] = list(loc, direction) // in lack of tuples
 	delete_me = 1
 	return 1
-
-/obj/effect/landmark/supply_truck/faction_1
-	faction_id = "faction_1"
-
-/obj/effect/landmark/supply_truck/faction_2
-	faction_id = "faction_2"
