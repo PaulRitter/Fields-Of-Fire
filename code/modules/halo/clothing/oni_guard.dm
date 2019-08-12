@@ -93,7 +93,7 @@
 	icon = 'code/modules/halo/clothing/item_oni.dmi'
 	icon_state = "Oni_Ammo_Belt"
 	item_state = "Oni Belt"
-	storage_slots = 6
+	storage_slots_w = 6
 
 
 #undef ONI_OVERRIDE

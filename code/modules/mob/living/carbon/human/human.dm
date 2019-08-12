@@ -121,16 +121,16 @@
 		if (2.0)
 			b_loss = 60
 			f_loss = 60
-
-			if (!istype(l_ear, /obj/item/clothing/ears/earmuffs) && !istype(r_ear, /obj/item/clothing/ears/earmuffs))
-				ear_damage += 30
-				ear_deaf += 120
+			var/ear_protection = earcheck()
+			if (ear_protection > 2)
+				ear_damage += 30/(ear_protection+1)
+				ear_deaf += 120/(ear_protection+1)
 			if (prob(70))
 				Paralyse(10)
 
 		if(3.0)
 			b_loss = 30
-			if (!istype(l_ear, /obj/item/clothing/ears/earmuffs) && !istype(r_ear, /obj/item/clothing/ears/earmuffs))
+			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
 			if (prob(50))
@@ -659,6 +659,16 @@
 		return FLASH_PROTECTION_MAJOR
 	return total_protection
 
+/mob/living/carbon/human/earcheck()
+	var/ear_safety = 0
+	if(istype(ears, /obj/item/clothing/ears/earmuffs))
+		ear_safety += 2
+	if(HULK in mutations)
+		ear_safety += 1
+	if(istype(head, /obj/item/clothing/head/helmet))
+		ear_safety += 1
+	return ear_safety
+
 /mob/living/carbon/human/flash_eyes(var/intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)
 	if(internal_organs_by_name[BP_EYES]) // Eyes are fucked, not a 'weak point'.
 		var/obj/item/organ/internal/eyes/I = internal_organs_by_name[BP_EYES]
@@ -694,7 +704,7 @@
 
 /mob/living/carbon/human/abiotic(var/full_body = TRUE)
 	if(full_body)
-		if(src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.l_ear || src.r_ear || src.gloves)
+		if(src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves)
 			return FALSE
 	return ..()
 

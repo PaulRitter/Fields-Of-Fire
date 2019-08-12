@@ -63,7 +63,7 @@
 	name = "Shotgun Shell Box"
 	desc = "A small box of shotgun shells to help load a shotgun."
 	capacity = 6
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "papcase"
 	w_class = ITEM_SIZE_NORMAL
 	ammo_spawnwith = list(/obj/item/ammo_casing/shotgun/trench)
@@ -115,7 +115,7 @@
 	ammo_spawnwith = list(/obj/item/ammo_casing/c8mm)
 	w_class = ITEM_SIZE_NORMAL
 	icon_state = "lebelbox"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	capacity = 8
 	load_time = 1
 	slot_flags = SLOT_BELT
@@ -129,7 +129,7 @@
 	ammo_spawnwith = list(/obj/item/ammo_casing/a3030)
 	w_class = ITEM_SIZE_NORMAL
 	icon_state = "lebelbox"
-	icon = 'icons/FoF/munitions.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	capacity = 8
 	load_time = 1
 	slot_flags = SLOT_BELT

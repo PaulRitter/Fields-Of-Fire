@@ -30,14 +30,12 @@ var/list/supply_truck_pos = list()
 	var/datum/radionet/radionet
 	var/faction_id //used to link to truck spawner ~and maybe other things later on~
 
-	//CONFIG VARS
+	//CONFIG VARS // should be moved to config at some point
 	var/money_per_crate = 5 //how much command pays per crate
 	//SHOULD BE 1, IS 0 FOR DEBUGGING
-	var/restriction = 0 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
-	var/movetimeMax = 5 SECONDS
-	var/movetimeMin = 1 SECONDS
-	// var/movetimeMax = 3 MINUTES //how long the truck takes
-	// var/movetimeMin = 1.5 MINUTES
+	var/restriction = 1 //Who can approve orders? 0 = autoapprove; 1 = has access; 2 = has an ID (omits silicons)
+	var/movetimeMax = 3 MINUTES //how long the truck takes
+	var/movetimeMin = 1.5 MINUTES
 
 	//SYSTEM VARS
 	//control

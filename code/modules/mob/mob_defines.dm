@@ -21,14 +21,18 @@
 	var/obj/screen/purged = null
 	var/obj/screen/internals = null
 	var/obj/screen/oxygen = null
+	var/obj/screen/thirst_HUD = null
 	var/obj/screen/i_select = null
 	var/obj/screen/m_select = null
 	var/obj/screen/toxin = null
 	var/obj/screen/fire = null
 	var/obj/screen/bodytemp = null
 	var/obj/screen/healths = null
+	var/obj/screen/healthbar = null
+	var/obj/screen/staminas = null
 	var/obj/screen/throw_icon = null
 	var/obj/screen/nutrition_icon = null
+	var/obj/screen/health_huds = null
 	var/obj/screen/happiness_icon = null //moodies
 	var/obj/screen/pressure = null
 	var/obj/screen/pain = null
@@ -98,7 +102,7 @@
 	var/obj/item/l_hand = null//Living
 	var/obj/item/r_hand = null//Living
 	var/obj/item/weapon/back = null//Human/Monkey
-	var/obj/item/weapon/storage/s_active = null//Carbon
+	var/list/s_active = list()//Carbon
 	var/obj/item/clothing/mask/wear_mask = null//Carbon
 
 

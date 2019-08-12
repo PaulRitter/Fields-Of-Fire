@@ -14,6 +14,7 @@
 
 	var/caliber = "357"		//determines which casings will fit
 	var/handle_casings = EJECT_CASINGS	//determines how spent casings should be handled
+	var/ejection_angle = 90 //If we handle casings by ejecting them, which direction should we throw them? Angle between 1 to 360
 	var/load_method = SINGLE_CASING|SPEEDLOADER //1 = Single shells, 2 = box or quick loader, 3 = magazine
 	var/obj/item/ammo_casing/chambered = null
 
@@ -89,7 +90,9 @@
 	..()
 	if(chambered)
 		chambered.expend()
-		process_chambered()
+	if(handle_casings == EJECT_CASINGS)
+		chambered.eject(get_turf(src), angle2dir(dir2angle(loc.dir)+ejection_angle))
+	process_chambered()
 
 /obj/item/weapon/gun/projectile/handle_click_empty()
 	..()
@@ -98,14 +101,11 @@
 /obj/item/weapon/gun/projectile/proc/process_chambered()
 	if (!chambered) return
 
-	switch(handle_casings)
-		if(EJECT_CASINGS) //eject casing onto ground.
-			chambered.loc = get_turf(src)
-		if(CYCLE_CASINGS) //cycle the casing back to the end.
-			if(ammo_magazine)
-				ammo_magazine.stored_ammo += chambered
-			else
-				loaded += chambered
+	if(handle_casings == CYCLE_CASINGS)
+		if(ammo_magazine)
+			ammo_magazine.stored_ammo += chambered
+		else
+			loaded += chambered
 
 	if(handle_casings != HOLD_CASINGS)
 		chambered = null
@@ -239,6 +239,8 @@
 		to_chat(user, "<span class='warning'>It looks jammed.</span>")
 	if(ammo_magazine)
 		to_chat(user, "It has \a [ammo_magazine] loaded.")
+	if(chambered && in_range(user, src))
+		to_chat(user, "<span class='info'>It has a round in the chamber.</span>")
 //	to_chat(user, "Has [getAmmo()] round\s remaining.")
 	return
 

@@ -690,11 +690,11 @@
 	vend_delay = 25
 	products = list(/obj/item/weapon/reagent_containers/food/snacks/candy = 6,/obj/item/weapon/reagent_containers/food/drinks/dry_ramen = 6,/obj/item/weapon/reagent_containers/food/snacks/chips =6,
 					/obj/item/weapon/reagent_containers/food/snacks/sosjerky = 6,/obj/item/weapon/reagent_containers/food/snacks/no_raisin = 6,/obj/item/weapon/reagent_containers/food/snacks/spacetwinkie = 6,
-					/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers = 6, /obj/item/weapon/reagent_containers/food/snacks/tastybread = 6)
-	contraband = list(/obj/item/weapon/reagent_containers/food/snacks/syndicake = 6, /obj/item/weapon/reagent_containers/food/snacks/skrellsnacks = 3)
+					/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers = 6)
+	contraband = list(/obj/item/weapon/reagent_containers/food/snacks/syndicake = 6)
 	prices = list(/obj/item/weapon/reagent_containers/food/snacks/candy = 1,/obj/item/weapon/reagent_containers/food/drinks/dry_ramen = 5,/obj/item/weapon/reagent_containers/food/snacks/chips = 1,
 					/obj/item/weapon/reagent_containers/food/snacks/sosjerky = 2,/obj/item/weapon/reagent_containers/food/snacks/no_raisin = 1,/obj/item/weapon/reagent_containers/food/snacks/spacetwinkie = 1,
-					/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers = 1, /obj/item/weapon/reagent_containers/food/snacks/tastybread = 2)
+					/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers = 1)
 
 
 
@@ -1102,32 +1102,8 @@
 	contraband = list(/obj/item/weapon/reagent_containers/spray/waterflower = 2, /obj/item/weapon/storage/box/snappops = 3)
 
 /obj/machinery/vending/wwi
-	icon = 'icons/FoF/tree.dmi'
+	icon = 'icons/FoF/x64structures.dmi'
 	name = "Requisitions Vendor"
 	desc = "Insert your Requisition Receipt into the punch card slot to recieve your gear."
 	vend_delay = 21
 	icon_state = "vendor"
-
-/obj/machinery/vending/wwi/frenchstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/lebel = 80)
-
-/obj/machinery/vending/wwi/britstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/smle = 80, /obj/item/weapon/storage/box/wwi/brit/squire = 80)
-
-/obj/machinery/vending/wwi/germstandard
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/g98 = 80, /obj/item/weapon/storage/box/wwi/germ/squire = 80)
-
-/obj/machinery/vending/wwi/frenchmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/frenchmed = 80)
-
-/obj/machinery/vending/wwi/britmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/britmed = 80)
-
-/obj/machinery/vending/wwi/germmedic
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/med = 80)
-
-/obj/machinery/vending/wwi/germknight
-	premium = list(/obj/item/weapon/storage/box/wwi/germ/knight = 40)
-
-/obj/machinery/vending/wwi/britknight
-	premium = list(/obj/item/weapon/storage/box/wwi/brit/knight = 40)

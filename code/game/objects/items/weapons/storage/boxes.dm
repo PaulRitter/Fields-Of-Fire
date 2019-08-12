@@ -24,15 +24,16 @@
 	desc = "It's just an ordinary box."
 	icon_state = "box"
 	item_state = "syringe_kit"
-	max_storage_space = DEFAULT_BOX_STORAGE
+	storage_slots_w = 6
+	storage_slots_h = 3
 	var/foldable = /obj/item/stack/material/cardboard	// BubbleWrap - if set, can be folded (when empty) into a sheet of cardboard
 
 /obj/item/weapon/storage/box/large
 	name = "large box"
 	icon_state = "largebox"
 	w_class = ITEM_SIZE_LARGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = DEFAULT_LARGEBOX_STORAGE
+	storage_slots_w = 9
+	storage_slots_h = 3
 
 // BubbleWrap - A box can be folded up to make card
 /obj/item/weapon/storage/box/attack_self(mob/user as mob)
@@ -47,7 +48,7 @@
 	var/found = 0
 	// Close any open UI windows first
 	for(var/mob/M in range(1))
-		if (M.s_active == src)
+		if (src in M.s_active)
 			src.close(M)
 		if ( M == user )
 			found = 1
@@ -334,25 +335,6 @@
 		W.update_icon()
 		return
 
-/obj/item/weapon/storage/box/matches/trench
-	name = "matchbook"
-	desc = "A small book of matches. They're advertised as being waterproof."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "matches"
-	item_state = "matches"
-	max_storage_space = 5
-	can_hold = list(/obj/item/weapon/flame/match/trench)
-	startswith = list(/obj/item/weapon/flame/match/trench = 5)
-	attackby(obj/item/weapon/flame/match/trench/W as obj, mob/user as mob)
-		if(istype(W) && !W.lit && !W.burnt)
-			W.lit = 1
-			W.damtype = "burn"
-			W.icon_state = "match_litup"
-			W.set_light(2)
-			GLOB.processing_objects.Add(W)
-		W.update_icon()
-		return
-
 /obj/item/weapon/storage/box/matches/trench/empty
 	icon_state = "matches-0"
 
@@ -414,17 +396,18 @@
 	icon_state = "portafreezer"
 	item_state = "medicalpack"
 	foldable = null
-	max_w_class = ITEM_SIZE_NORMAL
+	storage_slots_w = 9
+	storage_slots_h = 3
 	w_class = ITEM_SIZE_HUGE
 	can_hold = list(/obj/item/organ, /obj/item/weapon/reagent_containers/food, /obj/item/weapon/reagent_containers/glass)
-	max_storage_space = DEFAULT_BACKPACK_STORAGE
 	use_to_pickup = 1 // for picking up broken bulbs, not that most people will try
 
 /obj/item/weapon/storage/box/checkers
 	name = "checkers box"
 	desc = "This box holds a nifty portion of checkers. Foam-shaped on the inside so that only checkers may fit."
 	icon_state = "checkers"
-	max_storage_space = 24
+	storage_slots_w = 36
+	storage_slots_h = 6
 	foldable = null
 	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/checker)
 	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/checker = 12,
@@ -476,11 +459,12 @@
 	startswith = list(/obj/item/clothing/accessory/armband/med = 5)
 
 /obj/item/weapon/storage/box/letter
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lettercase"
 	name = "Envelope"
 	desc = "The envelope they gave you with your tags. Contains a Requisition Receipt and Transportation Receipt. Don't use the Transportation Receipt until you've gotten your gear with the Requisition Receipt."
-	max_storage_space = 2
+	storage_slots_w = 2
+	storage_slots_h = 1
 	w_class = ITEM_SIZE_TINY
 
 /obj/item/weapon/storage/box/letter/brit
@@ -488,110 +472,3 @@
 
 /obj/item/weapon/storage/box/letter/german
 	startswith = list(/obj/item/weapon/coin/req = 1,/obj/item/wwi/transit/german = 1)
-
-/obj/item/weapon/storage/box/wwi
-	icon = 'icons/FoF/misc.dmi'
-	can_hold = list(/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/clothing,/obj/item/weapon/melee/combat_knife,/obj/item/clothing/mask/gas,/obj/item/ammo_box,/obj/item/clothing/head/helmet)
-	w_class = ITEM_SIZE_HUGE
-
-/obj/item/weapon/storage/box/wwi/germ
-	icon_state = "flatcrate"
-
-/obj/item/weapon/storage/box/wwi/brit
-	icon_state = "lightflatcrate"
-
-/obj/item/weapon/storage/box/wwi/brit/lebel
-	name = "Lebel box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
-					/obj/item/clothing/accessory/storage/wwi/french,
-					/obj/item/clothing/suit/storage/wwi/frenchcoat,
-					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
-					/obj/item/clothing/mask/gas/wwi/french,
-					/obj/item/weapon/melee/combat_knife/french,
-					/obj/item/clothing/head/helmet/frenchsoft)
-
-/obj/item/weapon/storage/box/wwi/brit/smle
-	name = "Lee-Enfield box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/clothing/accessory/storage/wwi/brit,
-					/obj/item/clothing/suit/storage/wwi/britishcoat,
-					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)
-
-/obj/item/weapon/storage/box/wwi/germ/g98
-	name = "G98 box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/clothing/accessory/storage/wwi/germ,
-					/obj/item/clothing/suit/storage/wwi/germancoat,
-					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/item/weapon/storage/box/wwi/brit/britmed
-	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/britmedcoat,
-					/obj/item/ammo_magazine/smle_strip, /obj/item/ammo_magazine/smle_strip,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)
-
-/obj/item/weapon/storage/box/wwi/brit/frenchmed
-	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/lebel,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/frenchmedcoat,
-					/obj/item/ammo_box/lebel, /obj/item/ammo_box/lebel,
-					/obj/item/clothing/mask/gas/wwi/french,
-					/obj/item/weapon/melee/combat_knife/french,
-					/obj/item/clothing/head/helmet/frenchsoft)
-
-/obj/item/weapon/storage/box/wwi/germ/med
-	name = "Medic box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/weapon/storage/belt/trenchmed,
-					/obj/item/clothing/suit/storage/wwi/germanmedcoat,
-					/obj/item/ammo_magazine/g792,/obj/item/ammo_magazine/g792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/item/weapon/storage/box/wwi/germ/knight
-	name = "Knight box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/mg08,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/ammo_magazine/box/a792,/obj/item/ammo_magazine/box/a792,
-					/obj/item/weapon/melee/combat_knife/german)
-
-/obj/item/weapon/storage/box/wwi/germ/squire
-	name = "AMG box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/g98rifle,
-					/obj/item/clothing/accessory/storage/wwi/germ,
-					/obj/item/clothing/suit/storage/wwi/germancoat,
-					/obj/item/ammo_magazine/g792,
-					/obj/item/ammo_magazine/box/a792, /obj/item/ammo_magazine/box/a792,
-					/obj/item/clothing/mask/gas/wwi/german,
-					/obj/item/weapon/melee/combat_knife/german,
-					/obj/item/clothing/head/helmet/germansoft)
-
-/obj/item/weapon/storage/box/wwi/brit/knight
-	name = "Knight box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/lewis,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/ammo_magazine/box/mp303,/obj/item/ammo_magazine/box/mp303,
-					/obj/item/weapon/melee/combat_knife/british)
-
-/obj/item/weapon/storage/box/wwi/brit/squire
-	name = "AMG box"
-	startswith = list(/obj/item/weapon/gun/projectile/wwi/bolt/smle,
-					/obj/item/clothing/accessory/storage/wwi/brit,
-					/obj/item/clothing/suit/storage/wwi/britishcoat,
-					/obj/item/ammo_magazine/smle_strip,
-					/obj/item/ammo_magazine/box/mp303,/obj/item/ammo_magazine/box/mp303,
-					/obj/item/clothing/mask/gas/wwi/british,
-					/obj/item/weapon/melee/combat_knife/british,
-					/obj/item/clothing/head/helmet/britsoft)

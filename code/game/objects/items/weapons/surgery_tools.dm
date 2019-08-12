@@ -136,11 +136,6 @@
 	sharp = 1
 	edge = 1
 
-/obj/item/weapon/circular_saw/trench
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "bonesaw"
-	hitsound = 'sound/weapons/bladeslice.ogg'
-
 //misc, formerly from code/defines/weapons.dm
 /obj/item/weapon/bonegel
 	name = "bone gel"

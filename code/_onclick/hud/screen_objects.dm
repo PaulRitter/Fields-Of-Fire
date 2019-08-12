@@ -35,6 +35,8 @@
 
 /obj/screen/close
 	name = "close"
+	icon = 'icons/mob/screen1_small.dmi'
+	icon_state = "x"
 
 /obj/screen/close/Click()
 	if(master)
@@ -95,54 +97,51 @@
 	var/old_selecting = selecting //We're only going to update_icon() if there's been a change
 
 	switch(icon_y)
-		if(1 to 3) //Feet
+		if(5 to 8) //Feet
 			switch(icon_x)
-				if(10 to 15)
+				if(6 to 13)
 					selecting = BP_R_FOOT
-				if(17 to 22)
+				if(20 to 27)
 					selecting = BP_L_FOOT
 				else
 					return 1
-		if(4 to 9) //Legs
+		if(9 to 25) //Legs
 			switch(icon_x)
-				if(10 to 15)
+				if(8 to 15)
 					selecting = BP_R_LEG
-				if(17 to 22)
+				if(18 to 25)
 					selecting = BP_L_LEG
 				else
 					return 1
-		if(10 to 13) //Hands and groin
+		if(26 to 32) //Hands and groin
 			switch(icon_x)
-				if(8 to 11)
+				if(5 to 11)
 					selecting = BP_R_HAND
-				if(12 to 20)
+				if(12 to 22)
 					selecting = BP_GROIN
-				if(21 to 24)
+				if(23 to 29)
 					selecting = BP_L_HAND
 				else
 					return 1
-		if(14 to 22) //Chest and arms to shoulders
+		if(33 to 48) //Chest and arms to shoulders
 			switch(icon_x)
-				if(8 to 11)
-					selecting = BP_R_ARM
-				if(12 to 20)
-					selecting = BP_CHEST
-				if(21 to 24)
+				if(4 to 10)
 					selecting = BP_L_ARM
+				if(11 to 23)
+					selecting = BP_CHEST
+				if(24 to 29)
+					selecting = BP_R_ARM
 				else
 					return 1
-		if(23 to 30) //Head, but we need to check for eye or mouth
-			if(icon_x in 12 to 20)
+		if(49 to 60) //Head, but we need to check for eye or mouth
+			if(icon_x in 11 to 22)
 				selecting = BP_HEAD
 				switch(icon_y)
-					if(23 to 24)
-						if(icon_x in 15 to 17)
+					if(48 to 52)
+						if(icon_x in 13 to 20)
 							selecting = BP_MOUTH
-					if(26) //Eyeline, eyes are on 15 and 17
-						if(icon_x in 14 to 18)
-							selecting = BP_EYES
-					if(25 to 27)
-						if(icon_x in 15 to 17)
+					if(53 to 55) //Eyeline, eyes are on 15 and 17
+						if(icon_x in 14 to 19)
 							selecting = BP_EYES
 
 	if(old_selecting != selecting)
@@ -157,7 +156,7 @@
 
 /obj/screen/zone_sel/update_icon()
 	overlays.Cut()
-	overlays += image('icons/mob/zone_sel.dmi', "[selecting]")
+	overlays += image('icons/mob/screen/newhud_32x64.dmi', "[selecting]")
 
 /obj/screen/intent
 	name = "intent"
@@ -194,7 +193,7 @@
 			else
 				usr.hud_used.inventory_shown = 1
 				usr.client.screen += usr.hud_used.other
-
+			icon_state = "other[usr.hud_used.inventory_shown]"
 			usr.hud_used.hidden_inventory_update()
 
 		if("equip")
@@ -342,6 +341,16 @@
 		if("mood")
 			var/mob/living/carbon/C = usr
 			C.print_happiness(C)
+
+		if("thirst")
+			if(iscarbon(usr))
+				var/mob/living/carbon/C = usr
+				C.print_thirst(C)
+
+		if("nutrition")
+			if(iscarbon(usr))
+				var/mob/living/carbon/C = usr
+				C.print_hunger(C)
 
 		if("module")
 			if(isrobot(usr))

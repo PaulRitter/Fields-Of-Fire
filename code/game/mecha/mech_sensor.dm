@@ -25,6 +25,7 @@
 	return 1
 
 /obj/machinery/mech_sensor/proc/is_blocked(O as obj)
+/*
 	if(istype(O, /obj/mecha/medical/odysseus))
 		var/obj/mecha/medical/odysseus/M = O
 		for(var/obj/item/mecha_parts/mecha_equipment/ME in M.equipment)
@@ -32,7 +33,7 @@
 				var/obj/item/mecha_parts/mecha_equipment/tool/sleeper/S = ME
 				if(S.occupant != null)
 					return 0
-
+*/
 	return istype(O, /obj/mecha) || istype(O, /obj/vehicle)
 
 /obj/machinery/mech_sensor/proc/give_feedback(O as obj)

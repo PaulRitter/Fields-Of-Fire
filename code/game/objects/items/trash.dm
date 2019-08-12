@@ -78,27 +78,27 @@
 
 /obj/item/trash/cansoup
 	name = "empty can"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "soup_e"
 
 /obj/item/trash/canbean
 	name = "empty can"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "beans_e"
 
 /obj/item/trash/canfish
 	name = "empty can"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "fish_e"
 
 /obj/item/trash/bowl
 	name = "empty bowl"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "bowl"
 
 obj/item/trash/canham
 	name = "empty can"
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "ham_e"
 
 /obj/item/trash/attack(mob/M as mob, mob/living/user as mob)

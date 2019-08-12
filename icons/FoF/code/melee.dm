@@ -12,24 +12,6 @@
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	slot_flags = SLOT_BELT
 
-/obj/item/weapon/melee/combat_knife/german
-	icon = 'icons/FoF/weaponsnew.dmi'
-	name = "\improper German Trench Knife"
-	desc = "A robust trench knife."
-	icon_state = "knife_german"
-
-/obj/item/weapon/melee/combat_knife/british
-	icon = 'icons/FoF/weaponsnew.dmi'
-	name = "\improper British Trench Knife"
-	desc = "A robust trench knife."
-	icon_state = "knife_british"
-
-/obj/item/weapon/melee/combat_knife/french
-	icon = 'icons/FoF/weaponsnew.dmi'
-	name = "\improper French Trench Knife"
-	desc = "A robust trench knife."
-	icon_state = "knife_french"
-
 /obj/item/weapon/melee/baton/humbler
 	name = "humbler stun device"
 	desc = "A retractable baton capable of inducing a large amount of pain via electrical shocks."
@@ -60,12 +42,16 @@
 		w_class = 2
 		item_state = "classic_baton"
 
-obj/item/weapon/melee/hammer
+/obj/item/weapon/melee/hammer
 	name = "hammer"
-	desc = "Nails, skulls, what isn't a heavy rusted hammer good for pounding on?" //L-Lewd
-	icon = 'icons/FoF/tools_ww1.dmi'
-	icon_state = "ww1_multitool-hammer"
+	desc = "When all you have is a hammer, everything looks like a nail."
+	icon = 'icons/FoF/needs_resprite.dmi'
+	icon_state = "ww1_hammer"
 	w_class = ITEM_SIZE_NORMAL
 	force = 15
 	throwforce = 10
 	attack_verb = list("beaten","clubbed","whacked","smacked","slapped","crushed","crunched","bashed","clobbered","struck","busted","thumped","battered","pounded","pummeled","slammed")
+
+/obj/item/weapon/melee/hammer/New()
+	..()
+	icon_state = pick("ww1_hammer","ww1_hammer-alt")

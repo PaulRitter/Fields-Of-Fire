@@ -441,38 +441,3 @@
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale/New()
     . = ..()
     reagents.add_reagent(/datum/reagent/ethanol/ale, 30)
-
-/obj/item/weapon/reagent_containers/food/drinks/bottle/trench
-	center_of_mass = "x=16;y=4"
-	icon = 'icons/FoF/misc.dmi'
-	isGlass = 0
-
-/obj/item/weapon/reagent_containers/food/drinks/bottle/trench/wine
-	name = "Wingman Wine"
-	desc = "When you need a friend, you'll always have your Wingman! <span class='warning'>Warning: This is contraband!</span>"
-	icon_state = "wine"
-	center_of_mass = "x=16;y=4"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/ethanol/wine, 100)
-		reagents.add_reagent(/datum/reagent/tramadol, 20)
-
-/obj/item/weapon/reagent_containers/food/drinks/bottle/trench/whiskey
-	name = "Streamline Whiskey"
-	desc = "Smooth and flavorful. Streamline. <span class='warning'>Warning: This is contraband!</span>"
-	icon_state = "whiskey_f"
-	center_of_mass = "x=16;y=3"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/ethanol/whiskey, 100)
-		reagents.add_reagent(/datum/reagent/tramadol, 20)
-
-/obj/item/weapon/reagent_containers/food/drinks/bottle/trench/schnapps
-	name = "Bluefish Schnapps"
-	desc = "100 proof cinnamon schnapps. For nights you don't want to remember. <span class='warning'>Warning: This is contraband!</span>"
-	icon_state = "schnapps"
-	center_of_mass = "x=15;y=3"
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/ethanol/goldschlager, 100)
-		reagents.add_reagent(/datum/reagent/tramadol, 20)

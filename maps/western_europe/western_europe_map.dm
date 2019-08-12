@@ -1,19 +1,3 @@
-#if !defined(using_map_DATUM)
-
-	#define using_map_DATUM /datum/map/western_europe
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
 /datum/map/western_europe
 	name = "Trenches"
 	full_name = "Undisclosed Location"

@@ -6,7 +6,7 @@
 	SIGNS
 */
 /obj/structure/sign/trench
-	icon = 'icons/FoF/Signs.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	name = "wooden sign"
 
 /obj/structure/sign/trench/wallammo
@@ -59,11 +59,11 @@
 /obj/item/wwi/stack
 	name = "intelligence"
 	desc = "A stack of envelopes full of incriminating details of the army's information."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "letter_pack"
 
 /obj/item/weapon/coin/req
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	name = "Requisition Receipt"
 	desc = "Insert this voucher into the dispenser to recieve a loadout."
 	icon_state = "paper_words"
@@ -72,7 +72,7 @@
 	return
 
 /obj/item/wwi/transit
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "lettercase_f"
 	name = "Transportation Receipt"
 	desc = "A voucher used to board the train and go to war. Make sure you are completely prepared before using this."
@@ -219,50 +219,5 @@ obj/item/device/whistle/attack_self(mob/living/carbon/user as mob)
 			if(istype(src, /obj/item/ammo_casing/shotgun))
 				to_chat(user, "You can't hollow out a shotgun shell. That defeats the purpose.")
 				return
-
-/*
-	CANNED GOODS
-*/
-
-/obj/item/weapon/wwi/can
-	icon = 'icons/FoF/misc.dmi'
-	throwforce = 10
-
-/obj/item/weapon/wwi/can/attackby(obj/item/weapon/C as obj, mob/user as mob)
-	if(istype(C, /obj/item/weapon/screwdriver))
-		playsound(src.loc, 'sound/effects/canopen.ogg', 100, 1, -4)
-		if(istype(src, /obj/item/weapon/wwi/can/fish))
-			qdel(src)
-			user.put_in_hands(new /obj/item/weapon/reagent_containers/food/snacks/can/fish(user.loc))
-		if(istype(src, /obj/item/weapon/wwi/can/soup))
-			qdel(src)
-			user.put_in_hands(new /obj/item/weapon/reagent_containers/food/snacks/can/soup(user.loc))
-		if(istype(src, /obj/item/weapon/wwi/can/beans))
-			qdel(src)
-			user.put_in_hands(new /obj/item/weapon/reagent_containers/food/snacks/can/beans(user.loc))
-		if(istype(src, /obj/item/weapon/wwi/can/ham))
-			qdel(src)
-			user.put_in_hands(new /obj/item/weapon/reagent_containers/food/snacks/can/ham(user.loc))
-
-
-/obj/item/weapon/wwi/can/fish
-	name = "\improper Ration Fish"
-	desc = "A can of reeking fish meant to last months in the trenches. Open with a can opener."
-	icon_state = "fish"
-
-/obj/item/weapon/wwi/can/soup
-	name = "\improper Ration Soup"
-	desc = "A can of sour soup meant to last months in the trenches. Open with a can opener."
-	icon_state = "soup"
-
-/obj/item/weapon/wwi/can/beans
-	name = "\improper Ration Beans"
-	desc = "A can of bland beans meant to last months in the trenches. Open with a can opener."
-	icon_state = "beans"
-
-/obj/item/weapon/wwi/can/ham
-	name = "\improper Ration Ham"
-	desc = "A can of ham meant to last months in the trenches. Open with a can opener."
-	icon_state = "ham"
 
 #endif

@@ -89,9 +89,7 @@ This saves us from having to call add_fingerprint() any time something is put in
 		if(slot_wear_id)
 			// the only relevant check for this is the uniform check
 			return 1
-		if(slot_l_ear)
-			return has_organ(BP_HEAD)
-		if(slot_r_ear)
+		if(slot_ears)
 			return has_organ(BP_HEAD)
 		if(slot_glasses)
 			return has_organ(BP_HEAD)
@@ -150,15 +148,8 @@ This saves us from having to call add_fingerprint() any time something is put in
 				update_inv_ears(0)
 				update_inv_wear_mask(0)
 		update_inv_head()
-	else if (W == l_ear)
-		l_ear = null
-		if(r_ear == W) //check for items that get equipped to both ear slots
-			r_ear = null
-		update_inv_ears()
-	else if (W == r_ear)
-		r_ear = null
-		if(l_ear == W)
-			l_ear = null
+	else if (W == ears)
+		ears = null
 		update_inv_ears()
 	else if (W == shoes)
 		shoes = null
@@ -210,6 +201,9 @@ This saves us from having to call add_fingerprint() any time something is put in
 			r_hand.update_twohanding()
 			update_inv_l_hand()
 		update_inv_l_hand()
+	else if (W == w_store)
+		w_store = null
+		update_inv_sling()
 	else
 		return 0
 
@@ -263,16 +257,8 @@ This saves us from having to call add_fingerprint() any time something is put in
 			src.wear_id = W
 			W.equipped(src, slot)
 			update_inv_wear_id(redraw_mob)
-		if(slot_l_ear)
-			src.l_ear = W
-			if(l_ear.slot_flags & SLOT_TWOEARS)
-				src.r_ear = W
-			W.equipped(src, slot)
-			update_inv_ears(redraw_mob)
-		if(slot_r_ear)
-			src.r_ear = W
-			if(r_ear.slot_flags & SLOT_TWOEARS)
-				src.l_ear = W
+		if(slot_ears)
+			src.ears = W
 			W.equipped(src, slot)
 			update_inv_ears(redraw_mob)
 		if(slot_glasses)
@@ -330,6 +316,10 @@ This saves us from having to call add_fingerprint() any time something is put in
 		if(slot_tie)
 			var/obj/item/clothing/under/uniform = src.w_uniform
 			uniform.attackby(W,src)
+		if(slot_sling)
+			w_store = W
+			W.equipped(src, slot)
+			update_inv_sling(redraw_mob)
 		else
 			to_chat(src, "<span class='danger'>You are trying to eqip this item to an unsupported inventory slot. If possible, please write a ticket with steps to reproduce. Slot was: [slot]</span>")
 			return
@@ -389,15 +379,13 @@ This saves us from having to call add_fingerprint() any time something is put in
 		if(slot_wear_suit)  return wear_suit
 		if(slot_w_uniform)  return w_uniform
 		if(slot_s_store)    return s_store
-		if(slot_l_ear)      return l_ear
-		if(slot_r_ear)      return r_ear
+		if(slot_ears)      return ears
 	return ..()
 
 /mob/living/carbon/human/get_equipped_items(var/include_carried = 0)
 	. = ..()
 	if(belt)      . += belt
-	if(l_ear)     . += l_ear
-	if(r_ear)     . += r_ear
+	if(ears)      . += ears
 	if(glasses)   . += glasses
 	if(gloves)    . += gloves
 	if(head)      . += head
