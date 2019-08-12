@@ -415,6 +415,7 @@
 
 /datum/reagent/drink/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	M.nutrition += nutrition * removed
+	M.add_event("hydrate", /datum/happiness_event/cold_drink)
 	M.dizziness = max(0, M.dizziness + adj_dizzy)
 	M.drowsyness = max(0, M.drowsyness + adj_drowsy)
 	M.sleeping = max(0, M.sleeping + adj_sleepy)
@@ -668,6 +669,7 @@
 	if(alien == IS_DIONA)
 		return
 	..()
+	M.add_event("coffee", /datum/happiness_event/coffee)
 	if(alien == IS_TAJARA)
 		M.adjustToxLoss(0.5 * removed)
 		M.make_jittery(4) //extra sensitive to caffine

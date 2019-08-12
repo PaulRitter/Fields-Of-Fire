@@ -169,13 +169,6 @@
 	. = ..()
 	reagents.add_reagent(/datum/reagent/drink/coffee, 30)
 
-/obj/item/weapon/reagent_containers/food/drinks/coffee/trench
-	name = "tin cup"
-	desc = "This tin cup has some weight to it."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "cup"
-	volume = 50
-
 /obj/item/weapon/reagent_containers/food/drinks/tea
 	name = "cup of Duke Purple Tea"
 	desc = "An insult to Duke Purple is an insult to the Space Queen! Any proper gentleman will fight you, if you sully this tea."

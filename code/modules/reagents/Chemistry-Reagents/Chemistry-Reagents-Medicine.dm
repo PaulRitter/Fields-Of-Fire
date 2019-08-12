@@ -268,10 +268,6 @@
 		return
 	M.add_chemical_effect(CE_PAINKILLER, 10)
 	M.add_chemical_effect(CE_BRAIN_REGEN, 1)
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		H.confused++
-		H.drowsyness++
 
 /datum/reagent/imidazoline
 	name = "Imidazoline"
@@ -546,6 +542,7 @@
 /datum/reagent/nicotine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
 		return
+	M.add_event("smoke", /datum/happiness_event/relaxed)
 	if(prob(volume*20))
 		M.add_chemical_effect(CE_PULSE, 1)
 	if(volume <= 0.02 && dose >= 0.05 && world.time > data + ANTIDEPRESSANT_MESSAGE_DELAY * 0.3)

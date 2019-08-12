@@ -188,7 +188,9 @@ What is the naming convention for planes or layers?
 	#define HUD_BASE_LAYER       1
 	#define HUD_ITEM_LAYER       2
 	#define HUD_ABOVE_ITEM_LAYER 3
+	#define ABOVE_HUD_LAYER      4
 
+#define ABOVE_HUD_PLANE 				25		// For being above the Head-Up Display
 
 /image
 	plane = FLOAT_PLANE			// this is defunct, lummox fixed this on recent compilers, but it will bug out if I remove it for coders not on the most recent compile.

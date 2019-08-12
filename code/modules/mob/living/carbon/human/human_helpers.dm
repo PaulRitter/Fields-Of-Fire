@@ -199,7 +199,7 @@
 		..()
 
 /mob/living/carbon/human/proc/has_headset_in_ears()
-	return istype(get_equipped_item(slot_l_ear), /obj/item/device/radio/headset) || istype(get_equipped_item(slot_r_ear), /obj/item/device/radio/headset)
+	return istype(get_equipped_item(slot_ears), /obj/item/device/radio/headset)
 
 /mob/living/carbon/human/proc/make_grab(var/mob/living/carbon/human/attacker, var/mob/living/carbon/human/victim, var/grab_tag)
 	var/obj/item/grab/G

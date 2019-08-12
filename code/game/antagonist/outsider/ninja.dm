@@ -101,7 +101,7 @@ var/datum/antagonist/ninja/ninjas
 		return 0
 
 	var/obj/item/device/radio/R = new /obj/item/device/radio/headset(player)
-	player.equip_to_slot_or_del(R, slot_l_ear)
+	player.equip_to_slot_or_del(R, slot_ears)
 	player.equip_to_slot_or_del(new /obj/item/clothing/under/color/black(player), slot_w_uniform)
 	player.equip_to_slot_or_del(new /obj/item/device/flashlight(player), slot_belt)
 	create_id("Infiltrator", player)

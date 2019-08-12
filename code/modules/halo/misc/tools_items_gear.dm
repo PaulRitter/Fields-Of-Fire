@@ -14,8 +14,8 @@
 	icon = 'code/modules/halo/misc/halohumanmisc.dmi'
 	icon_state = "erk"
 
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = 20
+	storage_slots_w = 20
+	storage_slots_h = 3
 
 	startswith = list(
 		/obj/item/weapon/crowbar,

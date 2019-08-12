@@ -147,14 +147,6 @@ proc/listclearnulls(list/list)
 		return picked
 	return null
 
-//Returns the top(last) element from the list and removes it from the list (typical stack function)
-/proc/pop(list/listfrom)
-	if (listfrom.len > 0)
-		var/picked = listfrom[listfrom.len]
-		listfrom.len--
-		return picked
-	return null
-
 //Returns the next element in parameter list after first appearance of parameter element. If it is the last element of the list or not present in list, returns first element.
 /proc/next_in_list(element, list/L)
 	for(var/i=1, i<L.len, i++)
@@ -734,3 +726,20 @@ proc/dd_sortedTextList(list/incoming)
 			L.Swap(start++,end--)
 
 	return L
+
+//Returns the top(last) element from the list and removes it from the list (typical stack function)
+/proc/pop(list/L)
+	if(L.len)
+		. = L[L.len]
+		L.len--
+
+//Puts an item on the end of a list
+/proc/push(list/L, thing)
+	L += thing
+
+//Shift/Unshift works on a FIFO system unlike pop/push working on FILO
+//Returns the bottom(first) element from the list and removes it from the list
+/proc/shift(list/L)
+	if(L.len)
+		. = L[1]
+		L.Cut(1,2)

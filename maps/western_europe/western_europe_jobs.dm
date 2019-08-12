@@ -3,11 +3,12 @@
 	allowed_jobs = list(/datum/job/britsoldier,/datum/job/germknight,/datum/job/frenchsoldier,/datum/job/britknight,/datum/job/germsoldier,/datum/job/germsquire,/datum/job/britag)
 	allowed_spawns = list("Tester","British Soldier","German Knight","French Soldier","British Knight","German Soldier","German Squire","British AG")
 
-	default_spawn = "Tester"
+	default_spawn = "The Rear"
 
 /datum/job/britsoldier
 	title = "British Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -18,13 +19,14 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
 /datum/job/germknight
 	title = "German Knight"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -35,13 +37,14 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germknight
+	//outfit_type = /decl/hierarchy/outfit/job/germknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
 /datum/job/frenchsoldier
 	title = "French Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -52,13 +55,14 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/frenchsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/frenchsoldier TODO
 
 	latejoin_at_spawnpoints = TRUE
 
 /datum/job/britknight
 	title = "British Knight"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -69,23 +73,20 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britknight
+	//outfit_type = /decl/hierarchy/outfit/job/britknight TODO
 
 	latejoin_at_spawnpoints = TRUE
 
 /obj/item/weapon/storage/backpack/britknight
 	name = "internal compartment"
 	can_hold = list(/obj/item/ammo_magazine/box/mp303)
-	storage_slots = 2
+	storage_slots_w = 2
 	canremove = 0
-
-/datum/armourspecials/gear/britplate
-	gear_type = /obj/item/weapon/storage/backpack/britknight
-	equip_slot = slot_back
 
 /datum/job/germsoldier
 	title = "German Soldier"
 	total_positions = -1
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -96,11 +97,12 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/germsquire
 	title = "German Squire"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -111,11 +113,12 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/germsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/germsoldier TODO
 
 /datum/job/britag
 	title = "British AG"
 	total_positions = 5
+	spawn_positions = -1
 	selection_color = "#000000"
 
 	supervisors = "god"
@@ -126,4 +129,4 @@
 
 	loadout_allowed = TRUE
 	announced = FALSE
-	outfit_type = /decl/hierarchy/outfit/job/britsoldier
+	//outfit_type = /decl/hierarchy/outfit/job/britsoldier TODO

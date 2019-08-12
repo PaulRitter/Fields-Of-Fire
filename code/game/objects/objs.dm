@@ -3,6 +3,8 @@
 	//Used to store information about the contents of the object.
 	var/list/matter
 	var/w_class // Size of the object.
+	var/x_class
+	var/y_class
 	var/unacidable = 0 //universal "unacidabliness" var, here so you can use it in any obj.
 	animate_movement = 2
 	var/throwforce = 1
@@ -11,6 +13,13 @@
 	var/in_use = 0 // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
 	var/damtype = "brute"
 	var/armor_penetration = 0
+
+/obj/New()
+	..()
+	if(x_class == null)
+		x_class = w_class
+	if(y_class == null)
+		y_class = x_class
 
 /obj/Destroy()
 	GLOB.processing_objects -= src

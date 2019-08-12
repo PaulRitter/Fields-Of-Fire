@@ -37,14 +37,6 @@
 	desc = "A mining lantern."
 	brightness_on = 6			// luminosity when on
 
-/obj/item/device/flashlight/lantern/wolf
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "wolflight"
-
-/obj/item/device/flashlight/lantern/mining
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "lantern"
-
 /*****************************Pickaxe********************************/
 
 /obj/item/weapon/pickaxe
@@ -67,15 +59,6 @@
 	sharp = 1
 
 	var/excavation_amount = 200
-
-/obj/item/weapon/pickaxe/trench
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "pickaxe"
-	force = 20
-	item_state = "spickaxe"
-	desc = "A rusty old pickaxe. Heavy and imposing."
-	drill_verb = "chipping"
-	name = "pickaxe"
 
 /obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"

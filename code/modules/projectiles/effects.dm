@@ -12,11 +12,9 @@
 	if(istype(M))
 		transform = M
 
-/obj/effect/projectile/proc/activate(var/kill_delay = 3)
+/obj/effect/projectile/proc/activate(var/kill_delay = get_animation_length(icon, icon_state))
 	spawn(kill_delay)
 		qdel(src)	//see effect_system.dm - sets loc to null and lets GC handle removing these effects
-
-	return
 
 //----------------------------
 // Laser beam
@@ -129,3 +127,22 @@
 //----------------------------
 /obj/effect/projectile/bullet/muzzle
 	icon_state = "muzzle_bullet"
+
+//----------------------------
+// Atom specific
+//----------------------------
+
+/obj/effect/projectile/generic_impact
+	icon_state = "impact_generic"
+
+/obj/effect/projectile/wood_impact
+	icon_state = "impact_wood"
+
+/obj/effect/projectile/metal_impact
+	icon_state = "impact_metal"
+
+/obj/effect/projectile/mob_impact
+	icon_state = "impact_mob"
+
+/obj/effect/projectile/sand_impact
+	icon_state = "impact_sand"

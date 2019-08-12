@@ -915,3 +915,45 @@ proc/generate_image(var/tx as num, var/ty as num, var/tz as num, var/range as nu
 
 	return cap
 
+GLOBAL_LIST_EMPTY(icon_state_lengths) //icon file = list(icon_state = length in frames)
+
+proc/get_animation_length(var/icon_file, var/icon_state, var/icon_size = 32, var/dir = NORTH)
+	if(icon_file in GLOB.icon_state_lengths)
+		var/list/L = GLOB.icon_state_lengths[icon_file]
+		if(L["[icon_state]"])
+			return L["[icon_state]"]
+
+	var/icon/icon_to_check = icon(icon_file, icon_state)
+	var/frames = 0
+	var/null_frame_count = 0
+	var/cur_frame = 1
+	var/last_x = icon_size/2 //Last known x position of a pixel. By default we start in the center of the file
+	var/last_y = icon_size/2 //Last known y position of a pixel
+	while(null_frame_count < 3)
+		var/frame_found = FALSE
+		if(icon_to_check.GetPixel(last_x,last_y, dir,frame = cur_frame))//See if there is a pixel in dead center, or where we last saw a pixel in the previous frame.
+			frame_found = TRUE
+		else
+			for(var/x = 1 to icon_size)
+				for(var/y = 1 to icon_size)
+					if(icon_to_check.GetPixel(x,y,dir,frame = cur_frame))
+						last_x = x
+						last_y = y
+						frame_found = TRUE
+						break
+				if(frame_found)
+					break
+		if(!frame_found)
+			null_frame_count++
+			continue
+		cur_frame++
+		frames++
+	qdel(icon_to_check)
+
+	if(!islist(GLOB.icon_state_lengths[icon_file]))
+		GLOB.icon_state_lengths[icon_file] = list()
+
+	var/list/L = GLOB.icon_state_lengths[icon_file]
+	L["[icon_state]"] = frames
+
+	return frames

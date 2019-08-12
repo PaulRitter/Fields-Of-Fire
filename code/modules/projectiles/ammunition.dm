@@ -9,6 +9,7 @@
 	throwforce = 1
 	w_class = ITEM_SIZE_TINY
 
+	var/sound = "casing"
 	var/leaves_residue = 1
 	var/caliber = ""					//Which kind of guns it can be loaded into
 	var/projectile_type					//The bullet type to create when New() is called
@@ -25,15 +26,17 @@
 /obj/item/ammo_casing/proc/expend()
 	. = BB
 	BB = null
-	set_dir(pick(GLOB.alldirs)) //spin spent casings
-	pixel_x = rand(-40,40)
-	pixel_y = rand(-40,40)		//random pixel offset... possibility of turf overlay
+	update_icon()
+
+/obj/item/ammo_casing/proc/eject(var/turf/landing, var/dir_throw)
+	forceMove(landing)
+	throw_at(get_edge_target_turf(landing, dir_throw), rand(1,3), 1)
+	animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = rand(3,8))
+	playsound(src, sound, 50, 1)
 
 	// Aurora forensics port, gunpowder residue.
 	if(leaves_residue)
 		leave_residue()
-
-	update_icon()
 
 /obj/item/ammo_casing/proc/leave_residue()
 	var/mob/living/carbon/human/H
@@ -75,6 +78,22 @@
 	. = ..()
 	if (!BB)
 		to_chat(user, "This one is spent.")
+
+/obj/item/ammo_casing/Crossed(atom/AM)
+	..()
+	if(isliving(AM))
+		var/mob/living/L = AM
+
+		if(L.buckled) //Are we in a vehicle of sorts?
+			return
+
+		playsound(src, sound, 50, 1)
+		if(L.m_intent == "run" && prob(10))
+			var/turf/curturf = get_turf(src)
+			var/turf/destination = get_step(curturf, L.dir)
+			if(destination.Adjacent(curturf))
+				throw_at(destination, 2, 2)
+				animate(src, pixel_x = rand(-16,16), pixel_y = rand(-16,16), transform = turn(matrix(), rand(120,300)), time  = rand(3,8))
 
 //Gun loading types
 #define SINGLE_CASING 	1	//The gun only accepts ammo_casings. ammo_magazines should never have this as their mag_type.

@@ -92,7 +92,7 @@
 /obj/item/weapon/gun/projectile/revolver/webley
 	name = "Webley"
 	desc = "A classic British revolver. Fires .455 caliber"
-	icon = 'icons/FoF/weaponsnew.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	fire_sound = 'sound/weapons/webley.ogg'
 	icon_state = "webley"
 	item_state = "revolver"

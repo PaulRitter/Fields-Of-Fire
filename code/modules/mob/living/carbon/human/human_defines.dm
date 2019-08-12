@@ -47,19 +47,19 @@
 	var/religion = ""
 
 	//Equipment slots
-	var/obj/item/wear_suit = null
-	var/obj/item/w_uniform = null
-	var/obj/item/shoes = null
-	var/obj/item/belt = null
-	var/obj/item/gloves = null
-	var/obj/item/glasses = null
-	var/obj/item/head = null
-	var/obj/item/l_ear = null
-	var/obj/item/r_ear = null
-	var/obj/item/wear_id = null
-	var/obj/item/r_store = null
-	var/obj/item/l_store = null
-	var/obj/item/s_store = null
+	var/obj/item/wear_suit = null //Suit slot (armour, space suit, etc)
+	var/obj/item/w_uniform = null //under slot
+	var/obj/item/shoes = null   //Shoes slot
+	var/obj/item/belt = null    //Belt slot
+	var/obj/item/gloves = null  //Glove slot
+	var/obj/item/glasses = null //Eyewear
+	var/obj/item/head = null    //Headwear
+	var/obj/item/ears = null    //Ears slot
+	var/obj/item/wear_id = null //ID slot
+	var/obj/item/r_store = null //Right pocket storage
+	var/obj/item/l_store = null //Left pocket storage
+	var/obj/item/s_store = null //Suit storage
+	var/obj/item/w_store = null //Sling storage
 
 	var/used_skillpoints = 0
 	var/list/skills = list()

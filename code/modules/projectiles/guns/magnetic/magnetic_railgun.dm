@@ -30,7 +30,7 @@
 	slowdown_per_slot[slot_back] =    slowdown_worn
 	slowdown_per_slot[slot_belt] =    slowdown_worn
 	slowdown_per_slot[slot_s_store] = slowdown_worn
-
+	slowdown_per_slot[slot_sling] =   slowdown_worn
 	. = ..()
 
 // Not going to check type repeatedly, if you code or varedit

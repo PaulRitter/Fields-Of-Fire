@@ -678,7 +678,6 @@ obj/random/obstruction/spawn_choices()
 				/obj/item/weapon/reagent_containers/food/snacks/no_raisin,
 				/obj/item/weapon/reagent_containers/food/snacks/spacetwinkie,
 				/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers,
-				/obj/item/weapon/reagent_containers/food/snacks/tastybread,
 				/obj/item/weapon/reagent_containers/food/snacks/candy/proteinbar,
 				/obj/item/weapon/reagent_containers/food/snacks/syndicake,
 				/obj/item/weapon/reagent_containers/food/snacks/donut,
@@ -688,8 +687,7 @@ obj/random/obstruction/spawn_choices()
 				/obj/item/pizzabox/vegetable,
 				/obj/item/pizzabox/margherita,
 				/obj/item/pizzabox/mushroom,
-				/obj/item/weapon/reagent_containers/food/snacks/plumphelmetbiscuit,
-				/obj/item/weapon/reagent_containers/food/snacks/skrellsnacks)
+				/obj/item/weapon/reagent_containers/food/snacks/plumphelmetbiscuit)
 
 
 /obj/random/storage

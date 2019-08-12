@@ -300,24 +300,3 @@
 
 /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/flashbang/clusterbang/limited/rearm()
 	return//Extra bit of security
-
-/obj/item/missile/dynamite
-	name = "old stick of dynamite"
-	desc = "The nitroglycerin in this stick of dynamite is unstable from age. Simply throw to set it off."
-	icon = 'icons/FoF/misc.dmi'
-	icon_state = "dynamite"
-	throwforce = 5
-	primed = 1
-
-/obj/item/missile/dynamite/cluster
-	icon_state = "clusterdynamite"
-	name = "cluster of dynamite"
-	desc = "As if one stick of unstable nitroglycerin wasn't bad enough, someone taped a bunch together."
-
-	throw_impact(atom/hit_atom)
-		if(primed)
-			explosion(hit_atom, 0, 2, 4, 6)
-			qdel(src)
-		else
-			..()
-		return

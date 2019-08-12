@@ -13,8 +13,8 @@
 	icon_state = "firstaid"
 	throw_speed = 2
 	throw_range = 8
-	max_w_class = ITEM_SIZE_SMALL
-	max_storage_space = DEFAULT_BOX_STORAGE
+	storage_slots_w = 6
+	storage_slots_h = 2
 
 /obj/item/weapon/storage/firstaid/empty
 	icon_state = "firstaid"
@@ -115,9 +115,8 @@
 	icon_state = "surgerykit"
 	item_state = "firstaid-surgery"
 
-	storage_slots = 14
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = null
+	storage_slots_w = 14
+	storage_slots_h = 9
 
 	can_hold = list(
 		/obj/item/weapon/bonesetter,
@@ -152,12 +151,13 @@
 /obj/item/weapon/storage/pill_bottle
 	name = "pill bottle"
 	desc = "It's an airtight container for storing medication."
-	icon_state = "pill_canister"
-	icon = 'icons/obj/chemical.dmi'
+	icon_state = "med-bottle"
+	icon = 'icons/FoF/objects.dmi'
 	item_state = "contsolid"
-	w_class = ITEM_SIZE_SMALL
-	max_w_class = ITEM_SIZE_TINY
-	max_storage_space = 7
+	x_class = 1
+	y_class = 2
+	storage_slots_w = 7
+	storage_slots_h = 1
 	can_hold = list(/obj/item/weapon/reagent_containers/pill,/obj/item/weapon/dice,/obj/item/weapon/paper)
 	allow_quick_gather = 1
 	use_to_pickup = 1

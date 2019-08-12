@@ -9,7 +9,7 @@
 /mob/verb/say_verb(message as text)
 	set name = "Say"
 	set category = "IC"
-	
+
 	if(typing_indicator)
 		qdel(typing_indicator)
 	usr.say(message)
@@ -93,7 +93,7 @@
 //parses the message mode code (e.g. :h, :w) from text, such as that supplied to say.
 //returns the message mode string or null for no message mode.
 //standard mode is the mode returned for the special ';' radio code.
-/mob/proc/parse_message_mode(var/message, var/standard_mode="headset")
+/mob/proc/parse_message_mode(var/message, var/standard_mode=SAY_HEADSET)
 	if(length(message) >= 1 && copytext(message,1,2) == ";")
 		return standard_mode
 

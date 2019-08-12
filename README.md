@@ -1,5 +1,5 @@
 # Fields of Fire
----
+[![Build Status](https://travis-ci.com/Fields-Of-Fire/Fields-Of-Fire.svg?branch=master)](https://travis-ci.com/Fields-Of-Fire/Fields-Of-Fire)
 
 ### LICENSE
 All content commited after commit [dc1796b](https://github.com/Fields-Of-Fire/Fields-Of-Fire/commit/dc1796b5a2bd72d2849571097ad69172f711baf4) is licensed under the AGPL v3 license.

@@ -773,49 +773,57 @@
 				healths.icon_state = "health_numb"
 			else
 				switch(hal_screwyhud)
-					if(1)	healths.icon_state = "health6"
-					if(2)	healths.icon_state = "health7"
+					if(1)
+						healths.icon_state = "health6"
+						healthbar.icon_state = "health6"
+					if(2)
+						healths.icon_state = "health7"
+						healthbar.icon_state = "health7"
 					else
 						// Generate a by-limb health display.
 						healths.icon_state = "blank"
 						healths.overlays = null
 
-						var/no_damage = 1
-						var/trauma_val = 0 // Used in calculating softcrit/hardcrit indicators.
-						if(can_feel_pain())
-							trauma_val = max(shock_stage,getHalLoss())/(species.total_health-100)
 						// Collect and apply the images all at once to avoid appearance churn.
 						var/list/health_images = list()
 						for(var/obj/item/organ/external/E in organs)
-							if(no_damage && (E.brute_dam || E.burn_dam))
-								no_damage = 0
 							health_images += E.get_damage_hud_image()
 
 						// Apply a fire overlay if we're burning.
 						if(on_fire)
 							health_images += image('icons/mob/screen1_health.dmi',"burning")
 
-						// Show a general pain/crit indicator if needed.
-						if(is_asystole())
-							health_images += image('icons/mob/screen1_health.dmi',"hardcrit")
-						else if(trauma_val)
-							if(can_feel_pain())
-								if(trauma_val > 0.7)
-									health_images += image('icons/mob/screen1_health.dmi',"softcrit")
-								if(trauma_val >= 1)
-									health_images += image('icons/mob/screen1_health.dmi',"hardcrit")
-						else if(no_damage)
-							health_images += image('icons/mob/screen1_health.dmi',"fullhealth")
-
 						healths.overlays += health_images
 
+		if(healthbar)
+			var/phys_health = maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss() - getCloneLoss()
+			switch(phys_health)
+				if(200 to INFINITY)
+					healthbar.icon_state = "health0"
+				if(150 to 200)
+					healthbar.icon_state = "health1"
+				if(100 to 150)
+					healthbar.icon_state = "health2"
+				if(1 to 100)
+					healthbar.icon_state = "health3"
+				else
+					healthbar.icon_state = "health4"
+		if(thirst_HUD)
+			switch(thirst)
+				if(THIRST_LEVEL_FILLED to INFINITY)
+					thirst_HUD.icon_state = "thirst0"
+				if(THIRST_LEVEL_MEDIUM to THIRST_LEVEL_FILLED)
+					thirst_HUD.icon_state = "thirst1"
+				if(THIRST_LEVEL_THIRSTY to THIRST_LEVEL_MEDIUM)
+					thirst_HUD.icon_state = "thirst2"
+				if(0 to THIRST_LEVEL_THIRSTY)
+					thirst_HUD.icon_state = "thirst3"
 		if(nutrition_icon)
 			switch(nutrition)
-				if(450 to INFINITY)				nutrition_icon.icon_state = "nutrition0"
-				if(350 to 450)					nutrition_icon.icon_state = "nutrition1"
-				if(250 to 350)					nutrition_icon.icon_state = "nutrition2"
-				if(150 to 250)					nutrition_icon.icon_state = "nutrition3"
-				else							nutrition_icon.icon_state = "nutrition4"
+				if(HUNGER_SATED to INFINITY)				nutrition_icon.icon_state = "nutrition0"
+				if(HUNGER_HUNGRY to HUNGER_SATED)					nutrition_icon.icon_state = "nutrition1"
+				if(HUNGER_STARVING to HUNGER_HUNGRY)					nutrition_icon.icon_state = "nutrition2"
+				else							nutrition_icon.icon_state = "nutrition3"
 
 		if(isSynthetic())
 			var/obj/item/organ/internal/cell/C = internal_organs_by_name[BP_CELL]
@@ -842,15 +850,11 @@
 		if(bodytemp)
 			if (!species)
 				switch(bodytemperature) //310.055 optimal body temp
-					if(370 to INFINITY)		bodytemp.icon_state = "temp4"
-					if(350 to 370)			bodytemp.icon_state = "temp3"
-					if(335 to 350)			bodytemp.icon_state = "temp2"
-					if(320 to 335)			bodytemp.icon_state = "temp1"
-					if(300 to 320)			bodytemp.icon_state = "temp0"
-					if(295 to 300)			bodytemp.icon_state = "temp-1"
-					if(280 to 295)			bodytemp.icon_state = "temp-2"
-					if(260 to 280)			bodytemp.icon_state = "temp-3"
-					else					bodytemp.icon_state = "temp-4"
+					if(370 to INFINITY)		bodytemp.icon_state = "temp2"
+					if(350 to 370)			bodytemp.icon_state = "temp1"
+					if(350 to 226)			bodytemp.icon_state = "temp0"
+					if(260 to 280)			bodytemp.icon_state = "temp-1"
+					else					bodytemp.icon_state = "temp-2"
 			else
 				//TODO: precalculate all of this stuff when the species datum is created
 				var/base_temperature = species.body_temperature

@@ -12,7 +12,6 @@
 	infra_luminosity = 6
 	var/overload = 0
 	var/overload_coeff = 2
-	wreckage = /obj/effect/decal/mecha_wreckage/gygax
 	internal_damage_threshold = 35
 	max_equip = 3
 

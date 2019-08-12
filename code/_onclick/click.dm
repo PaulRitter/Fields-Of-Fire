@@ -44,7 +44,11 @@
 
 	next_click = world.time + 1
 
-	var/list/modifiers = params2list(params)
+	var/list/modifiers
+	if(islist(params))
+		modifiers = params
+	else
+		modifiers = params2list(params)
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return 1
@@ -213,12 +217,34 @@
 
 /*
 	Middle click
-	Only used for swapping hands
+	Used for radial menu stuff
 */
 /mob/proc/MiddleClickOn(var/atom/A)
-	swap_hand()
-	return
+	var/turf/T = get_turf(A)
+	if(!T)
+		return 0
 
+	var/list/all_choices = list()
+	var/list/choice_references = list()
+	for(var/obj/item/thing in T)
+		if(istype(thing))
+			all_choices += new /datum/radial_menu_choice(thing.name, image(thing.icon, thing.icon_state, thing.dir), thing.desc)
+			choice_references["[thing.name]"] = thing
+
+	var/list/choice = show_radial_menu(src, T, all_choices)
+	if(!choice || !choice.len)
+		return 0
+	
+	if(!(choice[1] in choice_references))
+		return 0
+
+	if(!choice_references["[choice[1]]"])
+		return 0
+
+	var/atom/selA = choice_references["[choice[1]]"]
+	ClickOn(selA, choice.Copy(2))
+
+	return 1
 // In case of use break glass
 /*
 /atom/proc/MiddleClick(var/mob/M as mob)

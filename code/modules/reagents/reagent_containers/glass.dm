@@ -147,7 +147,7 @@
 /obj/item/weapon/reagent_containers/glass/trench
 	name = "tin cup"
 	desc = "This tin cup has some weight to it."
-	icon = 'icons/FoF/misc.dmi'
+	icon = 'icons/FoF/needs_resprite.dmi'
 	icon_state = "cup"
 	center_of_mass = "x=15;y=10"
 	matter = list("steel" = 500)

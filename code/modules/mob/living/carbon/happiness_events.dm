@@ -11,8 +11,12 @@
 	happiness = 4
 
 /datum/happiness_event/thirst/watered
-	description = "<span class='info'>I have recently had something to drink.</span>\n"
+	description = "<span class='info'>My thirst is quenched.</span>\n"
 	happiness = 2
+
+/datum/happiness_event/thirst/parched
+	description = "<span class='none'>I could go for something to drink.</span>\n"
+	happiness = -2
 
 /datum/happiness_event/thirst/thirsty
 	description = "<span class='warning'>I'm getting a bit thirsty.</span>\n"
@@ -23,10 +27,23 @@
 	happiness = -14
 
 
+//illness
+/datum/happiness_event/sick/cold
+	description = "<span class='warning'>I'm catching a cold.</span>\n"
+	happiness = -4
+
+/datum/happiness_event/sick/ill
+	description = "<span class='warning'>I'm ill with something.</span>\n"
+	happiness = -8
+
+/datum/happiness_event/sick/flu
+	description = "<span class='warning'><B>I'm sick as hell.</B></span>\n"
+	happiness = -14
+
 
 //nutrition
 /datum/happiness_event/nutrition/fat
-	description = "<span class='warning'><B>I'm so fat..</B></span>\n" 
+	description = "<span class='warning'><B>I'm so fat..</B></span>\n"
 	happiness = -4
 
 /datum/happiness_event/nutrition/wellfed
@@ -78,6 +95,10 @@
 	happiness = -6
 	timeout = 1800
 
+/datum/happiness_event/disgust/bloodspray
+	description = "<span class='danger'>I got someone's blood on my face! This is horrifying!</span>\n"
+	happiness = -16
+	timeout = 2400
 
 
 //Generic events
@@ -100,8 +121,13 @@
 	happiness = 3
 	timeout = 2400
 
+/datum/happiness_event/coffee
+	description = "<span class='info'>I had a good cup of joe.</span>\n"
+	happiness = 3
+	timeout = 1800
+
 /datum/happiness_event/relaxed//For nicotine.
-	description = "<span class='info'>I feel relaxed.</span>\n"
+	description = "<span class='info'>Nothing like a good smoke.</span>\n"
 	happiness = 1
 	timeout = 1800
 
@@ -111,18 +137,36 @@
 	timeout = 1800
 
 /datum/happiness_event/hot_food //Hot food feels good!
-	description = "<span class='info'>I've eaten something warm.</span>\n"
+	description = "<span class='info'>I had a hot meal.</span>\n"
 	happiness = 3
 	timeout = 1800
 
 /datum/happiness_event/cold_drink //Cold drinks feel good!
-	description = "<span class='info'>I've had something refreshing.</span>\n"
+	description = "<span class='info'>I drank something refreshing.</span>\n"
 	happiness = 3
 	timeout = 1800
 
 /datum/happiness_event/high
 	description = "<span class='binfo'>I'm high as fuck</span>\n"
 	happiness = 12
+
+
+//pain and injuries
+/datum/happiness_event/bleed/cut
+	description = "<span class='warning'>I'm bleeding from somewhere!</span>\n"
+	happiness = -8
+
+/datum/happiness_event/pain/little
+	description = "<span class='warning'>I'm in a bit of pain.</span>\n"
+	happiness = -4
+
+/datum/happiness_event/pain/some
+	description = "<span class='warning'>I'm in quite some pain.</span>\n"
+	happiness = -8
+
+/datum/happiness_event/pain/lots
+	description = "<span class='warning'><B>This really hurts!</B></span>\n"
+	happiness = -12
 
 
 

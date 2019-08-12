@@ -133,8 +133,8 @@ var/list/robot_hud_colours = list("#FFFFFF","#CCCCCC","#AAAAAA","#888888","#6666
 		if(species)
 			// Calculate the required colour matrix.
 			var/r = 0.30 * species.health_hud_intensity
-			var/g = 0.59 * species.health_hud_intensity
-			var/b = 0.11 * species.health_hud_intensity
+			var/g = 0.30 * species.health_hud_intensity
+			var/b = 0.10 * species.health_hud_intensity
 			temp.color = list(r, r, r, g, g, g, b, b, b)
 		hud_damage_image = image(null)
 		hud_damage_image.overlays += temp

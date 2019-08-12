@@ -255,6 +255,16 @@
 	damage = 30
 	edge = 1
 
+/obj/item/projectile/bullet/rifle/a3006
+	fire_sound = 'sound/weapons/Gunshot_light.ogg'
+	damage = 30
+
+/obj/item/projectile/bullet/rifle/a3006/hp
+	damage = 40
+	penetrating = 0
+	armor_penetration = 0
+	edge = 1
+
 /obj/item/projectile/bullet/rifle/a762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
 	damage = 15
